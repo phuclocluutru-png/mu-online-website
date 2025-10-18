@@ -9,26 +9,15 @@
 .header-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
+    justify-content: center;
+    gap: 2.5rem;
     flex-wrap: wrap;
-    padding: 1rem 0;
+    padding: 0.85rem 0 0.9rem;
 }
 
-.header-logo {
-    display: inline-flex;
-    align-items: center;
-}
-
-.header-logo img {
-    display: block;
-    height: 64px;
-    width: auto;
-    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
-}
 
 .primary-nav {
-    flex: 1 1 320px;
+    flex: 1 1 100%;
 }
 
 .primary-nav ul {
