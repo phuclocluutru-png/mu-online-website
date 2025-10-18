@@ -1,7 +1,9 @@
 /* Header-specific layout */
 .site-header {
     border-bottom: 1px solid var(--color-border);
-    background: rgba(233, 242, 250, 0.5);
+    background: linear-gradient(135deg, rgba(12, 20, 44, 0.92), rgba(27, 39, 70, 0.85));
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 24px rgba(12, 20, 44, 0.4);
 }
 
 .header-container {
@@ -22,6 +24,7 @@
     display: block;
     height: 64px;
     width: auto;
+    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
 }
 
 .primary-nav {
@@ -47,14 +50,16 @@
     gap: 0.25rem;
     padding: 0.25rem 0;
     font-weight: 600;
-    color: var(--color-text);
+    color: var(--color-text-primary);
     text-decoration: none;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    letter-spacing: 0.02em;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     border-bottom: 2px solid transparent;
 }
 
 .primary-nav a:focus,
 .primary-nav a:hover {
-    color: var(--color-accent);
-    border-bottom-color: var(--color-accent);
+    color: var(--color-gold);
+    border-bottom-color: var(--color-gold);
+    transform: translateY(-2px);
 }
