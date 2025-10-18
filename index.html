@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MU Online - Huyền Thoại Trở Lại</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="images/logo.png" alt="MU Online" class="logo-img">
+                    <span class="logo-text">MU Online</span>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link">Trang Chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#classes" class="nav-link">Nhân Vật</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#news" class="nav-link">Tin Tức</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#download" class="nav-link">Tải Game</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#register" class="nav-link btn-register">Đăng Ký</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-video">
+            <video autoplay muted loop>
+                <source src="images/hero-video.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="title-main">MU ONLINE</span>
+                    <span class="title-sub">Huyền Thoại Trở Lại</span>
+                </h1>
+                <p class="hero-description">
+                    Khám phá thế giới MU với đồ họa đỉnh cao, gameplay hấp dẫn và cộng đồng game thủ sôi động.
+                    Trải nghiệm cuộc phiêu lưu không giới hạn trong vương quốc MU huyền thoại.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#download" class="btn btn-primary">
+                        <i class="fas fa-download"></i>
+                        Tải Game Ngay
+                    </a>
+                    <a href="#register" class="btn btn-secondary">
+                        <i class="fas fa-user-plus"></i>
+                        Đăng Ký Tài Khoản
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <div class="stat-number" data-target="50000">0</div>
+                <div class="stat-label">Người Chơi Online</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="100">0</div>
+                <div class="stat-label">Server Hoạt Động</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="5">0</div>
+                <div class="stat-label">Năm Kinh Nghiệm</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Character Classes Section -->
+    <section id="classes" class="classes-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Chọn Nhân Vật Của Bạn</h2>
+                <p class="section-subtitle">Khám phá sức mạnh của từng class nhân vật với kỹ năng độc đáo</p>
+            </div>
+            <div class="classes-grid">
+                <div class="class-card" data-class="dark-knight">
+                    <div class="class-image">
+                        <img src="images/dark-knight.jpg" alt="Dark Knight">
+                    </div>
+                    <div class="class-content">
+                        <h3 class="class-name">Dark Knight</h3>
+                        <p class="class-description">Chiến binh mạnh mẽ với sức tấn công cận chiến khủng khiếp</p>
+                        <div class="class-stats">
+                            <div class="stat">
+                                <span class="stat-name">Sức Mạnh</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-name">Phòng Thủ</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-name">Tốc Độ</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="class-card" data-class="dark-wizard">
+                    <div class="class-image">
+                        <img src="images/dark-wizard.jpg" alt="Dark Wizard">
+                    </div>
+                    <div class="class-content">
+                        <h3 class="class-name">Dark Wizard</h3>
+                        <p class="class-description">Pháp sư hắc ám với sức mạnh ma thuật hủy diệt</p>
+                        <div class="class-stats">
+                            <div class="stat">
+                                <span class="stat-name">Ma Thuật</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 98%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-name">Phòng Thủ</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 60%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-name">Tốc Độ</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="class-card" data-class="fairy-elf">
+                    <div class="class-image">
+                        <img src="images/fairy-elf.jpg" alt="Fairy Elf">
+                    </div>
+                    <div class="class-content">
+                        <h3 class="class-name">Fairy Elf</h3>
+                        <p class="class-description">Cung thủ nhanh nhẹn với khả năng hỗ trợ đồng đội</p>
+                        <div class="class-stats">
+                            <div class="stat">
+                                <span class="stat-name">Tốc Độ</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-name">Chính Xác</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 92%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-name">Hỗ Trợ</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 88%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="class-card" data-class="magic-gladiator">
+                    <div class="class-image">
+                        <img src="images/magic-gladiator.jpg" alt="Magic Gladiator">
+                    </div>
+                    <div class="class-content">
+                        <h3 class="class-name">Magic Gladiator</h3>
+                        <p class="class-description">Chiến binh ma pháp kết hợp sức mạnh và phép thuật</p>
+                        <div class="class-stats">
+                            <div class="stat">
+                                <span class="stat-name">Cân Bằng</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-name">Đa Năng</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-name">Sức Mạnh</span>
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section id="news" class="news-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Tin Tức & Sự Kiện</h2>
+                <p class="section-subtitle">Cập nhật những thông tin mới nhất về game</p>
+            </div>
+            <div class="news-grid">
+                <article class="news-card featured">
+                    <div class="news-image">
+                        <img src="images/news-1.jpg" alt="Cập nhật mới">
+                        <div class="news-badge">Nổi Bật</div>
+                    </div>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span class="news-date">19/10/2025</span>
+                            <span class="news-category">Cập Nhật</span>
+                        </div>
+                        <h3 class="news-title">Phiên Bản Mới: Thế Giới Mở Rộng</h3>
+                        <p class="news-excerpt">
+                            Khám phá vùng đất mới với boss khủng, trang bị mạnh mẽ và nhiều thử thách hấp dẫn đang chờ
+                            đợi bạn.
+                        </p>
+                        <a href="#" class="news-link">Đọc Thêm <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-image">
+                        <img src="images/news-2.jpg" alt="Sự kiện">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span class="news-date">18/10/2025</span>
+                            <span class="news-category">Sự Kiện</span>
+                        </div>
+                        <h3 class="news-title">Sự Kiện Halloween 2025</h3>
+                        <p class="news-excerpt">
+                            Tham gia sự kiện Halloween với nhiều phần thưởng hấp dẫn và hoạt động đặc biệt.
+                        </p>
+                        <a href="#" class="news-link">Đọc Thêm <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-image">
+                        <img src="images/news-3.jpg" alt="Giải đấu">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-meta">
+                            <span class="news-date">17/10/2025</span>
+                            <span class="news-category">Giải Đấu</span>
+                        </div>
+                        <h3 class="news-title">Giải Đấu PvP Mùa Đông</h3>
+                        <p class="news-excerpt">
+                            Đăng ký tham gia giải đấu PvP lớn nhất năm với tổng giải thưởng lên đến 1 tỷ VNĐ.
+                        </p>
+                        <a href="#" class="news-link">Đọc Thêm <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="download-section">
+        <div class="container">
+            <div class="download-content">
+                <div class="download-text">
+                    <h2 class="download-title">Tải Game Ngay</h2>
+                    <p class="download-description">
+                        Bắt đầu cuộc phiêu lưu của bạn ngay hôm nay. Game hoàn toàn miễn phí và được cập nhật liên tục.
+                    </p>
+                    <div class="system-requirements">
+                        <h4>Cấu Hình Tối Thiểu:</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Windows 10 64-bit</li>
+                            <li><i class="fas fa-check"></i> RAM: 4GB</li>
+                            <li><i class="fas fa-check"></i> DirectX 11</li>
+                            <li><i class="fas fa-check"></i> Dung lượng: 5GB</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="download-buttons">
+                    <a href="#" class="download-btn primary">
+                        <i class="fab fa-windows"></i>
+                        <div class="btn-text">
+                            <span class="btn-title">Tải cho Windows</span>
+                            <span class="btn-subtitle">Phiên bản 2.1.5 - 4.2GB</span>
+                        </div>
+                    </a>
+                    <a href="#" class="download-btn secondary">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div class="btn-text">
+                            <span class="btn-title">Phiên bản Mobile</span>
+                            <span class="btn-subtitle">Sắp ra mắt</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section id="register" class="register-section">
+        <div class="container">
+            <div class="register-content">
+                <div class="register-form-container">
+                    <h2 class="register-title">Tạo Tài Khoản</h2>
+                    <p class="register-subtitle">Tham gia cộng đồng MU Online ngay hôm nay</p>
+
+                    <form class="register-form" id="registerForm">
+                        <div class="form-group">
+                            <label for="username">Tên Đăng Nhập</label>
+                            <input type="text" id="username" name="username" required>
+                            <span class="form-message"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                            <span class="form-message"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Mật Khẩu</label>
+                            <input type="password" id="password" name="password" required>
+                            <span class="form-message"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Xác Nhận Mật Khẩu</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required>
+                            <span class="form-message"></span>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="terms" name="terms" required>
+                                <span class="checkmark"></span>
+                                Tôi đồng ý với <a href="#" class="terms-link">Điều khoản sử dụng</a>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-user-plus"></i>
+                            Đăng Ký Ngay
+                        </button>
+                    </form>
+
+                    <div class="login-link">
+                        Đã có tài khoản? <a href="#" id="showLogin">Đăng nhập ngay</a>
+                    </div>
+                </div>
+
+                <div class="login-form-container" style="display: none;">
+                    <h2 class="login-title">Đăng Nhập</h2>
+                    <p class="login-subtitle">Chào mừng bạn trở lại</p>
+
+                    <form class="login-form" id="loginForm">
+                        <div class="form-group">
+                            <label for="loginUsername">Tên Đăng Nhập</label>
+                            <input type="text" id="loginUsername" name="loginUsername" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loginPassword">Mật Khẩu</label>
+                            <input type="password" id="loginPassword" name="loginPassword" required>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="remember" name="remember">
+                                <span class="checkmark"></span>
+                                Ghi nhớ đăng nhập
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Đăng Nhập
+                        </button>
+                    </form>
+
+                    <div class="register-link">
+                        Chưa có tài khoản? <a href="#" id="showRegister">Đăng ký ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="images/logo.png" alt="MU Online">
+                        <span>MU Online</span>
+                    </div>
+                    <p class="footer-description">
+                        Trải nghiệm thế giới MU huyền thoại với đồ họa đỉnh cao và gameplay đầy thử thách.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitch"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">Game</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Tải Game</a></li>
+                        <li><a href="#">Hướng Dẫn</a></li>
+                        <li><a href="#">Nhân Vật</a></li>
+                        <li><a href="#">Cập Nhật</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">Cộng Đồng</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Diễn Đàn</a></li>
+                        <li><a href="#">Discord</a></li>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">YouTube</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4 class="footer-title">Hỗ Trợ</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Liên Hệ</a></li>
+                        <li><a href="#">Báo Lỗi</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Chính Sách</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 MU Online. Tất cả quyền được bảo lưu.</p>
+                </div>
+                <div class="footer-legal">
+                    <a href="#">Điều Khoản</a>
+                    <a href="#">Bảo Mật</a>
+                    <a href="#">Cookie</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <img src="images/logo.png" alt="MU Online">
+            </div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <div class="loading-text">Đang tải...</div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/forms.js"></script>
+</body>
+
+</html>
