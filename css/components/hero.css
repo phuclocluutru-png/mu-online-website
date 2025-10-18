@@ -4,7 +4,7 @@
     overflow: hidden;
     color: var(--color-text-primary);
     background: radial-gradient(circle at 20% 15%, rgba(63, 131, 255, 0.35), transparent 55%), radial-gradient(circle at 85% 20%, rgba(247, 167, 54, 0.28), transparent 60%), linear-gradient(145deg, rgba(12, 20, 44, 0.92), rgba(12, 20, 44, 0.7) 55%, rgba(12, 20, 44, 0.92)), url('../../images/top-bg.png') center / cover no-repeat;
-    padding: 6.5rem 0 5.5rem;
+    padding: 4.75rem 0 4rem;
 }
 
 .hero::after {
@@ -23,13 +23,13 @@
 
 .hero__layout {
     display: grid;
-    gap: 3rem;
+    gap: 2.25rem;
     align-items: center;
 }
 
 .hero__copy {
     display: grid;
-    gap: 1.5rem;
+    gap: 1.25rem;
     justify-items: center;
     text-align: center;
 }
@@ -194,8 +194,8 @@
 
 .hero__logo-orb {
     position: absolute;
-    width: clamp(300px, 32vw, 360px);
-    height: clamp(300px, 32vw, 360px);
+    width: clamp(240px, 28vw, 300px);
+    height: clamp(240px, 28vw, 300px);
     background: radial-gradient(circle at 45% 45%, rgba(103, 212, 255, 0.55), transparent 65%), radial-gradient(circle at 55% 60%, rgba(247, 167, 54, 0.45), transparent 70%);
     filter: blur(12px);
     opacity: 0.85;
@@ -213,14 +213,14 @@
 }
 
 .hero__logo-stack img {
-    width: clamp(220px, 26vw, 320px);
+    width: clamp(200px, 24vw, 280px);
     height: auto;
     display: block;
     filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.55));
 }
 
 .hero__metrics {
-    margin: 3.25rem 0 0;
+    margin: 2.5rem 0 0;
     padding: 0;
     list-style: none;
     display: grid;
@@ -228,7 +228,7 @@
 }
 
 .hero__metrics li {
-    padding: 1.25rem 1.5rem;
+    padding: 1rem 1.25rem;
     border-radius: 20px;
     background: rgba(12, 20, 44, 0.6);
     border: 1px solid rgba(103, 212, 255, 0.22);
@@ -284,10 +284,10 @@
 
 @media (min-width: 1280px) {
     .hero {
-        padding: 7rem 0 6rem;
+        padding: 5.25rem 0 4.5rem;
     }
 
     .hero__layout {
-        gap: 4rem;
+        gap: 2.5rem;
     }
 }
