@@ -1,17 +1,24 @@
 /* Base layout foundation */
 :root {
     --font-base: 'Segoe UI', Tahoma, sans-serif;
-    --color-background: #0c142c;
-    --color-surface: #111830;
-    --color-surface-alt: #1b2746;
+    --color-background: #0d1122;
+    --color-surface: #12172b;
+    --color-surface-alt: #1d243b;
     --color-border: rgba(247, 167, 54, 0.35);
-    --color-border-soft: rgba(31, 91, 255, 0.18);
-    --color-text-primary: #f4f1e8;
-    --color-text-muted: rgba(244, 241, 232, 0.72);
-    --color-accent: #1f5bff;
-    --color-accent-bright: #3f83ff;
+    --color-border-soft: rgba(124, 58, 237, 0.28);
+    --color-text-primary: #f4f6fa;
+    /* silver-ish */
+    --color-text-muted: rgba(230, 232, 238, 0.68);
     --color-gold: #f7a736;
-    --color-secondary: #4b1e66;
+    /* brand gold */
+    --color-gold-bright: #ffd700;
+    --color-purple: #7c3aed;
+    --color-purple-light: #a78bfa;
+    --color-purple-dark: #5b2ca2;
+    --color-silver: #cfd8e3;
+    --gradient-brand: linear-gradient(120deg, var(--color-purple) 0%, var(--color-purple-light) 45%, var(--color-gold-bright) 100%);
+    --gradient-gold: linear-gradient(95deg, #b97822 0%, #f7a736 40%, #ffd700 70%, #ffefb3 100%);
+    --gradient-purple: linear-gradient(100deg, #5b2ca2 0%, #7c3aed 45%, #a78bfa 100%);
 }
 
 *,
@@ -23,7 +30,10 @@
 body {
     margin: 0;
     font-family: var(--font-base);
-    background: radial-gradient(circle at top, rgba(63, 131, 255, 0.12), transparent 55%), var(--color-background);
+    background:
+        radial-gradient(circle at 18% 12%, rgba(124, 58, 237, 0.18), transparent 60%),
+        radial-gradient(circle at 82% 20%, rgba(247, 167, 54, 0.15), transparent 65%),
+        var(--color-background);
     color: var(--color-text-primary);
     min-height: 100vh;
     display: flex;
@@ -82,25 +92,56 @@ main {
     transform: translateY(-2px);
 }
 
+/* Primary brand button */
 .button--primary {
-    background: linear-gradient(130deg, var(--color-accent) 0%, var(--color-accent-bright) 100%);
+    background: var(--gradient-brand);
     color: var(--color-text-primary);
-    box-shadow: 0 14px 28px rgba(31, 91, 255, 0.32);
+    box-shadow: 0 12px 28px -6px rgba(124, 58, 237, 0.45), 0 4px 10px rgba(247, 167, 54, 0.25);
+    font-weight: 700;
+    letter-spacing: .04em;
 }
 
 .button--primary:focus,
 .button--primary:hover {
-    box-shadow: 0 18px 35px rgba(31, 91, 255, 0.4);
+    box-shadow: 0 16px 36px -6px rgba(124, 58, 237, 0.55), 0 0 0 2px var(--color-gold-bright), 0 0 18px rgba(247, 167, 54, 0.55);
 }
 
+/* Ghost brand button */
 .button--ghost {
-    border: 1px solid rgba(247, 167, 54, 0.65);
-    color: var(--color-gold);
-    background: rgba(17, 24, 48, 0.55);
+    border: 1px solid var(--color-purple-light);
+    color: var(--color-purple-light);
+    background: rgba(92, 54, 150, 0.18);
 }
 
 .button--ghost:focus,
 .button--ghost:hover {
-    border-color: rgba(247, 167, 54, 0.9);
-    color: #ffd697;
+    border-color: var(--color-gold-bright);
+    color: var(--color-gold-bright);
+    background: rgba(247, 167, 54, 0.18);
+}
+
+/* Utility text colors */
+.text-gold {
+    color: var(--color-gold-bright);
+}
+
+.text-purple {
+    color: var(--color-purple-light);
+}
+
+.text-silver {
+    color: var(--color-silver);
+}
+
+/* Utility glows */
+.glow-gold {
+    text-shadow: 0 0 6px var(--color-gold-bright), 0 0 16px rgba(247, 167, 54, .55);
+}
+
+.glow-purple {
+    text-shadow: 0 0 6px var(--color-purple-light), 0 0 16px rgba(124, 58, 237, .5);
+}
+
+.glow-silver {
+    text-shadow: 0 0 4px #fff, 0 0 12px rgba(255, 255, 255, .6);
 }

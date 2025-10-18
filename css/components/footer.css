@@ -1,15 +1,17 @@
 /* Footer-specific layout */
 .site-footer {
-    border-top: 1px solid var(--color-border);
-    background: linear-gradient(135deg, rgba(12, 20, 44, 0.92), rgba(27, 39, 70, 0.85));
+    border-top: 1px solid var(--color-purple-light);
+    background: linear-gradient(135deg, rgba(28, 20, 44, 0.92), rgba(52, 30, 90, 0.85));
     margin-top: auto;
-    box-shadow: 0 -12px 24px rgba(12, 20, 44, 0.35);
+    box-shadow: 0 -12px 28px -6px rgba(124, 58, 237, 0.4), 0 -2px 0 0 rgba(247, 167, 54, 0.35) inset;
 }
 
 .site-footer small {
     display: block;
     padding: 1.5rem 0;
-    color: var(--color-text-muted);
+    color: var(--color-silver);
     text-align: center;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    text-shadow: 0 0 4px #ffffff55;
 }

@@ -164,11 +164,18 @@
 }
 
 .hero__feature-sub {
-    font-size: 0.9rem;
-    letter-spacing: 0.08em;
-    color: rgba(244, 241, 232, 0.85);
-    font-weight: 500;
-    line-height: 1.2;
+    font-size: 1.05rem;
+    /* bigger */
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    /* bolder */
+    line-height: 1.25;
+    background: linear-gradient(90deg, #67d4ff 0%, #9f7aea 50%, #f7a736 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* use gradient text */
+    filter: drop-shadow(0 0 4px rgba(103, 212, 255, 0.35));
 }
 
 .hero__features li:hover,
