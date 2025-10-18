@@ -1,0 +1,12 @@
+/* Footer-specific layout */
+.site-footer {
+    border-top: 1px solid var(--color-border);
+    background: rgba(233, 242, 250, 0.5);
+    margin-top: auto;
+}
+
+.site-footer small {
+    display: block;
+    padding: 1.5rem 0;
+    color: var(--color-muted);
+}

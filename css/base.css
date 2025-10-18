@@ -1,0 +1,60 @@
+/* Base layout foundation */
+:root {
+    --font-base: 'Segoe UI', Tahoma, sans-serif;
+    --color-text: #1f2933;
+    --color-background: #ffffff;
+    --color-border: #d9e2ec;
+    --color-muted: #829ab1;
+    --color-accent: #1d4ed8;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-base);
+    background: var(--color-background);
+    color: var(--color-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    padding: 4rem 1.5rem;
+}
+
+.container {
+    width: min(1080px, 100%);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.placeholder {
+    margin: 0 auto;
+    max-width: 680px;
+    padding: 4rem 2rem;
+    border: 2px dashed var(--color-border);
+    border-radius: 12px;
+    text-align: center;
+    background: rgba(233, 242, 250, 0.4);
+}
+
+.placeholder h1 {
+    margin-bottom: 0.75rem;
+    font-size: 2rem;
+}
+
+.placeholder p {
+    margin: 0;
+    color: var(--color-muted);
+}
+
+[data-include] {
+    min-height: 1px;
+}
