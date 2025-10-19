@@ -180,50 +180,29 @@ async function loadCategories(postJson) {
             if (!byParent[parent]) byParent[parent] = [];
             byParent[parent].push(c);
         });
+        const currentCatIds = Array.isArray(postJson.categories) ? postJson.categories : [];
         wrap.innerHTML = '';
         (byParent[0] || []).forEach(parentCat => {
-            const branch = document.createElement('div');
-            branch.className = 'postView__catBranch';
-            branch.innerHTML = `<div class="postView__catParent">${parentCat.name}</div>`;
+            const group = document.createElement('div');
+            group.className = 'postView__catGroup';
+            group.innerHTML = `<h4 class="postView__catGroupTitle">${parentCat.name}</h4>`;
             const children = byParent[parentCat.id] || [];
-            if (children.length) {
-                const childList = document.createElement('div');
-                childList.className = 'postView__catChildList';
+            if (!children.length) {
+                // treat parent itself as clickable
+                const item = buildCatItem(parentCat, currentCatIds.includes(parentCat.id));
+                group.appendChild(item);
+            } else {
                 children.forEach(child => {
-                    const btn = document.createElement('button');
-                    btn.className = 'postView__catChildBtn';
-                    btn.textContent = child.name;
-                    btn.onclick = () => renderCategoryPosts(child.id, child.name);
-                    childList.appendChild(btn);
+                    const item = buildCatItem(child, currentCatIds.includes(child.id));
+                    group.appendChild(item);
                 });
-                branch.appendChild(childList);
             }
-            wrap.appendChild(branch);
+            wrap.appendChild(group);
         });
     } catch (e) {
         console.warn('Category sidebar failed', e);
         wrap.innerHTML = '<div class="postView__error">Không tải được danh mục.</div>';
     }
-}
-
-// Khi click vào danh mục con, fetch và render list bài viết thuộc danh mục đó
-async function renderCategoryPosts(catId, catName) {
-    const article = document.getElementById('post-article');
-    if (!article) return;
-    article.innerHTML = `<h2 class="postView__title">${catName}</h2><div class="postView__loading">Đang tải bài viết...</div>`;
-    try {
-        const res = await timeoutFetch(`${WP_API_BASE}/posts?categories=${catId}&per_page=10&_embed`);
-        if (!res.ok) throw new Error('Không tải được bài viết');
-        const posts = await res.json();
-        if (!posts.length) {
-            article.innerHTML = `<h2 class="postView__title">${catName}</h2><div class="postView__error">Không có bài viết nào trong danh mục này.</div>`;
-            return;
-        }
-        article.innerHTML = `<h2 class="postView__title">${catName}</h2><ul class="postView__catPostList">${posts.map(p => `<li><a href="post.html?id=${p.id}" class="postView__catPostLink">${p.title.rendered}</a></li>`).join('')}</ul>`;
-    } catch (e) {
-        article.innerHTML = `<h2 class="postView__title">${catName}</h2><div class="postView__error">Lỗi tải bài viết.</div>`;
-    }
-}
 }
 
 function buildCatItem(cat, isActive) {
