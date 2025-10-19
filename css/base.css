@@ -47,7 +47,7 @@ main {
 }
 
 .container {
-    width: min(1280px, 100%);
+    width: min(1200px, 100%);
     margin: 0 auto;
     padding: 0 1.5rem;
     /* restore side padding on larger screens */
@@ -55,7 +55,7 @@ main {
 
 /* Scaling wrapper solution C */
 .wrapper-scale {
-    width: 1280px;
+    width: 1200px;
     transform-origin: top center;
     will-change: transform;
     transition: transform 0.18s ease;

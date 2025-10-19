@@ -1,7 +1,7 @@
 // Entry point for custom interactions during the rebuild phase
 
 document.addEventListener('DOMContentLoaded', () => {
-    const baseWidth = 1280; // updated from 1080
+    const baseWidth = 1200; // updated from 1280
     let wrapper = null;
 
     function ensureWrapper() {
