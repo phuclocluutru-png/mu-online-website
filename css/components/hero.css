@@ -306,7 +306,22 @@
 }
 
 
-@media (min-width: 960px) {
+/* Unified layout: keep two columns across widths; only stack on very narrow screens */
+@media (max-width: 640px) {
+    .hero__layout {
+        grid-template-columns: 1fr;
+    }
+
+    .hero__logo-stack img {
+        width: clamp(180px, 55vw, 260px);
+    }
+
+    .hero__features {
+        justify-content: center;
+    }
+}
+
+@media (min-width: 641px) {
     .hero__layout {
         grid-template-columns: 1.05fr 0.95fr;
         align-items: center;
@@ -319,15 +334,5 @@
 
     .hero__copy .hero__actions {
         justify-content: flex-start;
-    }
-}
-
-@media (min-width: 1280px) {
-    .hero {
-        padding: 5rem 0 4rem;
-    }
-
-    .hero__layout {
-        gap: 2.5rem;
     }
 }
