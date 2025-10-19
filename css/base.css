@@ -38,6 +38,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden; /* prevent horizontal scroll due to scaling */
 }
 
 main {
@@ -50,6 +51,14 @@ main {
     margin: 0 auto;
     padding: 0;
     /* exact desktop spacing */
+}
+
+/* Scaling wrapper solution C */
+.wrapper-scale {
+    width: 1080px;
+    transform-origin: top left;
+    will-change: transform;
+    transition: transform 0.2s ease;
 }
 
 
