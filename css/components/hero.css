@@ -68,7 +68,8 @@
 
 .hero__title {
     margin: 0;
-    font-size: clamp(2.7rem, 5vw, 3.6rem);
+    font-size: 3.2rem;
+    /* fixed size (no responsive clamp) */
     line-height: 1.08;
     font-weight: 700;
 }
@@ -255,8 +256,10 @@
 
 .hero__logo-orb {
     position: absolute;
-    width: clamp(240px, 28vw, 300px);
-    height: clamp(240px, 28vw, 300px);
+    width: 280px;
+    /* fixed */
+    height: 280px;
+    /* fixed */
     background: radial-gradient(circle at 45% 45%, rgba(103, 212, 255, 0.55), transparent 65%), radial-gradient(circle at 55% 60%, rgba(247, 167, 54, 0.45), transparent 70%);
     filter: blur(12px);
     opacity: 0.85;
@@ -288,7 +291,8 @@
 /* removed old orb/rays */
 
 .hero__logo-stack img {
-    width: clamp(200px, 24vw, 280px);
+    width: 260px;
+    /* fixed width */
     height: auto;
     display: block;
     filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.55));
@@ -296,4 +300,31 @@
 
 
 /* Removed breakpoint stacking; layout now consistent on all devices.
-   Optional future tweak: introduce micro-scaling below 380px if overflow appears. */
+    Micro-fallback: extremely narrow screens (<360px) can shrink everything proportionally */
+@media (max-width: 360px) {
+    .hero__title {
+        font-size: 2.6rem;
+    }
+
+    .hero__logo-stack img {
+        width: 220px;
+    }
+
+    .hero__logo-orb {
+        width: 240px;
+        height: 240px;
+    }
+
+    .hero__features li {
+        width: 140px;
+        height: 100px;
+    }
+
+    .hero__feature-title {
+        font-size: 1.05rem;
+    }
+
+    .hero__feature-sub {
+        font-size: 0.92rem;
+    }
+}
