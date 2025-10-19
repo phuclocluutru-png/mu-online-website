@@ -299,32 +299,4 @@
 }
 
 
-/* Removed breakpoint stacking; layout now consistent on all devices.
-    Micro-fallback: extremely narrow screens (<360px) can shrink everything proportionally */
-@media (max-width: 360px) {
-    .hero__title {
-        font-size: 2.6rem;
-    }
-
-    .hero__logo-stack img {
-        width: 220px;
-    }
-
-    .hero__logo-orb {
-        width: 240px;
-        height: 240px;
-    }
-
-    .hero__features li {
-        width: 140px;
-        height: 100px;
-    }
-
-    .hero__feature-title {
-        font-size: 1.05rem;
-    }
-
-    .hero__feature-sub {
-        font-size: 0.92rem;
-    }
-}
+/* Removed all media queries to keep pixel-identical layout on every screen */

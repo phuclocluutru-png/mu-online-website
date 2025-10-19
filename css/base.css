@@ -45,9 +45,11 @@ main {
 }
 
 .container {
-    width: min(1080px, 100%);
+    width: 1080px;
+    /* fixed width */
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0;
+    /* exact desktop spacing */
 }
 
 
