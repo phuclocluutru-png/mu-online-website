@@ -31,6 +31,8 @@
     gap: 0.6rem;
     /* reduced */
     align-items: center;
+    /* Unified two-column layout across all widths */
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
 }
 
 .hero__copy {
@@ -228,20 +230,7 @@
     transform: translateY(-6px);
 }
 
-/* Mobile: allow scroll but hide scrollbar for cleaner look */
-@media (max-width: 640px) {
-    .hero__features {
-        overflow-x: auto;
-        -ms-overflow-style: none;
-        /* IE/Edge */
-        scrollbar-width: none;
-        /* Firefox */
-    }
-
-    .hero__features::-webkit-scrollbar {
-        display: none;
-    }
-}
+/* Removed mobile-only horizontal scroll to keep identical appearance */
 
 
 .hero__copy {
@@ -306,33 +295,5 @@
 }
 
 
-/* Unified layout: keep two columns across widths; only stack on very narrow screens */
-@media (max-width: 640px) {
-    .hero__layout {
-        grid-template-columns: 1fr;
-    }
-
-    .hero__logo-stack img {
-        width: clamp(180px, 55vw, 260px);
-    }
-
-    .hero__features {
-        justify-content: center;
-    }
-}
-
-@media (min-width: 641px) {
-    .hero__layout {
-        grid-template-columns: 1.05fr 0.95fr;
-        align-items: center;
-    }
-
-    .hero__copy {
-        justify-items: flex-start;
-        text-align: left;
-    }
-
-    .hero__copy .hero__actions {
-        justify-content: flex-start;
-    }
-}
+/* Removed breakpoint stacking; layout now consistent on all devices.
+   Optional future tweak: introduce micro-scaling below 380px if overflow appears. */
