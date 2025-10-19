@@ -1,5 +1,6 @@
 // Orchestrator module (ESM)
 import { initEvents } from './events.js';
+import { initNews } from './news.js';
 import { initRankings } from './rankings.js';
 import { initScaling } from './scaling.js';
 import { startGlobalCountdown } from './time-utils.js';
@@ -44,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.querySelector('.rankings__tab')) {
             initRankings();
             initEvents();
+            initNews();
             startGlobalCountdown();
             // delay a tick to ensure content rendered
             requestAnimationFrame(() => { initObserver(); syncEventHeight(); });
@@ -51,5 +53,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     observer.observe(document.body, { childList: true, subtree: true });
-    setTimeout(() => { initRankings(); initEvents(); startGlobalCountdown(); initObserver(); syncEventHeight(); }, 1200);
+    setTimeout(() => { initRankings(); initEvents(); initNews(); startGlobalCountdown(); initObserver(); syncEventHeight(); }, 1200);
 });

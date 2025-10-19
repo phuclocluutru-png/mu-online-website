@@ -1,3 +1,196 @@
+.postView__catPostList {
+    margin: 1.2rem 0 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+}
+
+.postView__catPostLink {
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--color-gold-bright);
+    text-decoration: none;
+    background: rgba(60, 40, 100, .25);
+    border-radius: 8px;
+    padding: .55rem 1rem;
+    transition: background .2s, color .2s;
+    display: inline-block;
+}
+
+.postView__catPostLink:hover {
+    background: var(--gradient-brand);
+    color: #fff;
+}
+
+.postView__catsTree {
+    padding-top: .5rem;
+}
+
+.postView__catBranch {
+    margin-bottom: 1.2rem;
+    position: relative;
+    padding-left: 1.2rem;
+}
+
+.postView__catBranch:before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 0.7rem;
+    bottom: 0.7rem;
+    width: 2px;
+    background: linear-gradient(180deg, var(--color-purple-light) 0%, var(--color-gold-bright) 100%);
+    border-radius: 2px;
+    opacity: .7;
+}
+
+.postView__catParent {
+    font-size: .95rem;
+    font-weight: 700;
+    color: var(--color-gold-bright);
+    margin-bottom: .4rem;
+    letter-spacing: .04em;
+    padding-left: .2rem;
+}
+
+.postView__catChildList {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+    margin-left: .7rem;
+}
+
+.postView__catChildBtn {
+    background: rgba(60, 40, 100, .35);
+    border: 1px solid var(--color-purple-light);
+    color: var(--color-silver);
+    padding: .45rem .8rem;
+    font-size: .82rem;
+    font-weight: 600;
+    border-radius: 9px;
+    cursor: pointer;
+    text-align: left;
+    transition: background .25s, color .25s;
+}
+
+.postView__catChildBtn:hover,
+.postView__catChildBtn.is-active {
+    background: var(--gradient-brand);
+    color: #fff;
+    box-shadow: 0 0 0 2px var(--color-gold-bright);
+}
+
+.postView__title {
+    font-size: 2.1rem;
+    font-weight: 800;
+    letter-spacing: .03em;
+    background: linear-gradient(90deg, #FFD700 0%, #FFB300 60%, #FFF3B0 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    margin-bottom: 0.7rem;
+}
+
+.postView__metaBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .92rem;
+    margin-bottom: 1.2rem;
+    color: var(--color-silver);
+    gap: 1rem;
+}
+
+.postView__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .92rem;
+    color: var(--color-gold-bright);
+    font-weight: 600;
+    letter-spacing: .02em;
+}
+
+.postView__breadcrumb a {
+    color: var(--color-gold-bright);
+    text-decoration: none;
+    opacity: .85;
+    transition: color .2s;
+}
+
+.postView__breadcrumb a:hover {
+    color: #fffbe7;
+}
+
+.postView__metaDate {
+    color: var(--color-silver);
+    font-size: .92rem;
+    font-weight: 500;
+    opacity: .85;
+}
+
+/* Featured & Related posts */
+.postView__featuredWrap,
+.postView__relatedWrap {
+    margin-top: 2.5rem;
+}
+
+.postView__featuredTitle,
+.postView__relatedTitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-gold-bright);
+    letter-spacing: .03em;
+}
+
+.postView__featuredList,
+.postView__relatedList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+}
+
+.postView__featuredItem,
+.postView__relatedItem {
+    background: rgba(34, 25, 53, .7);
+    border: 1px solid var(--color-purple-light);
+    border-radius: 12px;
+    padding: .7rem 1.1rem;
+    min-width: 180px;
+    max-width: 220px;
+    flex: 1 1 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    box-shadow: 0 6px 18px -8px rgba(92, 54, 150, .25);
+}
+
+.postView__featuredItemTitle,
+.postView__relatedItemTitle {
+    font-size: .98rem;
+    font-weight: 700;
+    color: var(--color-silver);
+    margin-bottom: .3rem;
+    text-decoration: none;
+    transition: color .2s;
+}
+
+.postView__featuredItemTitle:hover,
+.postView__relatedItemTitle:hover {
+    color: var(--color-gold-bright);
+}
+
+.postView__featuredItemDate,
+.postView__relatedItemDate {
+    font-size: .78rem;
+    color: var(--color-silver);
+    opacity: .7;
+}
+
 /* News & Events (WordPress integration) */
 .news {
     padding: 3rem 0 3.5rem;
@@ -365,10 +558,10 @@
 
 .postView__heroImg {
     width: 100%;
-    max-width: 970px;
+    max-width: 360px;
     height: auto;
     display: block;
-    margin: 0 0 1.4rem;
+    margin: 0 auto 1.4rem auto;
     border-radius: 16px;
     box-shadow: 0 14px 38px -16px rgba(0, 0, 0, .55);
 }

@@ -108,6 +108,9 @@ Ví dụ response:
 - Sửa giờ Event: cập nhật `events-data.js` (mảng `times`).
 - Thêm drop mới: thêm vào `event-drops.js` dưới key tên event.
 - Đổi chiều rộng cột Event: chỉnh biến CSS `--rank-event-width` trong `rankings.css`.
+- Cấu hình WordPress: thay `WP_BASE_URL` trong `news-config.js`.
+- Thay số bài viết mỗi lần tải: sửa `WP_NEWS_PAGE_SIZE`.
+- Thêm ảnh placeholder: cập nhật `images/news-placeholder.jpg`.
 
 ## 📱 Responsive
 - Hiện dùng cơ chế scale giữ nguyên bố cục desktop trên màn hình nhỏ.
@@ -129,6 +132,8 @@ Ví dụ response:
 - [ ] API thực tế từ database MU.
 - [ ] Dark/Light theme toggle.
 - [ ] Tối ưu mobile (không dùng scale) + menu đáp ứng.
+- [ ] Lazy fetch hình ảnh WP (IntersectionObserver).
+- [ ] Bộ nhớ cache sessionStorage cho danh mục/bài viết.
 
 ## 📄 License / Bản Quyền
 © 2025 MU PK CLEAR. All rights reserved.

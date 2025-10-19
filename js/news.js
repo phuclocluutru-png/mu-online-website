@@ -126,26 +126,24 @@ function renderPosts() {
         const dateObj = new Date(p.date);
         const dateStr = dateObj.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
         const catName = categoryNameFromPost(p) || 'Tin Tức';
+        const internalLink = `pages/post.html?id=${p.id}`;
         card.innerHTML = `
-      <div class="news__cardImgWrap">
-        <img src="${imgUrl}" alt="${p.title}" loading="lazy" />
-      </div>
-      <div class="news__cardBody">
-        <span class="news__cardCat">${catName}</span>
-        <h3 class="news__cardTitle">${p.title}</h3>
-        <div class="news__cardMeta">
-          <span>${dateStr}</span>
-          <span>#${p.id}</span>
-        </div>
-        <p class="news__cardExcerpt">${p.excerpt}</p>
-        <div class="news__cardFooter">
-          <button class="news__readMore" data-link="${p.link}" aria-label="Đọc bài viết">Đọc</button>
-        </div>
-      </div>
-    `;
-        card.querySelector('.news__readMore').addEventListener('click', () => {
-            window.open(p.link, '_blank', 'noopener');
-        });
+            <a class="news__cardImgWrap" href="${internalLink}" aria-label="Xem bài viết: ${p.title}">
+                <img src="${imgUrl}" alt="${p.title}" loading="lazy" />
+            </a>
+            <div class="news__cardBody">
+                <span class="news__cardCat">${catName}</span>
+                <h3 class="news__cardTitle"><a href="${internalLink}" class="news__cardTitleLink">${p.title}</a></h3>
+                <div class="news__cardMeta">
+                    <span>${dateStr}</span>
+                    <span>#${p.id}</span>
+                </div>
+                <p class="news__cardExcerpt">${p.excerpt}</p>
+                <div class="news__cardFooter">
+                    <a class="news__readMore" href="${internalLink}" aria-label="Đọc bài viết">Đọc</a>
+                </div>
+            </div>
+        `;
         wrap.appendChild(card);
     });
 }
