@@ -38,7 +38,8 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow-x: hidden; /* prevent horizontal scroll due to scaling */
+    overflow-x: hidden;
+    /* prevent horizontal scroll due to scaling */
 }
 
 main {
@@ -46,19 +47,20 @@ main {
 }
 
 .container {
-    width: 1080px;
-    /* fixed width */
+    width: min(1280px, 100%);
     margin: 0 auto;
-    padding: 0;
-    /* exact desktop spacing */
+    padding: 0 1.5rem;
+    /* restore side padding on larger screens */
 }
 
 /* Scaling wrapper solution C */
 .wrapper-scale {
-    width: 1080px;
-    transform-origin: top left;
+    width: 1280px;
+    transform-origin: top center;
     will-change: transform;
-    transition: transform 0.2s ease;
+    transition: transform 0.18s ease;
+    margin: 0 auto;
+    /* center on wide screens */
 }
 
 
