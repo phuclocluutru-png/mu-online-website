@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Bài viết - MU PK CLEAR</title>
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/components/news.css" />
+    <link rel="stylesheet" href="../css/components/hero.css" />
+    <link rel="stylesheet" href="../css/components/header.css" />
+    <link rel="stylesheet" href="../css/components/footer.css" />
+</head>
+
+<body>
+    <div data-include="layout/header"></div>
+    <div data-include="sections/hero"></div>
+    <main class="postView" id="post-view" data-loading="true">
+        <div class="container postView__container">
+            <div class="postView__grid">
+                <aside class="postView__sidebar" id="post-sidebar" aria-label="Danh mục">
+                    <div class="postView__backWrap"><a class="postView__back" href="../index.html#news">← Quay lại Tin
+                            tức</a></div>
+                    <div class="postView__cats" id="post-cats">
+                        <div class="postView__loading">Đang tải danh mục...</div>
+                    </div>
+                </aside>
+                <article class="postView__article" id="post-article" aria-live="polite">
+                    <div class="postView__loading">Đang tải bài viết...</div>
+                </article>
+            </div>
+        </div>
+    </main>
+    <div data-include="layout/footer"></div>
+
+    <script src="../js/includes.js" defer></script>
+    <script type="module" src="../js/post.js"></script>
+</body>
+
+</html>
