@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!wrapper) {
                 wrapper = document.createElement('div');
                 wrapper.className = 'wrapper-scale';
+                // Ensure no margin auto so left edge aligns to viewport
+                wrapper.style.margin = '0';
                 // move existing body children into wrapper
                 const children = Array.from(document.body.children).filter(el => !el.classList.contains('wrapper-scale'));
                 children.forEach(child => wrapper.appendChild(child));

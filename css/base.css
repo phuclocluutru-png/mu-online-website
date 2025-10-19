@@ -56,11 +56,10 @@ main {
 /* Scaling wrapper solution C */
 .wrapper-scale {
     width: 1200px;
-    transform-origin: top center;
+    transform-origin: top left;
+    /* flush left when scaled on mobile */
     will-change: transform;
     transition: transform 0.18s ease;
-    margin: 0 auto;
-    /* center on wide screens */
 }
 
 
