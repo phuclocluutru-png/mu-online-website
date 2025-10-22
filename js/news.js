@@ -1,14 +1,20 @@
-import { WP_API_BASE, WP_NEWS_PAGE_SIZE, WP_TIMEOUT_MS, mapPost } from './news-config.js';
+import { WP_API_BASE, WP_TIMEOUT_MS, mapPost } from './news-config.js';
 
 // State
 const state = {
-    categories: [],
-    categoryCounts: {},
-    activeCategory: null, // category id or null for 'all'
-    page: 1,
-    hasMore: true,
+    featuredPosts: [], // Bài viết nổi bật cho slider
+    currentSlide: 0,
+    activeTab: 'tin-tuc-cap-nhat', // tab mặc định
+    tabPosts: {}, // Cache posts cho mỗi tab
     loading: false,
-    posts: [],
+};
+
+// Cấu hình tabs cố định
+const mainCategories = {
+    'tin-tuc-cap-nhat': { name: 'Tin tức và cập nhật', slug: 'tin-tuc-cap-nhat' },
+    'su-kien': { name: 'Sự kiện', slug: 'su-kien' },
+    'huong-dan': { name: 'Hướng dẫn', slug: 'huong-dan' },
+    'nhan-vat': { name: 'Nhân vật', slug: 'nhan-vat' }
 };
 
 function timeoutFetch(url, opts = {}) {
@@ -18,155 +24,282 @@ function timeoutFetch(url, opts = {}) {
         .finally(() => clearTimeout(t));
 }
 
-async function fetchCategories() {
+// Fetch bài viết nổi bật cho slider
+async function fetchFeaturedPosts() {
     try {
-        const res = await timeoutFetch(`${WP_API_BASE}/categories?per_page=100&hide_empty=true`);
-        if (!res.ok) throw new Error('Bad categories response');
+        // Đầu tiên tìm category ID của "noi-bat"
+        console.log('Finding category "noi-bat"...');
+        const catRes = await timeoutFetch(`${WP_API_BASE}/categories?slug=noi-bat`);
+        let categoryId = null;
+
+        if (catRes.ok) {
+            const categories = await catRes.json();
+            console.log('Categories found:', categories);
+            if (categories.length > 0) {
+                categoryId = categories[0].id;
+                console.log('Found category ID for "noi-bat":', categoryId);
+            }
+        }
+
+        // Fetch posts từ category "noi-bat" hoặc tất cả posts nếu không tìm thấy category
+        let apiUrl;
+        if (categoryId) {
+            apiUrl = `${WP_API_BASE}/posts?per_page=5&_embed&categories=${categoryId}`;
+            console.log('Fetching featured posts from category ID:', categoryId);
+        } else {
+            apiUrl = `${WP_API_BASE}/posts?per_page=5&_embed`;
+            console.log('Category "noi-bat" not found, fetching latest posts as fallback');
+        }
+
+        const res = await timeoutFetch(apiUrl);
+        if (!res.ok) throw new Error('Bad featured posts response');
+
         const json = await res.json();
-        state.categories = json.map(c => ({ id: c.id, name: c.name, count: c.count }));
+        console.log('Featured posts fetched:', json.length, 'posts');
+        state.featuredPosts = json.map(mapPost);
+
     } catch (e) {
-        console.warn('Categories fetch failed', e);
+        console.warn('Featured posts fetch failed:', e);
+        state.featuredPosts = [];
     }
 }
 
-async function fetchPosts(reset = false) {
+// Fetch posts cho một tab cụ thể
+async function fetchTabPosts(tabSlug) {
     if (state.loading) return;
     state.loading = true;
-    const postsWrap = document.getElementById('news-posts');
-    const loadBtn = document.getElementById('news-load-more');
-    if (reset) { state.page = 1; state.posts = []; state.hasMore = true; }
-    if (loadBtn) loadBtn.disabled = true;
-    renderSkeletons(postsWrap, reset ? WP_NEWS_PAGE_SIZE : 3);
+
+    const listWrap = document.getElementById('news-list');
+    renderLoading(listWrap);
+
     try {
-        const catParam = state.activeCategory ? `&categories=${state.activeCategory}` : '';
-        const res = await timeoutFetch(`${WP_API_BASE}/posts?per_page=${WP_NEWS_PAGE_SIZE}&page=${state.page}${catParam}&_embed`);
-        if (!res.ok) throw new Error('Bad posts response');
-        const json = await res.json();
-        const mapped = json.map(mapPost);
-        if (mapped.length < WP_NEWS_PAGE_SIZE) state.hasMore = false;
-        state.posts = reset ? mapped : [...state.posts, ...mapped];
-        state.page++;
+        console.log('Fetching posts for tab:', tabSlug);
+        // Tìm category ID từ slug
+        const categoriesRes = await timeoutFetch(`${WP_API_BASE}/categories?slug=${tabSlug}`);
+        console.log('Categories response for', tabSlug, ':', categoriesRes.status);
+
+        let postsRes;
+        if (categoriesRes.ok) {
+            const categories = await categoriesRes.json();
+            console.log('Categories found for', tabSlug, ':', categories);
+
+            if (categories.length > 0) {
+                const categoryId = categories[0].id;
+                console.log('Using category ID:', categoryId, 'for tab:', tabSlug);
+                postsRes = await timeoutFetch(`${WP_API_BASE}/posts?per_page=6&categories=${categoryId}&_embed`);
+            } else {
+                console.log('No category found for', tabSlug, ', fetching all posts');
+                postsRes = await timeoutFetch(`${WP_API_BASE}/posts?per_page=6&_embed`);
+            }
+        } else {
+            console.log('Category lookup failed for', tabSlug, ', fetching all posts');
+            postsRes = await timeoutFetch(`${WP_API_BASE}/posts?per_page=8&_embed`);
+        }
+
+        if (!postsRes.ok) throw new Error('Bad posts response');
+        const json = await postsRes.json();
+        console.log('Posts fetched for', tabSlug, ':', json.length, 'posts');
+        state.tabPosts[tabSlug] = json.map(mapPost);
+
     } catch (e) {
-        console.warn('Posts fetch failed', e);
-        state.hasMore = false;
+        console.warn(`Tab posts fetch failed for ${tabSlug}`, e);
+        state.tabPosts[tabSlug] = [];
     } finally {
         state.loading = false;
-        renderPosts();
-        if (loadBtn) loadBtn.disabled = !state.hasMore;
     }
 }
 
-function renderCategories() {
-    const wrap = document.getElementById('news-categories');
-    if (!wrap) return;
-    wrap.innerHTML = '';
-    // "All" pill
-    const allBtn = createCategoryPill({ id: null, name: 'Tất cả', count: state.categories.reduce((a, c) => a + c.count, 0) });
-    wrap.appendChild(allBtn);
-    state.categories.forEach(cat => wrap.appendChild(createCategoryPill(cat)));
+// Render slider cho bài viết nổi bật
+function renderFeaturedSlider() {
+    const sliderWrap = document.getElementById('news-slider');
+    if (!sliderWrap || state.featuredPosts.length === 0) return;
+
+    // Check if slides already exist
+    const existingSlides = sliderWrap.querySelectorAll('.news__slide');
+    if (existingSlides.length === state.featuredPosts.length) {
+        // Just update active class
+        existingSlides.forEach((slide, index) => {
+            slide.classList.toggle('is-active', index === state.currentSlide);
+        });
+        // Update dots
+        const dots = sliderWrap.querySelectorAll('.news__sliderDot');
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('is-active', index === state.currentSlide);
+        });
+    } else {
+        // Create slides HTML
+        const slidesHtml = state.featuredPosts.map((post, index) => {
+            const imgUrl = getPostImage(post);
+            console.log('Slider post:', post.title, 'Image:', imgUrl, 'Embedded:', post._embedded);
+            return `
+        <div class="news__slide ${index === state.currentSlide ? 'is-active' : ''}"
+             onclick="window.location.href='pages/post.html?id=${post.id}'">
+            <img src="${imgUrl}" alt="${post.title}" class="news__slideImg" 
+                 onload="console.log('Image loaded:', '${imgUrl}')" 
+                 onerror="console.error('Image failed to load:', '${imgUrl}'); this.src='images/top-bg.png'">
+            <div class="news__slideOverlay"></div>
+            <h3 class="news__slideTitle">${post.title}</h3>
+            <div class="news__slideMeta">
+                <span>${formatDate(post.date)}</span>
+            </div>
+        </div>
+    `;
+        }).join('');
+
+        const dotsHtml = state.featuredPosts.map((_, index) => `
+        <div class="news__sliderDot ${index === state.currentSlide ? 'is-active' : ''}"
+             onclick="changeSlide(${index})"></div>
+    `).join('');
+
+        sliderWrap.innerHTML = `
+        ${slidesHtml}
+        <div class="news__sliderNav">
+            ${dotsHtml}
+        </div>
+        <div class="news__sliderControls">
+            <button class="news__sliderBtn" onclick="prevSlide()" aria-label="Previous slide">
+                &#10094;
+            </button>
+            <button class="news__sliderBtn" onclick="nextSlide()" aria-label="Next slide">
+                &#10095;
+            </button>
+        </div>
+    `;
+    }
+
+    // Auto slide every 3 seconds
+    if (window.sliderInterval) clearInterval(window.sliderInterval);
+    window.sliderInterval = setInterval(() => {
+        nextSlide();
+    }, 3000);
 }
 
-function createCategoryPill(cat) {
-    const btn = document.createElement('button');
-    btn.className = 'news__cat';
-    btn.type = 'button';
-    btn.setAttribute('role', 'tab');
-    btn.textContent = cat.name;
-    const countSpan = document.createElement('span');
-    countSpan.className = 'news__catCount';
-    countSpan.textContent = cat.count;
-    btn.appendChild(countSpan);
-    if (state.activeCategory === cat.id) btn.classList.add('is-active');
-    btn.addEventListener('click', () => {
-        if (state.activeCategory === cat.id) return;
-        state.activeCategory = cat.id; // can be null
-        document.querySelectorAll('.news__cat').forEach(b => b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        fetchPosts(true);
+// Render tabs
+function renderTabs() {
+    const tabsWrap = document.querySelector('.news__tabs');
+    if (!tabsWrap) return;
+
+    const tabsHtml = Object.entries(mainCategories).map(([slug, cat]) => `
+        <button class="news__tab ${state.activeTab === slug ? 'is-active' : ''}"
+                data-category="${slug}"
+                role="tab"
+                aria-selected="${state.activeTab === slug}">
+            ${cat.name}
+        </button>
+    `).join('');
+
+    tabsWrap.innerHTML = tabsHtml;
+
+    // Add event listeners
+    tabsWrap.querySelectorAll('.news__tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const category = tab.dataset.category;
+            switchTab(category);
+        });
     });
-    return btn;
 }
 
-function renderSkeletons(container, count) {
-    if (!container) return;
-    if (count <= 0) return;
-    if (!state.loading) return;
-    container.innerHTML = '';
-    for (let i = 0; i < count; i++) {
-        const sk = document.createElement('div');
-        sk.className = 'news__skeleton';
-        container.appendChild(sk);
-    }
-}
+// Render danh sách posts cho tab active
+function renderPostsList() {
+    const listWrap = document.getElementById('news-list');
+    if (!listWrap) return;
 
-function getFeaturedImage(post) {
-    // WordPress _embed feature contains featured media in embedded list
-    try {
-        const media = post._embedded['wp:featuredmedia'];
-        if (Array.isArray(media) && media[0]?.source_url) return media[0].source_url;
-    } catch (e) { /* ignore */ }
-    return 'images/news-placeholder.jpg';
-}
+    const posts = state.tabPosts[state.activeTab] || [];
+    console.log('Rendering posts for tab:', state.activeTab, 'Posts:', posts);
 
-function renderPosts() {
-    const wrap = document.getElementById('news-posts');
-    if (!wrap) return;
-    wrap.innerHTML = '';
-    if (!state.posts.length) {
-        const empty = document.createElement('div');
-        empty.className = 'news__empty';
-        empty.innerHTML = '<p>Không tìm thấy bài viết. Kiểm tra domain WordPress hoặc danh mục trống.</p>';
-        wrap.appendChild(empty);
+    if (posts.length === 0) {
+        listWrap.innerHTML = '<div class="news__empty">Không có bài viết nào trong danh mục này.</div>';
         return;
     }
-    state.posts.forEach(p => {
-        const card = document.createElement('article');
-        card.className = 'news__card';
-        const imgUrl = getFeaturedImage(p);
-        const dateObj = new Date(p.date);
-        const dateStr = dateObj.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        const catName = categoryNameFromPost(p) || 'Tin Tức';
-        const internalLink = `pages/post.html?id=${p.id}`;
-        card.innerHTML = `
-            <a class="news__cardImgWrap" href="${internalLink}" aria-label="Xem bài viết: ${p.title}">
-                <img src="${imgUrl}" alt="${p.title}" loading="lazy" />
-            </a>
-            <div class="news__cardBody">
-                <span class="news__cardCat">${catName}</span>
-                <h3 class="news__cardTitle"><a href="${internalLink}" class="news__cardTitleLink">${p.title}</a></h3>
-                <div class="news__cardMeta">
-                    <span>${dateStr}</span>
-                    <span>#${p.id}</span>
-                </div>
-                <p class="news__cardExcerpt">${p.excerpt}</p>
-                <div class="news__cardFooter">
-                    <a class="news__readMore" href="${internalLink}" aria-label="Đọc bài viết">Đọc</a>
-                </div>
+
+    const postsHtml = posts.map(post => {
+        console.log('Post ID:', post.id, 'Title:', post.title);
+        return `
+        <div class="news__item" onclick="window.location.href='pages/post.html?id=${post.id}'">
+            <h4 class="news__itemTitle">${post.title}</h4>
+            <div class="news__itemMeta">
+                <span class="news__itemDate">${formatDate(post.date)}</span>
             </div>
-        `;
-        wrap.appendChild(card);
+        </div>
+    `}).join('');
+
+    listWrap.innerHTML = postsHtml;
+}
+
+// Render loading state
+function renderLoading(container) {
+    container.innerHTML = '<div class="news__loading">Đang tải...</div>';
+}
+
+// Helper functions
+function getPostImage(post) {
+    try {
+        return post._embedded?.['wp:featuredmedia']?.[0]?.source_url || 'Logo PK CLEAR -.png';
+    } catch (e) {
+        return 'Logo PK CLEAR -.png';
+    }
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
     });
 }
 
-function categoryNameFromPost(post) {
-    if (!post.categories || !post.categories.length) return null;
-    const found = state.categories.find(c => c.id === post.categories[0]);
-    return found ? found.name : null;
+// Global function for slider navigation
+window.changeSlide = function (index) {
+    state.currentSlide = index;
+    renderFeaturedSlider();
+};
+
+// Global functions for prev/next navigation
+window.prevSlide = function () {
+    const newIndex = state.currentSlide === 0 ? state.featuredPosts.length - 1 : state.currentSlide - 1;
+    changeSlide(newIndex);
+};
+
+window.nextSlide = function () {
+    const newIndex = (state.currentSlide + 1) % state.featuredPosts.length;
+    changeSlide(newIndex);
+};
+
+// Switch tab
+async function switchTab(tabSlug) {
+    if (state.activeTab === tabSlug) return;
+
+    state.activeTab = tabSlug;
+
+    // Update active tab UI
+    document.querySelectorAll('.news__tab').forEach(tab => {
+        tab.classList.toggle('is-active', tab.dataset.category === tabSlug);
+        tab.setAttribute('aria-selected', tab.dataset.category === tabSlug);
+    });
+
+    // Load posts if not cached
+    if (!state.tabPosts[tabSlug]) {
+        await fetchTabPosts(tabSlug);
+    }
+
+    renderPostsList();
 }
 
-function initLoadMore() {
-    const btn = document.getElementById('news-load-more');
-    if (!btn) return;
-    btn.addEventListener('click', () => { if (!state.hasMore || state.loading) return; fetchPosts(false); });
-}
-
+// Initialize
 export async function initNews() {
     const section = document.getElementById('news');
     if (!section) return;
     if (section.dataset.initialized) return;
     section.dataset.initialized = 'true';
-    await fetchCategories();
-    renderCategories();
-    await fetchPosts(true); // initial load
-    initLoadMore();
+
+    // Load featured posts and initial tab
+    await Promise.all([
+        fetchFeaturedPosts(),
+        fetchTabPosts(state.activeTab)
+    ]);
+
+    renderFeaturedSlider();
+    renderTabs();
+    renderPostsList();
 }

@@ -3,7 +3,7 @@
 export const WP_BASE_URL = 'https://pkclear.com'; // Domain WordPress thực tế
 export const WP_API_BASE = WP_BASE_URL + '/wp-json/wp/v2';
 export const WP_NEWS_PAGE_SIZE = 6; // posts mỗi lần tải
-export const WP_TIMEOUT_MS = 7000; // timeout fetch
+export const WP_TIMEOUT_MS = 1000; // timeout fetch
 
 // Mapping field fallback / transform
 export function mapPost(raw) {

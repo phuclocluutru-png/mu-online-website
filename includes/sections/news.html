@@ -1,18 +1,36 @@
 <section class="news" id="news">
     <div class="container news__container">
-        <h2 class="news__heading" id="news-title">Tin Tức & Sự Kiện</h2>
+        <img src="images/Tin tức sự kiện1.png" alt="Tin Tức & Sự Kiện" class="news__heading" id="news-title">
         <div class="news__layout" aria-labelledby="news-title">
-            <aside class="news__categories" aria-label="Danh mục">
-                <div class="news__categoriesInner" id="news-categories" role="tablist" aria-label="Danh mục bài viết">
-                    <!-- Categories pills rendered by JS -->
+            <!-- Bên trái: Slider bài viết nổi bật -->
+            <aside class="news__featured" aria-label="Bài viết nổi bật">
+                <div class="news__slider" id="news-slider">
+                    <!-- Featured posts slider rendered by JS -->
                 </div>
             </aside>
+
+            <!-- Bên phải: Tabs và danh sách bài viết -->
             <div class="news__content">
-                <div class="news__posts" id="news-posts" aria-live="polite">
-                    <!-- Post cards (rendered) -->
+                <!-- Tabs danh mục cha -->
+                <div class="news__tabs" role="tablist" aria-label="Danh mục chính">
+                    <button class="news__tab is-active" data-category="tin-tuc-cap-nhat" role="tab"
+                        aria-selected="true">
+                        Tin tức và cập nhật
+                    </button>
+                    <button class="news__tab" data-category="su-kien" role="tab" aria-selected="false">
+                        Sự kiện
+                    </button>
+                    <button class="news__tab" data-category="huong-dan" role="tab" aria-selected="false">
+                        Hướng dẫn
+                    </button>
+                    <button class="news__tab" data-category="nhan-vat" role="tab" aria-selected="false">
+                        Nhân vật
+                    </button>
                 </div>
-                <div class="news__actions">
-                    <button class="news__loadMore" id="news-load-more" disabled>Tải thêm</button>
+
+                <!-- Danh sách tiêu đề bài viết -->
+                <div class="news__list" id="news-list" aria-live="polite">
+                    <!-- Post titles list rendered by JS -->
                 </div>
             </div>
         </div>
