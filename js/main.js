@@ -54,4 +54,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     observer.observe(document.body, { childList: true, subtree: true });
     setTimeout(() => { initRankings(); initEvents(); initNews(); startGlobalCountdown(); initObserver(); syncEventHeight(); }, 1200);
+
+    // Smooth scroll for anchor links
+    const handleAnchorClick = (e) => {
+        const href = e.target.getAttribute('href');
+        if (href && href.startsWith('#')) {
+            e.preventDefault();
+            const targetId = href.substring(1);
+            const targetElement = document.getElementById(targetId);
+
+            if (targetElement) {
+                // Force smooth scroll with JavaScript
+                const targetPosition = targetElement.offsetTop - 20; // Small offset from top
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    };
+
+    // Add smooth scroll to all anchor links
+    document.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+            handleAnchorClick(e);
+        }
+    });
 });

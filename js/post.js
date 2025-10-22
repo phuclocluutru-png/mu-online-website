@@ -84,6 +84,13 @@ function renderPost(raw) {
 }
 
 async function loadPost() {
+    const cat = getParam('cat');
+    if (cat) {
+        const catName = cat === 'latest' ? 'Mới nhất' : 'Danh mục';
+        loadCategoryPosts(cat, catName);
+        return;
+    }
+
     const id = getParam('id');
     console.log('Loading post with ID:', id);
     if (!id) {
@@ -179,7 +186,7 @@ async function loadPost() {
     }
 }
 
-async function loadCategories(postJson) {
+async function loadCategories(postJson = null) {
     const wrap = document.getElementById('post-cats');
     if (!wrap) return;
     try {
@@ -193,7 +200,7 @@ async function loadCategories(postJson) {
             if (!byParent[parent]) byParent[parent] = [];
             byParent[parent].push(c);
         });
-        const currentCatIds = Array.isArray(postJson.categories) ? postJson.categories : [];
+        const currentCatIds = postJson && Array.isArray(postJson.categories) ? postJson.categories : [];
         wrap.innerHTML = '<div class="postView__searchWrap"><input type="text" class="postView__search" placeholder="Tìm kiếm bài viết..."><button class="postView__searchBtn" title="Tìm kiếm"></button></div>';
 
         // Add "Mới nhất" category
@@ -229,28 +236,44 @@ async function loadCategories(postJson) {
                 </button>
             `;
             const headerBtn = group.querySelector('.postView__catGroupHeader');
-            // Always make header clickable to load category posts
-            headerBtn.addEventListener('click', () => {
+            const titleSpan = headerBtn.querySelector('.postView__catGroupTitle');
+
+            // Click on title: load category posts
+            titleSpan.addEventListener('click', () => {
                 loadCategoryPosts(parentCat.id, parentCat.name);
-                // If has children, also toggle expand
-                if (hasChildren) {
+            });
+
+            // If has children, add arrow click handler for accordion toggle
+            if (hasChildren) {
+                const arrowSpan = headerBtn.querySelector('.postView__catGroupArrow');
+                arrowSpan.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent triggering title click
                     const childrenContainer = group.querySelector('.postView__catChildren');
                     if (childrenContainer) {
                         const isExpanded = childrenContainer.style.display !== 'none';
                         childrenContainer.style.display = isExpanded ? 'none' : 'block';
-                        const arrow = headerBtn.querySelector('.postView__catGroupArrow');
-                        if (arrow) arrow.textContent = isExpanded ? '▼' : '▲';
+                        arrowSpan.textContent = isExpanded ? '▼' : '▲';
                     }
-                }
-            });
+                });
+            }
             if (hasChildren) {
                 const childrenContainer = document.createElement('div');
                 childrenContainer.className = 'postView__catChildren';
                 childrenContainer.style.display = 'none'; // collapsed by default
+
+                let hasActiveChild = false;
                 children.forEach(child => {
-                    const item = buildCatItem(child, currentCatIds.includes(child.id));
+                    const isActive = currentCatIds.includes(child.id);
+                    if (isActive) hasActiveChild = true;
+                    const item = buildCatItem(child, isActive);
                     childrenContainer.appendChild(item);
                 });
+
+                if (hasActiveChild) {
+                    group.classList.add('has-active-child');
+                    childrenContainer.style.display = 'flex'; // expand if has active child
+                }
+
                 group.appendChild(childrenContainer);
             } else {
                 // For parent without children, could add item but header handles it
@@ -295,7 +318,7 @@ function buildCatItem(cat, isActive) {
     if (isActive) btn.classList.add('is-active');
     btn.innerHTML = `<span>${cat.name}</span><span style="opacity:.65;font-size:.6rem">${cat.count}</span>`;
     btn.addEventListener('click', () => {
-        loadCategoryPosts(cat.id, cat.name);
+        loadCategoryPosts(cat.id, cat.name, true); // Skip sidebar reload for child categories
     });
     return btn;
 }
@@ -303,12 +326,17 @@ function buildCatItem(cat, isActive) {
 // Init
 document.addEventListener('DOMContentLoaded', loadPost);
 
-async function loadCategoryPosts(catId, catName) {
+async function loadCategoryPosts(catId, catName, skipSidebarReload = false) {
     const article = document.getElementById('post-article');
     if (!article) return;
 
     // Show loading
     article.innerHTML = '<div class="postView__loading">Đang tải bài viết...</div>';
+
+    // Load categories for sidebar only if not skipping
+    if (!skipSidebarReload) {
+        await loadCategories();
+    }
 
     try {
         // Load first page (10 posts)
@@ -342,7 +370,7 @@ function renderCategoryPosts(container, posts, catName, currentPage, totalPages,
                 <div class="postView__listItemContent">
                     <div class="postView__listItemHeader">
                         <h3 class="postView__listItemTitle">
-                            <a href="post.html?id=${mapped.id}">${mapped.title}</a>
+                            <span class="postView__listItemTitleLink" data-post-id="${mapped.id}">${mapped.title}</span>
                         </h3>
                         <span class="postView__listItemDate">${dateStr}</span>
                     </div>
@@ -391,6 +419,98 @@ function renderCategoryPosts(container, posts, catName, currentPage, totalPages,
             }
         });
     });
+
+    // Add post title click event listeners
+    container.querySelectorAll('.postView__listItemTitleLink').forEach(link => {
+        link.addEventListener('click', () => {
+            const postId = link.dataset.postId;
+            // Update URL without page reload
+            history.pushState({ postId }, '', `post.html?id=${postId}`);
+            // Load the post
+            loadSinglePost(postId);
+        });
+    });
+}
+
+async function loadSinglePost(postId) {
+    const article = document.getElementById('post-article');
+    if (!article) return;
+
+    // Show loading
+    article.innerHTML = '<div class="postView__loading">Đang tải bài viết...</div>';
+
+    try {
+        console.log('Fetching post:', `${WP_API_BASE}/posts/${postId}?_embed`);
+        const res = await timeoutFetch(`${WP_API_BASE}/posts/${postId}?_embed`);
+        console.log('Response status:', res.status);
+        if (!res.ok) throw new Error('Không tải được bài viết (HTTP ' + res.status + ')');
+        const json = await res.json();
+        console.log('Post data:', json);
+
+        // Render the post (similar to renderPost but without category loading)
+        const mapped = mapPost(json);
+        const imgUrl = extractFeatured(json);
+        const dateStr = new Date(mapped.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const safeContent = sanitizeHTML(json.content?.rendered || '');
+
+        // Create dynamic breadcrumb based on categories
+        let breadcrumbHtml = '<span class="breadcrumb-link" data-cat-id="home">Trang chủ</span> / <span>Tin tức</span>'; // Default fallback
+        if (Array.isArray(json.categories) && json.categories.length) {
+            try {
+                const catRes = await timeoutFetch(`${WP_API_BASE}/categories?include=${json.categories.join(',')}`);
+                if (catRes.ok) {
+                    const catJson = await catRes.json();
+                    // Tìm category con đầu tiên (parent != 0)
+                    const subCat = catJson.find(c => c.parent !== 0);
+                    let parentCat = null;
+                    if (subCat) {
+                        parentCat = catJson.find(c => c.id === subCat.parent);
+                    } else {
+                        parentCat = catJson.find(c => c.parent === 0);
+                    }
+
+                    if (parentCat && subCat) {
+                        breadcrumbHtml = `<span class="breadcrumb-link" data-cat-id="home">Trang chủ</span> / <span class="breadcrumb-link" data-cat-id="${parentCat.id}">${parentCat.name}</span> - <span class="breadcrumb-link" data-cat-id="${subCat.id}">${subCat.name}</span>`;
+                    } else if (parentCat) {
+                        breadcrumbHtml = `<span class="breadcrumb-link" data-cat-id="home">Trang chủ</span> / <span class="breadcrumb-link" data-cat-id="${parentCat.id}">${parentCat.name}</span>`;
+                    } else if (subCat) {
+                        breadcrumbHtml = `<span class="breadcrumb-link" data-cat-id="home">Trang chủ</span> / <span class="breadcrumb-link" data-cat-id="${subCat.id}">${subCat.name}</span>`;
+                    }
+                }
+            } catch (e) {
+                console.log('Error fetching categories for breadcrumb:', e);
+            }
+        }
+
+        article.innerHTML = `
+            <div class="postView__title">${mapped.title}</div>
+            <div class="postView__metaBar">
+                <div class="postView__breadcrumb">
+                    ${breadcrumbHtml}
+                </div>
+                <div class="postView__metaDate">${dateStr}</div>
+            </div>
+            ${imgUrl ? `<img src="${imgUrl}" alt="${mapped.title}" class="postView__featuredImg" onerror="this.style.display='none';" />` : ''}
+            <div class="postView__content">${safeContent}</div>
+        `;
+
+        // Add breadcrumb click handlers
+        article.querySelectorAll('.breadcrumb-link').forEach(link => {
+            link.addEventListener('click', () => {
+                const catId = link.dataset.catId;
+                if (catId === 'home') {
+                    // Navigate to home page
+                    window.location.href = '/index.html';
+                    return;
+                }
+                // Update URL and load category
+                history.pushState({ catId }, '', `post.html?cat=${catId}`);
+                loadCategoryPosts(catId, link.textContent);
+            });
+        });
+    } catch (e) {
+        article.innerHTML = `<div class="postView__error">Lỗi tải bài viết: ${e.message}</div>`;
+    }
 }
 
 function renderSearchResults(container, posts, query) {
@@ -427,3 +547,13 @@ function renderSearchResults(container, posts, query) {
         </div>
     `;
 }
+
+// Handle browser back/forward navigation
+window.addEventListener('popstate', (event) => {
+    if (event.state && event.state.postId) {
+        loadSinglePost(event.state.postId);
+    } else {
+        // Reload current page state
+        loadPost();
+    }
+});

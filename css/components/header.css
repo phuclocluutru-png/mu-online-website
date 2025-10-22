@@ -53,3 +53,15 @@
     transform: translateY(-2px);
     text-shadow: 0 0 6px var(--color-gold-bright), 0 0 12px var(--color-purple-light);
 }
+
+/* Ensure all nav links have consistent base color */
+.primary-nav a {
+    color: var(--color-text-primary) !important;
+}
+
+.primary-nav a:focus,
+.primary-nav a:hover,
+.primary-nav a:active,
+.primary-nav a:visited {
+    color: var(--color-gold-bright) !important;
+}

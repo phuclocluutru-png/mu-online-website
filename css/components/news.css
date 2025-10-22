@@ -2,7 +2,6 @@
 .news {
     padding: 3rem 0 3.5rem;
     position: relative;
-    background: linear-gradient(155deg, rgba(18, 20, 34, 0.85), rgba(24, 22, 46, 0.88));
 }
 
 .news__heading {
@@ -12,7 +11,7 @@
     max-width: 100%;
     object-fit: contain;
     display: block;
-    animation: glow 3s ease-in-out infinite;
+    animation: glow 3s ease-in-out infinite, float 3.5s ease-in-out infinite;
 }
 
 @keyframes glow {
@@ -324,5 +323,17 @@
 
     .news__list {
         gap: .6rem;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-8px);
     }
 }

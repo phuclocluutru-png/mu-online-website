@@ -38,8 +38,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
-    /* prevent horizontal scroll due to scaling */
+    scroll-behavior: smooth;
 }
 
 main {
@@ -156,4 +155,11 @@ main {
 
 .glow-silver {
     text-shadow: 0 0 4px #fff, 0 0 12px rgba(255, 255, 255, .6);
+}
+
+/* Content sections wrapper with shared background */
+.content-sections {
+    background: linear-gradient(155deg, rgba(18, 20, 34, 0.6), rgba(24, 22, 46, 0.2)),
+        url('/images/BG MID.png') center/cover no-repeat;
+    background-blend-mode: overlay;
 }

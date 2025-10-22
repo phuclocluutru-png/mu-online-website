@@ -2,7 +2,6 @@
 .rankings {
     padding: 2.4rem 0 3.2rem;
     position: relative;
-    background: linear-gradient(160deg, rgba(20, 22, 38, 0.88), rgba(30, 26, 54, 0.84));
     overflow: hidden;
 }
 
@@ -45,7 +44,7 @@
     max-width: 100%;
     object-fit: contain;
     display: block;
-    animation: glow 3s ease-in-out infinite;
+    animation: glow 3s ease-in-out infinite, float 4s ease-in-out infinite;
 }
 
 .rankings__heading::after {
@@ -607,4 +606,16 @@
 
 .event-times-pop__rewardVal {
     font-weight: 700;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
 }
