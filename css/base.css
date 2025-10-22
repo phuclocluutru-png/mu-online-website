@@ -159,7 +159,10 @@ main {
 
 /* Content sections wrapper with shared background */
 .content-sections {
-    background: linear-gradient(155deg, rgba(18, 20, 34, 0.6), rgba(24, 22, 46, 0.2)),
-        url('/images/BG MID.png') center/cover no-repeat;
+    background:
+        radial-gradient(circle at 18% 14%, rgba(124, 58, 237, 0.28), transparent 60%),
+        radial-gradient(circle at 82% 22%, rgba(247, 167, 54, 0.22), transparent 65%),
+        linear-gradient(145deg, rgba(17, 22, 40, 0.92), rgba(22, 28, 52, 0.72) 55%, rgba(14, 18, 32, 0.94)),
+        url('/images/BG MID.png') TOP center/cover no-repeat;
     background-blend-mode: overlay;
 }
