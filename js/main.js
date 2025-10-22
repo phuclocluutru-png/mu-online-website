@@ -2,11 +2,10 @@
 import { initEvents } from './events.js';
 import { initNews } from './news.js';
 import { initRankings } from './rankings.js';
-import { initScaling } from './scaling.js';
 import { startGlobalCountdown } from './time-utils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    initScaling(1200);
+    // initScaling(1200); // Disabled: Fixed layout across all devices
     // Re-sync event card height to ranking card height for balanced look
     const syncEventHeight = () => {
         const rankingCard = document.querySelector('.rankings__card');

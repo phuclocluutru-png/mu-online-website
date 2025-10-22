@@ -807,7 +807,7 @@
     flex-shrink: 0;
 }
 
-@media (max-width: 1080px) {
+/* @media (max-width: 1080px) {
     .postView__grid {
         grid-template-columns: minmax(0, 1fr);
     }
@@ -819,4 +819,4 @@
     .postView__article {
         order: 1;
     }
-}
+} */
