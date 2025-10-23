@@ -136,11 +136,11 @@ function renderGuildLogo(hexStr, size = 32) {
 
 // Attempt to fetch dynamic data from backend API if available
 async function fetchRanking(panelId) {
-    // In development/localhost, use mock data immediately
-    if (window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1' ||
-        window.location.host.includes('localhost') ||
-        window.location.host.includes('127.0.0.1')) {
+    // In development (not on GitHub Pages), use mock data immediately
+    const isProduction = window.location.hostname.includes('github.io') ||
+        window.location.hostname === 'pkclear.com';
+
+    if (!isProduction) {
         return await fetchMockData(panelId);
     }
 
