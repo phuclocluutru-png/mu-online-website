@@ -88,7 +88,10 @@ function isValidGuildHex(hexStr) {
 
 function renderGuildLogo(hexStr, size = 32) {
     const normalized = normalizeGuildHex(hexStr);
+    console.log('Rendering guild logo:', { original: hexStr, normalized, isValid: isValidGuildHex(normalized) });
+
     if (!isValidGuildHex(normalized)) {
+        console.warn('Invalid guild hex data:', hexStr);
         return '<div class="guild-logo-placeholder">-</div>';
     }
 
@@ -314,7 +317,7 @@ export function initRankings() {
                     cells = [row.name, row.points, row.guildLogo];
                     break;
                 case 'top-boss-guild':
-                    cells = [`<img src="${row.logo}" alt="Guild" class="guild-logo">`, row.name, row.owner, row.boss, row.star];
+                    cells = [row.logo, row.name, row.owner, row.boss, row.star];
                     break;
                 case 'top-loan-chien':
                 case 'top-bc':
