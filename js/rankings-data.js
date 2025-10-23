@@ -56,44 +56,8 @@ export const rankingData = {
         { name: 'MGFire', score: 2000, guild: 'Infinity', guildLogo: 'images/guild-sample.png' },
         { name: 'SummMaster', score: 1950, guild: 'Legends', guildLogo: 'images/guild-sample.png' },
         { name: 'PhoenixX', score: 1880, guild: 'Phoenix', guildLogo: 'images/guild-sample.png' },
-        { name: 'DVMaster', score: 1750, guild: 'Infinity', guildLogo: 'images/guild-sample.png' },
-        { name: 'CCMaster', score: 1680, guild: 'Infinity', guildLogo: 'images/guild-sample.png' },
-        { name: 'LordAce', score: 1600, guild: 'Phoenix', guildLogo: 'images/guild-sample.png' }
-    ],
-    'top-bc': [
-        { name: 'BCMaster', score: 220, guild: 'Infinity', guildLogo: 'images/guild-sample.png' },
-        { name: 'DVMaster', score: 180, guild: 'Infinity', guildLogo: 'images/guild-sample.png' },
-        { name: 'DarkLordX', score: 160, guild: 'Reborn', guildLogo: 'images/guild-sample.png' },
-        { name: 'ElfQueen', score: 150, guild: 'Reborn', guildLogo: 'images/guild-sample.png' },
-        { name: 'SummMaster', score: 120, guild: 'Legends', guildLogo: 'images/guild-sample.png' },
-        { name: 'BKWar', score: 110, guild: 'Reborn', guildLogo: 'images/guild-sample.png' },
-        { name: 'PhoenixX', score: 105, guild: 'Phoenix', guildLogo: 'images/guild-sample.png' },
-        { name: 'MGFire', score: 100, guild: 'Phoenix', guildLogo: 'images/guild-sample.png' },
-        { name: 'CCMaster', score: 95, guild: 'Infinity', guildLogo: 'images/guild-sample.png' },
-        { name: 'LordAce', score: 90, guild: 'Phoenix', guildLogo: 'images/guild-sample.png' }
-    ],
-    'top-dv': [
-        { name: 'DVMaster', score: 180, guild: 'Infinity', guildLogo: 'images/guild-sample.png' },
-        { name: 'CCMaster', score: 95, guild: 'Infinity', guildLogo: 'images/guild-sample.png' },
-        { name: 'DarkLordX', score: 90, guild: 'Reborn', guildLogo: 'images/guild-sample.png' },
-        { name: 'BKWar', score: 85, guild: 'Reborn', guildLogo: 'images/guild-sample.png' },
-        { name: 'ElfQueen', score: 80, guild: 'Reborn', guildLogo: 'images/guild-sample.png' },
-        { name: 'SlayerPro', score: 78, guild: 'Reborn', guildLogo: 'images/guild-sample.png' },
-        { name: 'SummMaster', score: 74, guild: 'Legends', guildLogo: 'images/guild-sample.png' },
-        { name: 'PhoenixX', score: 70, guild: 'Phoenix', guildLogo: 'images/guild-sample.png' },
-        { name: 'MGFire', score: 68, guild: 'Phoenix', guildLogo: 'images/guild-sample.png' },
-        { name: 'LordAce', score: 65, guild: 'Phoenix', guildLogo: 'images/guild-sample.png' }
-    ],
-    'top-cc': [
-        { name: 'CCMaster', score: 95, guild: 'Infinity', guildLogo: 'images/guild-sample.png' },
-        { name: 'DVMaster', score: 80, guild: 'Infinity', guildLogo: 'images/guild-sample.png' },
-        { name: 'DarkLordX', score: 70, guild: 'Reborn', guildLogo: 'images/guild-sample.png' },
-        { name: 'SummMaster', score: 65, guild: 'Legends', guildLogo: 'images/guild-sample.png' },
-        { name: 'MGFire', score: 60, guild: 'Phoenix', guildLogo: 'images/guild-sample.png' },
-        { name: 'BKWar', score: 55, guild: 'Reborn', guildLogo: 'images/guild-sample.png' },
-        { name: 'PhoenixX', score: 52, guild: 'Phoenix', guildLogo: 'images/guild-sample.png' },
-        { name: 'SlayerPro', score: 50, guild: 'Reborn', guildLogo: 'images/guild-sample.png' },
-        { name: 'ElfQueen', score: 48, guild: 'Infinity', guildLogo: 'images/guild-sample.png' },
-        { name: 'LordAce', score: 45, guild: 'Phoenix', guildLogo: 'images/guild-sample.png' }
+        { name: 'DVMaster', points: 58, guildLogo: 'images/guild-sample.png' },
+        { name: 'CCMaster', points: 54, guildLogo: 'images/guild-sample.png' },
+        { name: 'LordAce', points: 50, guildLogo: 'images/guild-sample.png' }
     ]
 };

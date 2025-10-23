@@ -149,6 +149,14 @@ async function fetchRanking(panelId) {
             apiUrl = `https://api.pkclear.com/topboss?limit=10`;
         } else if (panelId === 'top-boss-guild') {
             apiUrl = `https://api.pkclear.com/topbossguild?limit=10`;
+        } else if (panelId === 'top-loan-chien') {
+            apiUrl = `https://api.pkclear.com/loan-chien?limit=10`;
+        } else if (panelId === 'top-bc') {
+            apiUrl = `https://api.pkclear.com/bc?limit=10`;
+        } else if (panelId === 'top-dv') {
+            apiUrl = `https://api.pkclear.com/dv?limit=10`;
+        } else if (panelId === 'top-cc') {
+            apiUrl = `https://api.pkclear.com/cc?limit=10`;
         } else {
             // For other endpoints, fallback to mock data
             return await fetchMockData(panelId);
@@ -165,7 +173,7 @@ async function fetchRanking(panelId) {
         if (!res.ok) {
             console.warn(`API request failed for ${panelId}:`, res.status);
             // For main ranking panels, fallback to mock data
-            if (['top-players', 'top-guild', 'top-boss',].includes(panelId)) {
+            if (['top-players', 'top-guild', 'top-boss', 'top-loan-chien', 'top-bc', 'top-dv', 'top-cc'].includes(panelId)) {
                 return await fetchMockData(panelId);
             }
             // For top-boss-guild, don't fallback to mock data
@@ -183,8 +191,9 @@ async function fetchRanking(panelId) {
                 return await fetchMockData(panelId);
             }
             data = json;
-        } else if (panelId === 'top-guild' || panelId === 'top-boss' || panelId === 'top-boss-guild') {
-            // Guild, Top Boss, and Top Boss Guild APIs return {ok, time, items}
+        } else if (panelId === 'top-guild' || panelId === 'top-boss' || panelId === 'top-boss-guild' ||
+            panelId === 'top-loan-chien' || panelId === 'top-bc' || panelId === 'top-dv' || panelId === 'top-cc') {
+            // Guild, Top Boss, and Event APIs return {ok, time, items}
             if (!json.ok || !Array.isArray(json.items) || json.items.length === 0) {
                 console.warn(`Invalid API response for ${panelId}:`, json);
                 return await fetchMockData(panelId);
@@ -226,12 +235,19 @@ async function fetchRanking(panelId) {
                 boss: item.TotalBossPoints,
                 star: item.TopMember || 'N/A'
             }));
+        } else if (panelId === 'top-loan-chien' || panelId === 'top-bc' || panelId === 'top-dv' || panelId === 'top-cc') {
+            return data.map(item => ({
+                name: item.Name,
+                score: item.Score,
+                guild: item.GuildName || '',
+                guildLogo: renderGuildLogo(item.GuildMarkHex, 32)
+            }));
         }
 
     } catch (e) {
         console.warn(`Failed to fetch ranking for ${panelId}:`, e.message);
         // For main ranking panels, fallback to mock data
-        if (['top-players', 'top-guild', 'top-boss'].includes(panelId)) {
+        if (['top-players', 'top-guild', 'top-boss', 'top-loan-chien', 'top-bc', 'top-dv', 'top-cc'].includes(panelId)) {
             return await fetchMockData(panelId);
         }
         // For top-boss-guild, don't fallback to mock data
