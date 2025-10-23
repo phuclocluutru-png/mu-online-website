@@ -89,6 +89,12 @@ SetEnvIfNoCase User-Agent "node-fetch" bad_bot
 # Block access to .git directory
 RedirectMatch 404 /\.git
 
+# Prevent hotlinking of images
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^https?://(www\.)?pkclear\.com [NC]
+RewriteCond %{HTTP_REFERER} !^https?://(www\.)?github\.io [NC]  # For GitHub Pages
+RewriteRule \.(jpg|jpeg|png|gif|bmp|webp)$ - [F,NC]
+
 # Custom error pages (uncomment and modify paths as needed)
 # ErrorDocument 404 /404.html
 # ErrorDocument 500 /500.html

@@ -79,4 +79,20 @@ document.addEventListener('DOMContentLoaded', () => {
             handleAnchorClick(e);
         }
     });
+
+    // Disable right-click context menu to prevent viewing source and downloading images
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+    });
+
+    // Disable developer tools and view source shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'F12' ||
+            (e.ctrlKey && e.key === 'u') ||
+            (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+            (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+            (e.ctrlKey && e.shiftKey && e.key === 'C')) {
+            e.preventDefault();
+        }
+    });
 });
