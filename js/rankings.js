@@ -136,13 +136,9 @@ function renderGuildLogo(hexStr, size = 32) {
 
 // Attempt to fetch dynamic data from backend API if available
 async function fetchRanking(panelId) {
-    // In development (not on GitHub Pages), use mock data immediately
+    // Determine if we're in production (GitHub Pages or pkclear.com)
     const isProduction = window.location.hostname.includes('github.io') ||
         window.location.hostname === 'pkclear.com';
-
-    if (!isProduction) {
-        return await fetchMockData(panelId);
-    }
 
     // Map panel IDs to API endpoints
     const endpointMap = {
@@ -161,7 +157,7 @@ async function fetchRanking(panelId) {
 
     try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 3000); // Reduced timeout to 3s
+        const timeout = setTimeout(() => controller.abort(), isProduction ? 5000 : 2000); // Shorter timeout in dev
 
         // Use production API endpoint
         let apiUrl;
