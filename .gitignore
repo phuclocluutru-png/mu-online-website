@@ -1,3 +1,6 @@
+# API Server (contains sensitive database credentials)
+API Server/
+
 # Dependencies
 node_modules/
 npm-debug.log*

@@ -196,8 +196,22 @@
     white-space: nowrap;
 }
 
+.rankings__table tbody tr {
+    transition: all 0.3s ease;
+}
+
 .rankings__table tbody tr:hover {
     background: rgba(92, 54, 150, 0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(92, 54, 150, 0.3);
+    border-left: 3px solid var(--color-purple-light);
+    transition: all 0.3s ease;
+}
+
+.rankings__table tbody tr:hover td {
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
 }
 
 .rankings__table tbody tr:nth-child(odd) td {
@@ -216,6 +230,25 @@
     width: 46px;
     height: 46px;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), 0 4px 8px -2px rgba(0, 0, 0, 0.55);
+    transition: all 0.3s ease;
+}
+
+.rankings__table tbody tr:hover .guild-logo {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3), 0 6px 12px -2px rgba(0, 0, 0, 0.7);
+}
+
+.guild-logo-placeholder {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
 }
 
 /* Events */

@@ -1,11 +1,127 @@
 import { rankingData } from './rankings-data.js';
+
+// Guild logo rendering utilities
+const GUILD_PALETTE = {
+    "0": "transparent", "1": "#000000", "2": "#8c8a8d", "3": "#ffffff",
+    "4": "#fe0000", "5": "#ff8a00", "6": "#ffff00", "7": "#8cff01",
+    "8": "#00ff00", "9": "#01ff8d", "a": "#00ffff", "b": "#008aff",
+    "c": "#0000fe", "d": "#8c00ff", "e": "#ff00fe", "f": "#ff008c",
+};
+
+// Season 6 Class mapping (7 basic classes with short names)
+const SEASON6_CLASS_MAP = {
+    // Dark Wizard family
+    0: 'DW', 1: 'DW', 2: 'DW',
+    // Dark Knight family
+    16: 'DK', 17: 'DK', 18: 'DK',
+    // Elf family
+    32: 'ELF', 33: 'ELF', 34: 'ELF',
+    // Magic Gladiator family
+    48: 'MG', 49: 'MG',
+    // Dark Lord family
+    64: 'DL', 65: 'DL', 66: 'DL',
+    // Summoner family
+    80: 'SUM', 81: 'SUM', 82: 'SUM',
+    // Rage Fighter family
+    96: 'RF', 97: 'RF'
+};
+
+// Full class name to short name mapping
+const FULL_TO_SHORT_CLASS_MAP = {
+    'Dark Wizard': 'DW', 'Soul Master': 'DW', 'Grand Master': 'DW',
+    'Dark Knight': 'DK', 'Blade Knight': 'DK', 'Blade Master': 'DK',
+    'Fairy Elf': 'ELF', 'Muse Elf': 'ELF', 'High Elf': 'ELF',
+    'Elf': 'ELF', // Also handle generic "Elf"
+    'Magic Gladiator': 'MG', 'Duel Master': 'MG',
+    'Dark Lord': 'DL', 'Lord Emperor': 'DL',
+    'Summoner': 'SUM', 'Bloody Summoner': 'SUM', 'Dimension Master': 'SUM',
+    'Rage Fighter': 'RF', 'Fist Master': 'RF'
+};
+
+function getClassName(classNumber) {
+    if (typeof classNumber === 'string') {
+        // If it's already a proper class name, check if we have a short version
+        if (classNumber && !classNumber.startsWith('Class ')) {
+            // Check if we have a short name mapping for this full name
+            if (FULL_TO_SHORT_CLASS_MAP[classNumber]) {
+                return FULL_TO_SHORT_CLASS_MAP[classNumber];
+            }
+            return classNumber; // Return as-is if no mapping found
+        }
+        // Try to parse "Class X" format
+        const num = parseInt(classNumber.replace('Class ', ''));
+        if (!isNaN(num)) {
+            classNumber = num;
+        } else {
+            return classNumber; // Return as-is if can't parse
+        }
+    }
+
+    // Check direct mapping first
+    if (SEASON6_CLASS_MAP[classNumber]) {
+        return SEASON6_CLASS_MAP[classNumber];
+    }
+
+    // For unknown classes, try to map to closest family
+    if (classNumber >= 0 && classNumber < 16) return 'DW';
+    if (classNumber >= 16 && classNumber < 32) return 'DK';
+    if (classNumber >= 32 && classNumber < 48) return 'ELF';
+    if (classNumber >= 48 && classNumber < 64) return 'MG';
+    if (classNumber >= 64 && classNumber < 80) return 'DL';
+    if (classNumber >= 80 && classNumber < 96) return 'SUM';
+    if (classNumber >= 96) return 'RF';
+
+    return `Unknown Class (${classNumber})`;
+} function normalizeGuildHex(hexStr) {
+    if (!hexStr) return '';
+    hexStr = hexStr.trim();
+    if (hexStr.startsWith('0x') || hexStr.startsWith('0X')) {
+        hexStr = hexStr.slice(2);
+    }
+    return hexStr.toLowerCase();
+}
+
+function isValidGuildHex(hexStr) {
+    const normalized = normalizeGuildHex(hexStr);
+    return /^[0-9a-f]{64}$/.test(normalized);
+}
+
+function renderGuildLogo(hexStr, size = 32) {
+    const normalized = normalizeGuildHex(hexStr);
+    if (!isValidGuildHex(normalized)) {
+        return '<div class="guild-logo-placeholder">-</div>';
+    }
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const tileSize = Math.max(1, Math.floor(size / 8)); // Ensure minimum 1px per tile
+    const canvasSize = 8 * tileSize;
+
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
+
+    const cells = normalized.split('');
+    cells.forEach((hexChar, index) => {
+        const x = (index % 8) * tileSize;
+        const y = Math.floor(index / 8) * tileSize;
+        const color = GUILD_PALETTE[hexChar];
+
+        if (color && color !== 'transparent') {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, tileSize, tileSize);
+        }
+    });
+
+    return `<img src="${canvas.toDataURL('image/png')}" alt="Guild Logo" class="guild-logo" style="width: ${size}px; height: ${size}px;" />`;
+}
+
 // Attempt to fetch dynamic data from backend API if available
 async function fetchRanking(panelId) {
     // Map panel IDs to API endpoints
     const endpointMap = {
         'top-players': 'characters',
         'top-guild': 'guilds',
-        'top-boss': 'boss',
+        'top-boss': 'topboss',
         'top-boss-guild': 'boss-guild',
         'top-loan-chien': 'loan-chien',
         'top-bc': 'bc',
@@ -20,8 +136,20 @@ async function fetchRanking(panelId) {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 5000); // 5s timeout
 
-        // Use production API endpoint - character.php for better data
-        const apiUrl = `https://api.pkclear.com/character/top?limit=10`;
+        // Use production API endpoint
+        let apiUrl;
+        if (panelId === 'top-players') {
+            apiUrl = `https://api.pkclear.com/character/top?limit=10`;
+        } else if (panelId === 'top-guild') {
+            apiUrl = `https://api.pkclear.com/guild/top?limit=10`;
+        } else if (panelId === 'top-boss') {
+            apiUrl = `https://api.pkclear.com/topboss?limit=10`;
+        } else if (panelId === 'top-boss-guild') {
+            apiUrl = `https://api.pkclear.com/topbossguild?limit=10`;
+        } else {
+            // For other endpoints, fallback to mock data
+            return await fetchMockData(panelId);
+        }
         const res = await fetch(apiUrl, {
             signal: controller.signal,
             headers: {
@@ -33,50 +161,114 @@ async function fetchRanking(panelId) {
 
         if (!res.ok) {
             console.warn(`API request failed for ${panelId}:`, res.status);
-            // Fallback to mock data
-            return await fetchMockData();
+            // For main ranking panels, fallback to mock data
+            if (['top-players', 'top-guild', 'top-boss'].includes(panelId)) {
+                return await fetchMockData(panelId);
+            }
+            // For top-boss-guild, don't fallback to mock data
+            return null;
         }
 
         const json = await res.json();
 
-        // Character API returns array directly, not wrapped in {ok, items}
-        if (!Array.isArray(json) || json.length === 0) {
-            console.warn(`Invalid API response for ${panelId}:`, json);
-            // Fallback to mock data
-            return await fetchMockData();
+        // Handle different API response formats
+        let data;
+        if (panelId === 'top-players') {
+            // Character API returns array directly
+            if (!Array.isArray(json) || json.length === 0) {
+                console.warn(`Invalid API response for ${panelId}:`, json);
+                return await fetchMockData(panelId);
+            }
+            data = json;
+        } else if (panelId === 'top-guild' || panelId === 'top-boss') {
+            // Guild and Top Boss APIs return {ok, time, items}
+            if (!json.ok || !Array.isArray(json.items) || json.items.length === 0) {
+                console.warn(`Invalid API response for ${panelId}:`, json);
+                return await fetchMockData(panelId);
+            }
+            data = json.items;
+        } else {
+            return await fetchMockData(panelId);
         }
 
         // Transform API data to match expected format
-        return json.map(item => ({
-            name: item.Name,
-            level: item.cLevel,
-            reset: item.Reset || 0,
-            relife: item.Relife || 0,
-            class: item.ClassName || 'Unknown',
-            guild: item.GuildName || ''
-        }));
+        if (panelId === 'top-players') {
+            return data.map(item => ({
+                name: item.Name,
+                level: item.cLevel,
+                reset: item.Reset || 0,
+                relife: item.Relife || 0,
+                class: getClassName(item.ClassName || item.Class),
+                guild: item.GuildName || '',
+                guildMarkHex: item.GuildMarkHex
+            }));
+        } else if (panelId === 'top-guild') {
+            return data.map(item => ({
+                name: item.G_Name,
+                owner: item.G_Master,
+                members: item.MemberCount,
+                logo: renderGuildLogo(item.GuildMarkHex, 46)
+            }));
+        } else if (panelId === 'top-boss') {
+            return data.map(item => ({
+                name: item.Name,
+                points: item.TotalPoint,
+                guildLogo: renderGuildLogo(item.GuildMarkHex, 32)
+            }));
+        } else if (panelId === 'top-boss-guild') {
+            return data.map(item => ({
+                logo: renderGuildLogo(item.GuildMarkHex, 46),
+                name: item.G_Name,
+                owner: item.G_Master,
+                boss: item.TotalBossPoints,
+                star: item.TopMember || 'N/A'
+            }));
+        }
 
     } catch (e) {
         console.warn(`Failed to fetch ranking for ${panelId}:`, e.message);
-        // Fallback to mock data
-        return await fetchMockData();
+        // For main ranking panels, fallback to mock data
+        if (['top-players', 'top-guild', 'top-boss'].includes(panelId)) {
+            return await fetchMockData(panelId);
+        }
+        // For top-boss-guild, don't fallback to mock data
+        return null;
     }
 }
 
 // Fallback function to load mock data
-async function fetchMockData() {
+async function fetchMockData(panelId) {
     try {
-        const res = await fetch('mock-api-response.json');
-        if (!res.ok) return null;
-        const json = await res.json();
-        return json.map(item => ({
-            name: item.Name,
-            level: item.cLevel,
-            reset: item.Reset || 0,
-            relife: item.Relife || 0,
-            class: item.ClassName || 'Unknown',
-            guild: item.GuildName || ''
-        }));
+        if (panelId === 'top-players') {
+            const res = await fetch('mock-api-response.json');
+            if (!res.ok) return null;
+            const json = await res.json();
+            return json.map(item => ({
+                name: item.Name,
+                level: item.cLevel,
+                reset: item.Reset || 0,
+                relife: item.Relife || 0,
+                class: getClassName(item.ClassName || item.Class),
+                guild: item.GuildName || '',
+                guildMarkHex: item.GuildMarkHex
+            }));
+        } else if (panelId === 'top-guild') {
+            // Return mock guild data from rankings-data.js
+            return rankingData['top-guild'].map(item => ({
+                name: item.name,
+                owner: item.owner,
+                members: item.members,
+                logo: renderGuildLogo(item.GuildMarkHex, 46)
+            }));
+        } else if (panelId === 'top-boss') {
+            // Return mock boss data from rankings-data.js
+            return rankingData['top-boss'].map(item => ({
+                name: item.name,
+                points: item.points,
+                guildLogo: renderGuildLogo(null, 32) // Use placeholder for mock data
+            }));
+        }
+        return null;
     } catch (e) {
         console.warn('Failed to load mock data:', e.message);
         return null;
@@ -112,13 +304,14 @@ export function initRankings() {
             let cells = [];
             switch (panelId) {
                 case 'top-players':
-                    cells = [row.name, row.level, row.reset, row.relife, row.class, row.guild || ''];
+                    const guildLogoHtml = renderGuildLogo(row.guildMarkHex, 32);
+                    cells = [row.name, row.level, row.reset, row.relife, row.class, row.guild || '', guildLogoHtml];
                     break;
                 case 'top-guild':
-                    cells = [`<img src="${row.logo}" alt="Guild" class="guild-logo">`, row.name, row.owner, row.members];
+                    cells = [row.logo, row.name, row.owner, row.members];
                     break;
                 case 'top-boss':
-                    cells = [row.name, row.points, `<img src="${row.guildLogo}" alt="Guild" class="guild-logo">`];
+                    cells = [row.name, row.points, row.guildLogo];
                     break;
                 case 'top-boss-guild':
                     cells = [`<img src="${row.logo}" alt="Guild" class="guild-logo">`, row.name, row.owner, row.boss, row.star];

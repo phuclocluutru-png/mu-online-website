@@ -13,16 +13,16 @@ export const rankingData = {
         { name: 'LordAce', level: 320, reset: 2, relife: 1, cls: 'DL', guildLogo: 'images/guild-sample.png' }
     ],
     'top-guild': [
-        { logo: 'images/guild-sample.png', name: 'Reborn', owner: 'MasterLee', members: 58 },
-        { logo: 'images/guild-sample.png', name: 'Infinity', owner: 'BCMaster', members: 55 },
-        { logo: 'images/guild-sample.png', name: 'Legends', owner: 'SummMaster', members: 50 },
-        { logo: 'images/guild-sample.png', name: 'Empire', owner: 'MGFire', members: 48 },
-        { logo: 'images/guild-sample.png', name: 'Phoenix', owner: 'LordAce', members: 45 },
-        { logo: 'images/guild-sample.png', name: 'Avengers', owner: 'ElfQueen', members: 44 },
-        { logo: 'images/guild-sample.png', name: 'Valor', owner: 'BKWar', members: 43 },
-        { logo: 'images/guild-sample.png', name: 'Mythic', owner: 'SlayerPro', members: 42 },
-        { logo: 'images/guild-sample.png', name: 'Destiny', owner: 'PhoenixX', members: 40 },
-        { logo: 'images/guild-sample.png', name: 'Reapers', owner: 'LordAce', members: 38 }
+        { name: 'Reborn', owner: 'MasterLee', members: 58, GuildMarkHex: 'FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00' },
+        { name: 'Infinity', owner: 'BCMaster', members: 55, GuildMarkHex: '00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00' },
+        { name: 'Legends', owner: 'SummMaster', members: 50, GuildMarkHex: 'FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000' },
+        { name: 'Empire', owner: 'MGFire', members: 48, GuildMarkHex: '00000000FFFFFFFF00000000FFFFFFFF00000000FFFFFFFF00000000FFFFFFFF' },
+        { name: 'Phoenix', owner: 'LordAce', members: 45, GuildMarkHex: 'F0F0F0F00F0F0F0FF0F0F0F000F0F0F0FF0F0F0F000F0F0F0FF0F0F0F000F0F0F0F' },
+        { name: 'Avengers', owner: 'ElfQueen', members: 44, GuildMarkHex: '0F0F0F0FF0F0F0F00F0F0F0FF0F0F0F00F0F0F0FF0F0F0F00F0F0F0FF0F0F0F0' },
+        { name: 'Valor', owner: 'BKWar', members: 43, GuildMarkHex: 'FF0000FF00FF0000FF0000FF00FF0000FF0000FF00FF0000FF0000FF00FF0000' },
+        { name: 'Mythic', owner: 'SlayerPro', members: 42, GuildMarkHex: '00FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF00' },
+        { name: 'Destiny', owner: 'PhoenixX', members: 40, GuildMarkHex: 'FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00' },
+        { name: 'Reapers', owner: 'LordAce', members: 38, GuildMarkHex: 'CCCCCCCC33333333CCCCCCCC33333333CCCCCCCC33333333CCCCCCCC33333333' }
     ],
     'top-boss': [
         { name: 'SlayerPro', points: 120, guildLogo: 'images/guild-sample.png' },
