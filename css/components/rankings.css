@@ -656,7 +656,7 @@
 
 /* Top Rankings Styling */
 .rankings__table tbody tr:nth-child(1) {
-    background: url('/images/top2.png') center center / cover no-repeat;
+    background: url('images/top2.png') center center / cover no-repeat;
     animation: pulse 2s ease-in-out infinite;
 }
 
@@ -670,7 +670,7 @@
 
 /* Override hover effects for top rankings to preserve background */
 .rankings__table tbody tr:nth-child(1):hover {
-    background: url('/images/top2.png') center center / cover no-repeat !important;
+    background: url('images/top2.png') center center / cover no-repeat !important;
     transform: none;
 }
 
