@@ -132,16 +132,17 @@ function renderFeaturedSlider() {
             const imgUrl = getPostImage(post);
             console.log('Slider post:', post.title, 'Image:', imgUrl, 'Embedded:', post._embedded);
             return `
-        <div class="news__slide ${index === state.currentSlide ? 'is-active' : ''}"
-             onclick="window.location.href='/pages/post.html?id=${post.id}'">
-            <img src="${imgUrl}" alt="${post.title}" class="news__slideImg" 
-                 onload="console.log('Image loaded:', '${imgUrl}')" 
-                 onerror="console.error('Image failed to load:', '${imgUrl}'); this.src='images/top-bg.png'">
-            <div class="news__slideOverlay"></div>
-            <h3 class="news__slideTitle">${post.title}</h3>
-            <div class="news__slideMeta">
-                <span>${formatDate(post.date)}</span>
-            </div>
+        <div class="news__slide ${index === state.currentSlide ? 'is-active' : ''}">
+            <a href="/pages/post.html?id=${post.id}" class="news__slideLink">
+                <img src="${imgUrl}" alt="${post.title}" class="news__slideImg" 
+                     onload="console.log('Image loaded:', '${imgUrl}')" 
+                     onerror="console.error('Image failed to load:', '${imgUrl}'); this.src='images/top-bg.png'">
+                <div class="news__slideOverlay"></div>
+                <h3 class="news__slideTitle">${post.title}</h3>
+                <div class="news__slideMeta">
+                    <span>${formatDate(post.date)}</span>
+                </div>
+            </a>
         </div>
     `;
         }).join('');
@@ -215,11 +216,13 @@ function renderPostsList() {
     const postsHtml = posts.map(post => {
         console.log('Post ID:', post.id, 'Title:', post.title);
         return `
-        <div class="news__item" onclick="window.location.href='/pages/post.html?id=${post.id}'">
-            <h4 class="news__itemTitle">${post.title}</h4>
-            <div class="news__itemMeta">
-                <span class="news__itemDate">${formatDate(post.date)}</span>
-            </div>
+        <div class="news__item">
+            <a href="/pages/post.html?id=${post.id}" class="news__itemLink">
+                <h4 class="news__itemTitle">${post.title}</h4>
+                <div class="news__itemMeta">
+                    <span class="news__itemDate">${formatDate(post.date)}</span>
+                </div>
+            </a>
         </div>
     `}).join('');
 

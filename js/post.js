@@ -5,7 +5,7 @@ import { WP_API_BASE, mapPost } from './news-config.js';
 const excludedParentCats = ['Nổi Bật', 'MU ONLINE PK CLEAR'];
 
 // Thứ tự hiển thị danh mục cha (tên không có trong list sẽ ở cuối)
-const categoryOrder = ['Tin tức &amp; Cập nhật', 'Sự kiện', 'Hướng dẫn', 'Nhân vật'];async function timeoutFetch(url, ms = 8000) {
+const categoryOrder = ['Tin tức &amp; Cập nhật', 'Sự kiện', 'Hướng dẫn', 'Nhân vật']; async function timeoutFetch(url, ms = 8000) {
     const controller = new AbortController();
     const t = setTimeout(() => controller.abort(), ms);
     try {
