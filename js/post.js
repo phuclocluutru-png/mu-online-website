@@ -216,7 +216,7 @@ async function loadPost() {
                 const mapped = mapPost(p);
                 const dateStr = new Date(mapped.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
                 return `<div class="postView__relatedItem">
-                    <a class="postView__relatedItemTitle" href="post.html?id=${mapped.id}">${mapped.title}</a>
+                    <a class="postView__relatedItemTitle" href="/pages/post.html?id=${mapped.id}">${mapped.title}</a>
                     <div class="postView__relatedItemDate">${dateStr}</div>
                 </div>`;
             }).join('');
@@ -467,7 +467,7 @@ function renderCategoryPosts(container, posts, catName, currentPage, totalPages,
         link.addEventListener('click', () => {
             const postId = link.dataset.postId;
             // Update URL without page reload
-            history.pushState({ postId }, '', `post.html?id=${postId}`);
+            history.pushState({ postId }, '', `/pages/post.html?id=${postId}`);
             // Load the post
             loadSinglePost(postId);
         });
@@ -569,7 +569,7 @@ function renderSearchResults(container, posts, query) {
                 <div class="postView__listItemContent">
                     <div class="postView__listItemHeader">
                         <h3 class="postView__listItemTitle">
-                            <a href="post.html?id=${mapped.id}">${mapped.title}</a>
+                            <a href="/pages/post.html?id=${mapped.id}">${mapped.title}</a>
                         </h3>
                         <span class="postView__listItemDate">${dateStr}</span>
                     </div>
