@@ -133,7 +133,7 @@ function renderFeaturedSlider() {
             console.log('Slider post:', post.title, 'Image:', imgUrl, 'Embedded:', post._embedded);
             return `
         <div class="news__slide ${index === state.currentSlide ? 'is-active' : ''}"
-             onclick="window.location.href='pages/post.html?id=${post.id}'">
+             onclick="window.location.href='/pages/post.html?id=${post.id}'">
             <img src="${imgUrl}" alt="${post.title}" class="news__slideImg" 
                  onload="console.log('Image loaded:', '${imgUrl}')" 
                  onerror="console.error('Image failed to load:', '${imgUrl}'); this.src='images/top-bg.png'">
@@ -215,7 +215,7 @@ function renderPostsList() {
     const postsHtml = posts.map(post => {
         console.log('Post ID:', post.id, 'Title:', post.title);
         return `
-        <div class="news__item" onclick="window.location.href='pages/post.html?id=${post.id}'">
+        <div class="news__item" onclick="window.location.href='/pages/post.html?id=${post.id}'">
             <h4 class="news__itemTitle">${post.title}</h4>
             <div class="news__itemMeta">
                 <span class="news__itemDate">${formatDate(post.date)}</span>
