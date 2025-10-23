@@ -136,6 +136,14 @@ function renderGuildLogo(hexStr, size = 32) {
 
 // Attempt to fetch dynamic data from backend API if available
 async function fetchRanking(panelId) {
+    // In development/localhost, use mock data immediately
+    if (window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.host.includes('localhost') ||
+        window.location.host.includes('127.0.0.1')) {
+        return await fetchMockData(panelId);
+    }
+
     // Map panel IDs to API endpoints
     const endpointMap = {
         'top-players': 'characters',
@@ -153,7 +161,7 @@ async function fetchRanking(panelId) {
 
     try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 5000); // 5s timeout
+        const timeout = setTimeout(() => controller.abort(), 3000); // Reduced timeout to 3s
 
         // Use production API endpoint
         let apiUrl;
