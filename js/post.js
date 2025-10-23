@@ -91,8 +91,9 @@ async function loadPost() {
 
     const id = getParam('id');
     const search = getParam('search');
-    if (!id && !search) {
-        renderError('Không có tham số id hoặc search bài viết.');
+    const slug = getParam('slug');
+    if (!id && !search && !slug) {
+        renderError('Không có tham số id, search hoặc slug bài viết.');
         return;
     }
 
@@ -104,6 +105,25 @@ async function loadPost() {
             if (!res.ok) throw new Error('Không tìm thấy bài viết (HTTP ' + res.status + ')');
             const json = await res.json();
             if (json.length === 0) throw new Error('Không tìm thấy bài viết với từ khóa: ' + search);
+            const post = json[0];
+            postId = post.id;
+            // Update URL with id
+            const url = new URL(window.location);
+            url.searchParams.set('id', postId);
+            window.history.replaceState(null, null, url.pathname + url.search);
+        } catch (e) {
+            renderError(e.message);
+            return;
+        }
+    }
+
+    if (slug && !id) {
+        try {
+            console.log('Loading post with slug:', slug);
+            const res = await timeoutFetch(`${WP_API_BASE}/posts?slug=${encodeURIComponent(slug)}&_embed`);
+            if (!res.ok) throw new Error('Không tìm thấy bài viết (HTTP ' + res.status + ')');
+            const json = await res.json();
+            if (json.length === 0) throw new Error('Không tìm thấy bài viết với slug: ' + slug);
             const post = json[0];
             postId = post.id;
             // Update URL with id
