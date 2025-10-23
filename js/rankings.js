@@ -39,7 +39,8 @@ async function fetchRanking(panelId) {
 
         const json = await res.json();
 
-        if (!json.ok || !Array.isArray(json.items)) {
+        // Character API returns array directly, not wrapped in {ok, items}
+        if (!Array.isArray(json) || json.length === 0) {
             console.warn(`Invalid API response for ${panelId}:`, json);
             // Fallback to mock data
             return await fetchMockData();
