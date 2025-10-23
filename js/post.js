@@ -5,29 +5,7 @@ import { WP_API_BASE, mapPost } from './news-config.js';
 const excludedParentCats = ['Nổi Bật', 'MU ONLINE PK CLEAR'];
 
 // Thứ tự hiển thị danh mục cha (tên không có trong list sẽ ở cuối)
-const categoryOrder = ['Tin tức &amp; Cập nhật', 'Sự kiện', 'Hướng dẫn', 'Nhân vật'];
-
-function slugify(text) {
-    // Remove Vietnamese accents
-    const accents = 'àáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ';
-    const noAccents = 'aaaaaaaaceeeeiiiidnoooooouuuuyby';
-    let str = text.toString().toLowerCase();
-    for (let i = 0; i < accents.length; i++) {
-        str = str.replace(new RegExp(accents[i], 'g'), noAccents[i]);
-    }
-    // Remove other accents
-    str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
-    return str
-        .trim()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w\-]+/g, '')
-        .replace(/\-\-+/g, '-')
-        .replace(/^-+/, '')
-        .replace(/-+$/, '');
-}
-
-async function timeoutFetch(url, ms = 8000) {
+const categoryOrder = ['Tin tức &amp; Cập nhật', 'Sự kiện', 'Hướng dẫn', 'Nhân vật'];async function timeoutFetch(url, ms = 8000) {
     const controller = new AbortController();
     const t = setTimeout(() => controller.abort(), ms);
     try {
