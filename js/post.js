@@ -8,9 +8,17 @@ const excludedParentCats = ['Nổi Bật', 'MU ONLINE PK CLEAR'];
 const categoryOrder = ['Tin tức &amp; Cập nhật', 'Sự kiện', 'Hướng dẫn', 'Nhân vật'];
 
 function slugify(text) {
-    return text
-        .toString()
-        .toLowerCase()
+    // Remove Vietnamese accents
+    const accents = 'àáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ';
+    const noAccents = 'aaaaaaaaceeeeiiiidnoooooouuuuyby';
+    let str = text.toString().toLowerCase();
+    for (let i = 0; i < accents.length; i++) {
+        str = str.replace(new RegExp(accents[i], 'g'), noAccents[i]);
+    }
+    // Remove other accents
+    str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    
+    return str
         .trim()
         .replace(/\s+/g, '-')
         .replace(/[^\w\-]+/g, '')
