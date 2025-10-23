@@ -60,8 +60,8 @@ sudo chown www-data:www-data /var/www/api.pkclear.com/.env
 # Test health check
 curl https://api.pkclear.com/health
 
-# Test ranking API
-curl "https://api.pkclear.com/endpoints/ranking.php?limit=5"
+# Test character ranking API (for Nhân Vật tab)
+curl "https://api.pkclear.com/character/top?limit=5"
 ```
 
 ## 🔍 Troubleshooting
@@ -108,7 +108,7 @@ curl https://api.pkclear.com/health
 Sau khi deploy thành công:
 
 1. **API Health**: `https://api.pkclear.com/health`
-2. **Ranking Data**: `https://api.pkclear.com/endpoints/ranking.php?limit=10`
-3. **Website Integration**: Bảng xếp hạng trên `https://pkclear.com` sẽ load data thật
+2. **Character Ranking**: `https://api.pkclear.com/character/top?limit=10`
+3. **Website Integration**: Bảng xếp hạng trên `https://pkclear.com` sẽ load data thật từ character API
 
 🎉 **API Server đã sẵn sàng cung cấp dữ liệu cho website MU Online!**

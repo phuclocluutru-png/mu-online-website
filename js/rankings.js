@@ -20,8 +20,8 @@ async function fetchRanking(panelId) {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 5000); // 5s timeout
 
-        // Use production API endpoint
-        const apiUrl = `https://api.pkclear.com/endpoints/ranking.php?limit=10&sort=default`;
+        // Use production API endpoint - character.php for better data
+        const apiUrl = `https://api.pkclear.com/character/top?limit=10`;
         const res = await fetch(apiUrl, {
             signal: controller.signal,
             headers: {
@@ -46,7 +46,7 @@ async function fetchRanking(panelId) {
         }
 
         // Transform API data to match expected format
-        return json.items.map(item => ({
+        return json.map(item => ({
             name: item.Name,
             level: item.cLevel,
             reset: item.Reset || 0,
@@ -68,7 +68,7 @@ async function fetchMockData() {
         const res = await fetch('mock-api-response.json');
         if (!res.ok) return null;
         const json = await res.json();
-        return json.items.map(item => ({
+        return json.map(item => ({
             name: item.Name,
             level: item.cLevel,
             reset: item.Reset || 0,
