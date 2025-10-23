@@ -17,7 +17,7 @@ function slugify(text) {
     }
     // Remove other accents
     str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    
+
     return str
         .trim()
         .replace(/\s+/g, '-')
@@ -101,14 +101,6 @@ function renderPost(raw) {
                 <div class="postView__relatedList" id="post-related-list"></div>
             </div>
         `;
-
-    // Update URL to SEO-friendly slug
-    const currentPath = window.location.pathname;
-    const slug = slugify(mapped.title);
-    const newPath = '/tin-tuc-su-kien/' + slug;
-    if (currentPath !== newPath && !window.location.search.includes('search=')) {
-        window.history.pushState(null, mapped.title, newPath);
-    }
 }
 
 async function loadPost() {
