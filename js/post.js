@@ -546,7 +546,7 @@ async function loadSinglePost(postId) {
                     return;
                 }
                 // Update URL and load category
-                history.pushState({ catId }, '', `post.html?cat=${catId}`);
+                history.pushState({ catId }, '', `/pages/post.html?cat=${catId}`);
                 loadCategoryPosts(catId, link.textContent);
             });
         });
