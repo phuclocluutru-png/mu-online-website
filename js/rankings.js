@@ -339,7 +339,7 @@ export function initRankings() {
                 case 'top-bc':
                 case 'top-dv':
                 case 'top-cc':
-                    cells = [row.name, row.score, row.guild, `<img src="${row.guildLogo}" alt="Guild" class="guild-logo">`];
+                    cells = [row.name, row.score, row.guild, row.guildLogo];
                     break;
             }
             cells.forEach(html => {
