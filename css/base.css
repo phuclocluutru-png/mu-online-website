@@ -39,6 +39,11 @@ body {
     display: flex;
     flex-direction: column;
     scroll-behavior: smooth;
+    /* Disable text selection to prevent copying content */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 main {
@@ -101,6 +106,16 @@ main {
 .button:focus,
 .button:hover {
     transform: translateY(-2px);
+}
+
+/* Allow text selection in form inputs */
+input,
+textarea,
+select {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
 }
 
 /* Primary brand button */

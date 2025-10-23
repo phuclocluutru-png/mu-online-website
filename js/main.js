@@ -87,12 +87,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Disable developer tools and view source shortcuts
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'F12' ||
-            (e.ctrlKey && e.key === 'u') ||
-            (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-            (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+        if (e.key === 'F12' || 
+            (e.ctrlKey && e.key === 'u') || 
+            (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+            (e.ctrlKey && e.shiftKey && e.key === 'J') || 
             (e.ctrlKey && e.shiftKey && e.key === 'C')) {
             e.preventDefault();
+        }
+    });
+
+    // Disable text selection and copying
+    document.addEventListener('selectstart', (e) => {
+        e.preventDefault();
+    });
+
+    document.addEventListener('copy', (e) => {
+        e.preventDefault();
+    });
+
+    document.addEventListener('cut', (e) => {
+        e.preventDefault();
+    });
+
+    document.addEventListener('paste', (e) => {
+        e.preventDefault();
+    });
+
+    // Allow selection in form elements
+    document.addEventListener('keydown', (e) => {
+        const target = e.target;
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') {
+            // Allow Ctrl+A, Ctrl+C, Ctrl+V, etc. in form elements
+            if ((e.ctrlKey && (e.key === 'a' || e.key === 'c' || e.key === 'v' || e.key === 'x'))) {
+                return;
+            }
         }
     });
 });
