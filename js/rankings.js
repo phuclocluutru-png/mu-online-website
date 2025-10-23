@@ -1,30 +1,83 @@
 import { rankingData } from './rankings-data.js';
 // Attempt to fetch dynamic data from backend API if available
 async function fetchRanking(panelId) {
-    const map = {
-        'top-players': 'top-players',
-        'top-guild': 'top-guild',
-        'top-boss': 'top-boss',
-        'top-boss-guild': 'top-guild', // hiện chưa có bảng riêng boss-guild, reuse guild or create later
-        'top-loan-chien': 'top-loan-chien',
-        'top-bc': 'top-bc',
-        'top-dv': 'top-dv',
-        'top-cc': 'top-cc'
-        // có thể thêm 'top-reset', 'top-sinh-ton', 'top-tvt' nếu tạo tab giao diện
+    // Map panel IDs to API endpoints
+    const endpointMap = {
+        'top-players': 'characters',
+        'top-guild': 'guilds',
+        'top-boss': 'boss',
+        'top-boss-guild': 'boss-guild',
+        'top-loan-chien': 'loan-chien',
+        'top-bc': 'bc',
+        'top-dv': 'dv',
+        'top-cc': 'cc'
     };
-    const endpoint = map[panelId];
+
+    const endpoint = endpointMap[panelId];
     if (!endpoint) return null;
+
     try {
         const controller = new AbortController();
-        const t = setTimeout(() => controller.abort(), 4000); // 4s timeout
-        const res = await fetch(`/api/rankings/${endpoint}`, { signal: controller.signal });
-        clearTimeout(t);
+        const timeout = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
+        // Use production API endpoint
+        const apiUrl = `https://api.pkclear.com/endpoints/ranking.php?limit=10&sort=default`;
+        const res = await fetch(apiUrl, {
+            signal: controller.signal,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        clearTimeout(timeout);
+
+        if (!res.ok) {
+            console.warn(`API request failed for ${panelId}:`, res.status);
+            // Fallback to mock data
+            return await fetchMockData();
+        }
+
+        const json = await res.json();
+
+        if (!json.ok || !Array.isArray(json.items)) {
+            console.warn(`Invalid API response for ${panelId}:`, json);
+            // Fallback to mock data
+            return await fetchMockData();
+        }
+
+        // Transform API data to match expected format
+        return json.items.map(item => ({
+            name: item.Name,
+            level: item.cLevel,
+            reset: item.Reset || 0,
+            relife: item.Relife || 0,
+            class: item.ClassName || 'Unknown',
+            guild: item.GuildName || ''
+        }));
+
+    } catch (e) {
+        console.warn(`Failed to fetch ranking for ${panelId}:`, e.message);
+        // Fallback to mock data
+        return await fetchMockData();
+    }
+}
+
+// Fallback function to load mock data
+async function fetchMockData() {
+    try {
+        const res = await fetch('mock-api-response.json');
         if (!res.ok) return null;
         const json = await res.json();
-        if (!Array.isArray(json) || !json.length) return json; // may be empty array
-        return json;
+        return json.items.map(item => ({
+            name: item.Name,
+            level: item.cLevel,
+            reset: item.Reset || 0,
+            relife: item.Relife || 0,
+            class: item.ClassName || 'Unknown',
+            guild: item.GuildName || ''
+        }));
     } catch (e) {
-        // Silent fallback
+        console.warn('Failed to load mock data:', e.message);
         return null;
     }
 }
@@ -58,7 +111,7 @@ export function initRankings() {
             let cells = [];
             switch (panelId) {
                 case 'top-players':
-                    cells = [row.name, row.level, row.reset, row.relife, row.cls, `<img src="${row.guildLogo}" alt="Guild" class="guild-logo">`];
+                    cells = [row.name, row.level, row.reset, row.relife, row.class, row.guild || ''];
                     break;
                 case 'top-guild':
                     cells = [`<img src="${row.logo}" alt="Guild" class="guild-logo">`, row.name, row.owner, row.members];

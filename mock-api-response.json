@@ -1,0 +1,61 @@
+{
+    "ok": true,
+    "time": "2025-10-23T10:00:00Z",
+    "items": [
+        {
+            "Name": "PlayerOne",
+            "cLevel": 400,
+            "Reset": 50,
+            "Relife": 2,
+            "Class": 0,
+            "GuildName": "EliteGuild",
+            "CtlCode": 0,
+            "ClassCode": 0,
+            "ClassName": "Dark Wizard"
+        },
+        {
+            "Name": "PlayerTwo",
+            "cLevel": 400,
+            "Reset": 45,
+            "Relife": 1,
+            "Class": 16,
+            "GuildName": "PowerGuild",
+            "CtlCode": 0,
+            "ClassCode": 16,
+            "ClassName": "Dark Knight"
+        },
+        {
+            "Name": "PlayerThree",
+            "cLevel": 400,
+            "Reset": 40,
+            "Relife": 1,
+            "Class": 32,
+            "GuildName": "SpeedGuild",
+            "CtlCode": 0,
+            "ClassCode": 32,
+            "ClassName": "Elf"
+        },
+        {
+            "Name": "PlayerFour",
+            "cLevel": 400,
+            "Reset": 35,
+            "Relife": 0,
+            "Class": 48,
+            "GuildName": "MagicGuild",
+            "CtlCode": 0,
+            "ClassCode": 48,
+            "ClassName": "Magic Gladiator"
+        },
+        {
+            "Name": "PlayerFive",
+            "cLevel": 400,
+            "Reset": 30,
+            "Relife": 0,
+            "Class": 64,
+            "GuildName": "DarkGuild",
+            "CtlCode": 0,
+            "ClassCode": 64,
+            "ClassName": "Dark Lord"
+        }
+    ]
+}
