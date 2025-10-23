@@ -39,14 +39,8 @@
     <script src="../js/modal-download.js"></script>
     <script type="module" src="../js/main.js"></script>
     <script>
-        // Handle SPA routing for post slugs
-        const query = window.location.search;
-        if (query.includes('?/')) {
-            const path = query.split('?/')[1].split('&')[0];
-            const url = new URL(window.location);
-            url.searchParams.set('search', path);
-            window.history.replaceState(null, null, url.pathname + url.search);
-        } else if (!window.location.search.includes('cat=') && !window.location.search.includes('id=') && !window.location.search.includes('search=')) {
+        // Set default category if not present
+        if (!window.location.search.includes('cat=') && !window.location.search.includes('id=') && !window.location.search.includes('search=')) {
             const url = new URL(window.location);
             url.searchParams.set('cat', 'latest');
             window.history.replaceState(null, null, url.pathname + url.search);
