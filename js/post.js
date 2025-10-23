@@ -7,6 +7,18 @@ const excludedParentCats = ['Nổi Bật', 'MU ONLINE PK CLEAR'];
 // Thứ tự hiển thị danh mục cha (tên không có trong list sẽ ở cuối)
 const categoryOrder = ['Tin tức &amp; Cập nhật', 'Sự kiện', 'Hướng dẫn', 'Nhân vật'];
 
+function slugify(text) {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
+}
+
 async function timeoutFetch(url, ms = 8000) {
     const controller = new AbortController();
     const t = setTimeout(() => controller.abort(), ms);
@@ -81,6 +93,14 @@ function renderPost(raw) {
                 <div class="postView__relatedList" id="post-related-list"></div>
             </div>
         `;
+
+    // Update URL to SEO-friendly slug
+    const currentPath = window.location.pathname;
+    const slug = slugify(mapped.title);
+    const newPath = '/tin-tuc-su-kien/' + slug;
+    if (currentPath !== newPath && !window.location.search.includes('search=')) {
+        window.history.pushState(null, mapped.title, newPath);
+    }
 }
 
 async function loadPost() {
@@ -92,14 +112,36 @@ async function loadPost() {
     }
 
     const id = getParam('id');
-    console.log('Loading post with ID:', id);
-    if (!id) {
-        renderError('Không có tham số id bài viết.');
+    const search = getParam('search');
+    if (!id && !search) {
+        renderError('Không có tham số id hoặc search bài viết.');
         return;
     }
+
+    let postId = id;
+    if (search && !id) {
+        try {
+            console.log('Searching for post with:', search);
+            const res = await timeoutFetch(`${WP_API_BASE}/posts?search=${encodeURIComponent(search)}&_embed&per_page=1`);
+            if (!res.ok) throw new Error('Không tìm thấy bài viết (HTTP ' + res.status + ')');
+            const json = await res.json();
+            if (json.length === 0) throw new Error('Không tìm thấy bài viết với từ khóa: ' + search);
+            const post = json[0];
+            postId = post.id;
+            // Update URL with id
+            const url = new URL(window.location);
+            url.searchParams.set('id', postId);
+            window.history.replaceState(null, null, url.pathname + url.search);
+        } catch (e) {
+            renderError(e.message);
+            return;
+        }
+    }
+
+    console.log('Loading post with ID:', postId);
     try {
-        console.log('Fetching from:', `${WP_API_BASE}/posts/${id}?_embed`);
-        const res = await timeoutFetch(`${WP_API_BASE}/posts/${id}?_embed`);
+        console.log('Fetching from:', `${WP_API_BASE}/posts/${postId}?_embed`);
+        const res = await timeoutFetch(`${WP_API_BASE}/posts/${postId}?_embed`);
         console.log('Response status:', res.status);
         if (!res.ok) throw new Error('Không tải được bài viết (HTTP ' + res.status + ')');
         const json = await res.json();
