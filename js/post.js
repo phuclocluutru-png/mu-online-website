@@ -162,6 +162,9 @@ async function loadPost() {
             renderPost(json);
         }
 
+        // Ensure URL is set to id format
+        window.history.replaceState(null, null, `/pages/post.html?id=${postId}`);
+
         // Fetch danh mục nổi bật (top 3 category by count)
         const catAllRes = await timeoutFetch(`${WP_API_BASE}/categories?per_page=100`);
         let featuredCats = [];
