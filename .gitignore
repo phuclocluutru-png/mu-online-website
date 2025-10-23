@@ -1,5 +1,7 @@
-# API Server (contains sensitive database credentials)
-API Server/
+# API Server (exclude sensitive files only)
+API Server/.env
+API Server/cache/
+API Server/vendor/
 
 # Dependencies
 node_modules/

@@ -1,0 +1,321 @@
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.modal__content {
+    background: url('/images/BG MID.png') center center / cover no-repeat, var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 800px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s;
+}
+
+.modal.is-open .modal__content {
+    transform: scale(1);
+}
+
+.modal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.modal__close:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.modal__title {
+    margin: 0 0 1rem;
+    font-size: 1.5rem;
+    color: var(--color-gold-bright);
+}
+
+.modal__description {
+    margin: 0 0 1.5rem;
+    color: var(--color-text-primary);
+}
+
+.modal__options {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.modal__info {
+    background: var(--color-surface-alt);
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--color-border-soft);
+}
+
+.modal__info ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1.5rem;
+}
+
+.modal__options a {
+    background: var(--color-purple);
+    color: var(--color-gold-bright);
+    border: 1px solid var(--color-purple-light);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+    flex: 1;
+    text-align: center;
+}
+
+.modal__options a:hover {
+    background: var(--color-purple-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(124, 58, 237, 0.3);
+}
+
+.modal__terms {
+    margin-bottom: 1rem;
+}
+
+.modal__terms-toggle {
+    width: 100%;
+    background: rgba(207, 216, 227, 0.1);
+    color: var(--color-silver);
+    border: 1px solid var(--color-border-soft);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s;
+    animation: blink-white-gold 2s infinite;
+}
+
+.modal__terms-toggle:hover {
+    background: rgba(207, 216, 227, 0.2);
+    border-color: var(--color-silver);
+    color: var(--color-gold-bright);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(207, 216, 227, 0.2);
+}
+
+.modal__terms-arrow {
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+}
+
+.modal__terms-toggle.active .modal__terms-arrow {
+    transform: rotate(180deg);
+}
+
+@keyframes blink-white-gold {
+
+    0%,
+    50% {
+        color: var(--color-text-primary);
+    }
+
+    51%,
+    100% {
+        color: var(--color-gold-bright);
+    }
+}
+
+.modal__acceptance {
+    margin: 1rem 0;
+    padding: 0.75rem 1rem;
+    background: rgba(207, 216, 227, 0.05);
+    border-radius: 8px;
+    border: 1px solid var(--color-border-soft);
+}
+
+.modal__acceptance-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.modal__acceptance-checkbox {
+    margin-right: 0.75rem;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-gold-bright);
+    cursor: pointer;
+}
+
+.modal__acceptance-text {
+    user-select: none;
+}
+
+.modal__options .button.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: grayscale(100%);
+    background: var(--color-surface-alt) !important;
+    color: var(--color-text-muted) !important;
+    border-color: var(--color-border-soft) !important;
+}
+
+.modal__options .button.disabled:hover {
+    transform: none;
+    box-shadow: none;
+    background: var(--color-surface-alt) !important;
+    color: var(--color-text-muted) !important;
+}
+
+.modal__terms-content {
+    margin-top: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+    background: var(--color-surface);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border-soft);
+}
+
+.modal__terms-content h1 {
+    font-size: 1.2rem;
+    color: var(--color-gold-bright);
+    margin-bottom: 1rem;
+}
+
+.modal__terms-content h2 {
+    font-size: 1rem;
+    color: var(--color-gold);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal__terms-content h3 {
+    font-size: 0.9rem;
+    color: var(--color-silver);
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal__terms-content p {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.modal__terms-content ul,
+.modal__terms-content ol {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.modal__terms-content li {
+    margin-bottom: 0.25rem;
+}
+
+/* Install Guide Styles */
+.install-guide {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: var(--color-surface-alt);
+    border-radius: 10px;
+    border: 1px solid var(--color-border-soft);
+}
+
+.section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.section-title.red {
+    color: #ff4757;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.sub-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1rem 0 0.5rem 0;
+}
+
+.sub-title.green {
+    color: #2ed573;
+}
+
+.guide-list {
+    margin: 0.5rem 0 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.guide-list li {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.uninstall-steps {
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.note {
+    color: var(--color-gold);
+    font-weight: 500;
+    margin-top: 0.5rem;
+    font-style: italic;
+}

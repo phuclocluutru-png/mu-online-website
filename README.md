@@ -1,142 +1,383 @@
 <div align="center">
 
-# MU PK CLEAR – Website Tĩnh (Ranking & Event System)
+# 🎮 MU PK CLEAR – Official Website
 
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white) ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white) ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow) ![Status](https://img.shields.io/badge/Status-Active-success)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow)
+![PHP](https://img.shields.io/badge/PHP-8.1+-777BB4?logo=php&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Active-success)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
-Website tĩnh dành cho cộng đồng MU PK CLEAR: hiển thị Bảng Xếp Hạng (Top 10) và Hệ Thống Sự Kiện thời gian thực (đếm ngược, trạng thái, tooltip chi tiết drop – map – ghi chú – phần thưởng Wcoin). Kiến trúc hướng mở rộng để kết nối backend (API) sau này.
+**Website chính thức cho cộng đồng MU PK CLEAR** – Nơi hội tụ bảng xếp hạng, hệ thống sự kiện thời gian thực, tin tức cập nhật và trải nghiệm tải game chuyên nghiệp.
+
+[🌐 Truy cập Website](https://phuclocluutru-png.github.io/mu-online-website/) • [📖 API Documentation](./DEPLOY-API.md) • [📋 Báo Cáo Dự Án](./baocao.txt)
 
 </div>
 
-## ✅ Tính Năng Chính
+## ✨ Tính Năng Chính
 
-**Bảng Xếp Hạng**
-- Nhiều tab: Nhân Vật, Guild, Boss, Boss Guild, Loạn Chiến, BC, DV, CC.
-- Top 10 dữ liệu mẫu (có thể thay bằng API thực tế), auto render khi đổi tab.
-- Có sẵn fallback nếu API không phản hồi.
-- Thiết kế thu gọn chiều ngang để hiển thị đồng thời thẻ Event.
+### 🏆 **Bảng Xếp Hạng Chi Tiết**
+- **8 Danh Mục Chính:** Nhân Vật, Guild, Boss, Boss Guild, Loạn Chiến, Blood Castle, Devil Square, Chaos Castle
+- **Top 10** dữ liệu thời gian thực với thông tin đầy đủ (Level, Reset, Relife, Class)
+- **Auto-render** khi chuyển đổi tab, **fallback** dữ liệu nếu API không phản hồi
+- **Guild Logo** hiển thị trực quan cho các guild hàng đầu
 
-**Hệ Thống Sự Kiện**
-- Khai báo toàn bộ lịch event trong `events-data.js` (giờ xuất hiện, thời lượng, map, ghi chú).
-- Tooltip động hiển thị: danh sách giờ, bản đồ, ghi chú, danh sách vật phẩm rơi (`event-drops.js`), thưởng Wcoin (`eventWcoinReward`).
-- Đếm ngược tự động đến lần kế tiếp hoặc thời gian kết thúc nếu đang diễn ra.
-- Phân loại trạng thái: `Đang diễn ra`, `Sắp diễn ra` (<=10 phút), `Chờ đến giờ`.
-- Tự động sắp xếp: event đang diễn ra lên đầu, sau đó sự kiện gần kề.
+### ⚔️ **Hệ Thống Sự Kiện Thời Gian Thực**
+- **Countdown thông minh** với 3 trạng thái: `Đang diễn ra`, `Chuẩn bị` (≤10 phút), `Chờ đến giờ`
+- **Tooltip chi tiết** hiển thị: Giờ xuất hiện, Bản đồ, Ghi chú, Danh sách vật phẩm rơi, Phần thưởng Wcoin
+- **Auto sắp xếp** ưu tiên event đang diễn ra và sắp diễn ra
+- **Lịch event** dễ dàng cấu hình trong `events-data.js`
 
-**UI / UX**
-- Theme tím + hiệu ứng glass nhẹ, gradient thương hiệu.
-- Tab indicator động di chuyển theo tab chọn.
-- Tooltip gọn, theo chuột, tránh tràn viewport.
-- Đồng bộ chiều cao thẻ Event với thẻ Ranking bằng `ResizeObserver`.
-- Scrollbar tùy biến (WebKit + fallback Firefox).
+### 📰 **Hệ Thống Tin Tức**
+- **Tích hợp WordPress** API để lấy tin tức mới nhất
+- **Lazy loading** và **pagination** cho hiệu năng tối ưu
+- **Danh mục bài viết** động từ WordPress
+- **Responsive design** cho mọi thiết bị
 
-**Kiến Trúc & Mở Rộng**
-- Module tách biệt: ranking, events, data, util – dễ gắn API thực.
-- ES Modules (`type="module"`), không phụ thuộc thư viện ngoài.
-- Dữ liệu sự kiện / ranking chuẩn hóa để có thể thay bằng fetch API.
+### 📥 **Modal Download Game Chuyên Nghiệp**
+- **Điều khoản & Điều kiện** đầy đủ với toggle hiển thị
+- **Checkbox chấp nhận** bắt buộc trước khi tải
+- **2 Phương thức tải:** Direct download và Mega.nz
+- **Hướng dẫn cài đặt** chi tiết với uninstall guide
+- **Tái sử dụng** component trên nhiều trang
 
-## 🧩 Cấu Trúc Thư Mục
+### 🎨 **UI/UX Hiện Đại**
+- **Theme thương hiệu** tím + vàng với hiệu ứng glass nhẹ
+- **Tab indicator động** di chuyển mượt mà theo lựa chọn
+- **Tooltip thông minh** tránh tràn viewport, theo chuột
+- **Responsive scaling** giữ layout desktop trên mọi thiết bị
+- **Scrollbar tùy biến** với WebKit và Firefox fallback
+
+## 🏗️ Kiến Trúc & Công Nghệ
+
+### **Frontend Stack**
+- **HTML5** với semantic markup và accessibility
+- **CSS3** với CSS Variables, Flexbox, Grid, và animations
+- **Vanilla JavaScript ES6+** với ES Modules, không dependencies runtime
+- **Component-based architecture** với HTML partials và modular CSS/JS
+
+### **Backend API (Tùy Chọn)**
+- **PHP 8.1+** với PDO và prepared statements
+- **SQL Server** database connection với encryption
+- **RESTful API** endpoints cho rankings, events, news
+- **Rate limiting** và **CORS** protection
+- **Error handling** và **logging** chi tiết
+
+### **DevOps & Deployment**
+- **GitHub Pages** cho frontend static hosting
+- **VPS deployment** cho API server với Nginx
+- **SSL certificates** với Let's Encrypt
+- **Automated deployment** với webhooks
+
+## 📁 Cấu Trúc Thư Mục
 
 ```
 WEB PKCLEAR/
-├── index.html                 # Trang chính + include fragments
-├── includes/                  # HTML partials (header, footer, hero, rankings)
-│   ├── layout/
-│   │   ├── header.html
-│   │   └── footer.html
-│   └── sections/
-│       ├── hero.html
-│       └── rankings.html
-├── css/
-│   ├── base.css               # Biến màu & reset cơ bản
-│   ├── components/            # Tập tin CSS thành phần
-│   │   ├── header.css
-│   │   ├── hero.css
-│   │   ├── footer.css
-│   │   └── rankings.css
-│   ├── style.css              # (legacy / chung)
-│   └── responsive.css         # breakpoint (sẽ tinh chỉnh thêm)
-├── js/
-│   ├── main.js                # Orchestrator: scaling + init modules
-│   ├── rankings.js            # Logic tab + render dữ liệu ranking
-│   ├── rankings-data.js       # Dữ liệu Top 10 mẫu
-│   ├── events.js              # Render danh sách event + tooltip + loop trạng thái
-│   ├── events-data.js         # Lịch event (giờ, map, note, duration)
-│   ├── event-drops.js         # Drop item + Wcoin reward + format Wcoin
-│   ├── time-utils.js          # Hàm thời gian, countdown chung
-│   ├── scaling.js             # Giữ giao diện desktop trên màn hình nhỏ (scale wrapper)
-│   ├── animations.js          # (dự phòng / hiệu ứng)
-│   ├── forms.js               # (placeholder xử lý form)
-│   └── includes.js            # Nạp HTML partials bằng data-include
-├── images/                    # Asset (logo, icon, drops ...)
-├── pages/                     # Trang bổ sung (nếu triển khai thêm)
-├── .github/                   # Cấu hình Copilot / workflows
-└── README.md
+├── 📄 index.html                 # Trang chính với HTML includes
+├── 📄 package.json               # Dependencies và scripts
+├── 📄 README.md                  # Tài liệu dự án
+├── 📄 DEPLOY-API.md             # Hướng dẫn deploy API
+├── 📄 baocao.txt                # Báo cáo đánh giá dự án
+├── 📄 webhook-deploy.php        # Webhook tự động deploy
+│
+├── 🎨 css/                      # Stylesheets
+│   ├── 📄 base.css              # CSS Variables & reset cơ bản
+│   ├── 📄 style.css             # Legacy styles
+│   └── 📄 components/           # Component-specific styles
+│       ├── 📄 header.css
+│       ├── 📄 hero.css
+│       ├── 📄 footer.css
+│       ├── 📄 rankings.css
+│       ├── 📄 news.css
+│       └── 📄 modal-download.css
+│
+├── ⚙️ js/                       # JavaScript modules
+│   ├── 📄 main.js               # Orchestrator chính
+│   ├── 📄 includes.js           # HTML partials loader
+│   ├── 📄 rankings.js           # Logic bảng xếp hạng
+│   ├── 📄 rankings-data.js      # Dữ liệu mẫu rankings
+│   ├── 📄 events.js             # Hệ thống sự kiện
+│   ├── 📄 events-data.js        # Cấu hình lịch event
+│   ├── 📄 event-drops.js        # Danh sách drops & rewards
+│   ├── 📄 time-utils.js         # Utilities thời gian
+│   ├── 📄 scaling.js            # Responsive scaling
+│   ├── 📄 news.js               # Tích hợp WordPress
+│   ├── 📄 news-config.js        # Cấu hình WordPress API
+│   ├── 📄 modal-download.js     # Logic modal download
+│   └── 📄 services/             # Service modules
+│       └── 📄 rankings.js
+│
+├── 🖼️ images/                   # Static assets
+│   ├── 📄 logo.png
+│   ├── 📄 bg.png
+│   └── 📄 guild-logos/
+│
+├── 📄 includes/                 # HTML partials
+│   ├── 📁 layout/               # Layout components
+│   │   ├── 📄 header.html
+│   │   └── 📄 footer.html
+│   ├── 📁 sections/             # Page sections
+│   │   ├── 📄 hero.html
+│   │   ├── 📄 rankings.html
+│   │   └── 📄 news.html
+│   └── 📄 modal-download.html   # Download modal component
+│
+├── 📄 pages/                    # Additional pages
+│   └── 📄 post.html             # Individual post page
+│
+├── 🚀 API Server/               # Backend API (optional)
+│   ├── 📁 public/               # Public API endpoints
+│   │   ├── 📄 index.php
+│   │   └── 📁 endpoints/
+│   │       ├── 📄 rankings.php
+│   │       ├── 📄 events.php
+│   │       └── 📄 topboss.php
+│   ├── 📁 config/               # Configuration files
+│   │   ├── 📄 database.php
+│   │   └── 📄 cors.php
+│   ├── 📁 scripts/              # Deployment scripts
+│   │   └── 📄 install_ubuntu.sh
+│   └── 📄 composer.json         # PHP dependencies
+│
+├── 📂 Download/                 # Game download files
+├── 📂 .github/                  # GitHub configurations
+└── 📂 .vscode/                  # VS Code settings
 ```
 
-## 🚀 Chạy Local
+## 🚀 Cài Đặt & Chạy Local
 
-```powershell
-git clone https://github.com/<user>/<repo>.git
-cd "WEB PKCLEAR"
-python -m http.server 8000
+### **Yêu Cầu Hệ Thống**
+- **Node.js** 18.0+ (cho development server)
+- **PHP** 8.1+ (cho API server - tùy chọn)
+- **SQL Server** (cho database - tùy chọn)
+
+### **Chạy Frontend**
+```bash
+# Clone repository
+git clone https://github.com/phuclocluutru-png/mu-online-website.git
+cd mu-online-website
+
+# Cài đặt dependencies
+npm install
+
+# Chạy development server
+npm run dev
 # hoặc
-npx serve .
+npm start
+
+# Truy cập: http://localhost:3000
 ```
 
-Mở: http://localhost:8000
+### **Chạy API Server (Tùy Chọn)**
+```bash
+# Di chuyển vào thư mục API
+cd "API Server/public"
 
-## 🌐 Triển Khai GitHub Pages
-1. Push lên branch `main`.
-2. Settings → Pages → Source: `Deploy from a branch` → Chọn `main` + root.
-3. Chờ build hoàn tất, truy cập URL public.
+# Chạy PHP built-in server
+php -S localhost:8080
 
-## 🔌 Nối Backend (Tùy Chọn)
-- Tạo API trả JSON cho các endpoint: `/api/rankings/top-players`, ...
-- Trong `rankings.js` hàm `fetchRanking()` sẽ gọi API và nếu thành công sẽ override dữ liệu tĩnh.
-- Timeout 4s → fallback dữ liệu cục bộ đảm bảo giao diện luôn hiển thị.
+# API sẽ có tại: http://localhost:8080
+```
 
-Ví dụ response:
+## 🌐 Triển Khai Production
+
+### **Frontend (GitHub Pages)**
+1. Push code lên branch `main`
+2. Vào **Settings → Pages**
+3. Chọn **Source: Deploy from a branch**
+4. Chọn branch `main` và folder `/ (root)`
+5. Chờ build hoàn tất và truy cập URL được cung cấp
+
+### **API Server (VPS)**
+Chi tiết xem [DEPLOY-API.md](./DEPLOY-API.md)
+
+```bash
+# Upload files lên VPS
+scp -r API\ Server/* user@vps:/tmp/api-files/
+
+# Chạy script cài đặt
+ssh user@vps
+cd /tmp/api-files
+sudo bash scripts/install_ubuntu.sh
+```
+
+## 🔌 API Endpoints
+
+### **Frontend Integration**
+Website tự động fallback sang dữ liệu mẫu nếu API không khả dụng.
+
+```javascript
+// Rankings API
+GET /api/rankings/top-players
+GET /api/rankings/top-guilds
+GET /api/rankings/top-boss
+
+// Events API
+GET /api/events/active
+GET /api/events/schedule
+
+// News API (WordPress)
+GET /wp-json/wp/v2/posts
+GET /wp-json/wp/v2/categories
+```
+
+### **Response Format**
 ```json
-[
-	{ "name": "DarkLordX", "level": 400, "reset": 5, "relife": 3, "cls": "Dark Lord", "guildLogo": "images/guild.png" }
-]
+{
+  "success": true,
+  "data": [
+    {
+      "name": "PlayerName",
+      "level": 400,
+      "reset": 5,
+      "relife": 3,
+      "class": "Dark Lord",
+      "guild": "GuildName"
+    }
+  ],
+  "timestamp": "2025-10-24T10:00:00Z"
+}
 ```
 
-## 🔧 Tùy Biến Nhanh
-- Thay số lượng Top: sửa mảng trong `rankings-data.js` hoặc trả nhiều phần tử hơn từ API.
-- Sửa giờ Event: cập nhật `events-data.js` (mảng `times`).
-- Thêm drop mới: thêm vào `event-drops.js` dưới key tên event.
-- Đổi chiều rộng cột Event: chỉnh biến CSS `--rank-event-width` trong `rankings.css`.
-- Cấu hình WordPress: thay `WP_BASE_URL` trong `news-config.js`.
-- Thay số bài viết mỗi lần tải: sửa `WP_NEWS_PAGE_SIZE`.
-- Thêm ảnh placeholder: cập nhật `images/news-placeholder.jpg`.
+## ⚙️ Tùy Chỉnh & Cấu Hình
 
-## 📱 Responsive
-- Hiện dùng cơ chế scale giữ nguyên bố cục desktop trên màn hình nhỏ.
-- Có thể chuyển sang layout mobile thực tế bằng cách bỏ scaling và thêm breakpoints chi tiết.
+### **Cấu Hình Rankings**
+```javascript
+// js/rankings-data.js
+export const rankingsData = {
+  players: [/* Top 10 players */],
+  guilds: [/* Top 10 guilds */],
+  // ...
+};
+```
 
-## ⚙️ Hiệu Năng & UX
-- Một vòng lặp countdown duy nhất → giảm CPU.
-- Tooltip chỉ render nội dung khi hiển thị.
-- DOM cập nhật theo hàng, không reflow nặng.
+### **Cấu Hình Events**
+```javascript
+// js/events-data.js
+export const eventsData = [
+  {
+    name: "Blood Castle",
+    times: ["10:00", "14:00", "18:00"],
+    duration: 30,
+    map: "Blood Castle",
+    note: "Yêu cầu level 15+",
+    drops: ["Jewel of Chaos", "Jewel of Soul"]
+  }
+];
+```
 
-## 🛡️ Bảo Mật (Định Hướng Backend)
-- Sử dụng rate limit + token nếu API public.
-- Không trả trực tiếp query SQL ra frontend.
-- Sanitize dữ liệu (tránh XSS) khi hiển thị kết quả người chơi.
+### **Cấu Hình WordPress**
+```javascript
+// js/news-config.js
+export const WP_CONFIG = {
+  BASE_URL: 'https://your-wordpress-site.com',
+  NEWS_PAGE_SIZE: 6,
+  CACHE_DURATION: 300000 // 5 minutes
+};
+```
 
-## 🗺️ Roadmap Ngắn
-- [ ] Thêm cột Rank (#) cho từng bảng.
-- [ ] Bộ lọc / tìm kiếm nhân vật.
-- [ ] API thực tế từ database MU.
-- [ ] Dark/Light theme toggle.
-- [ ] Tối ưu mobile (không dùng scale) + menu đáp ứng.
-- [ ] Lazy fetch hình ảnh WP (IntersectionObserver).
-- [ ] Bộ nhớ cache sessionStorage cho danh mục/bài viết.
+### **Cấu Hình Modal Download**
+```html
+<!-- includes/modal-download.html -->
+<!-- Chỉnh sửa terms, download links, install guide -->
+```
 
-## 📄 License / Bản Quyền
-© 2025 MU PK CLEAR. All rights reserved.
+## 📱 Responsive & Performance
+
+### **Responsive Strategy**
+- **Desktop-first scaling** giữ nguyên layout trên mọi thiết bị
+- **CSS Variables** cho consistent theming
+- **Flexbox/Grid** cho flexible layouts
+- **ResizeObserver** đồng bộ chiều cao components
+
+### **Performance Optimizations**
+- **ES Modules** với tree shaking tự nhiên
+- **Single countdown loop** giảm CPU usage
+- **Lazy loading** cho images và content
+- **SessionStorage caching** cho news data
+- **Tooltip on-demand rendering**
+
+## 🛡️ Bảo Mật & Best Practices
+
+### **Frontend Security**
+- **Content Security Policy** headers
+- **Input sanitization** cho user inputs
+- **HTTPS enforcement** trên production
+- **Rate limiting** cho API calls
+
+### **API Security**
+- **PDO prepared statements** chống SQL injection
+- **CORS configuration** giới hạn origins
+- **Input validation** và **type checking**
+- **Error logging** không expose sensitive data
+
+### **Database Security**
+- **Encrypted connections** với SQL Server
+- **Least privilege principle** cho database users
+- **Parameterized queries** cho tất cả operations
+
+## 🗺️ Roadmap & Tính Năng Sắp Ra
+
+### **Phase 1 (Current)**
+- ✅ Bảng xếp hạng với 8 categories
+- ✅ Hệ thống events với countdown
+- ✅ Modal download với terms acceptance
+- ✅ WordPress news integration
+- ✅ Responsive scaling
+
+### **Phase 2 (Upcoming)**
+- 🔄 **Real-time updates** với WebSocket
+- 🔄 **User authentication** system
+- 🔄 **Guild management** interface
+- 🔄 **Event notifications** push
+- 🔄 **Mobile app** companion
+
+### **Phase 3 (Future)**
+- 📋 **Advanced analytics** dashboard
+- 📋 **Tournament system** integration
+- 📋 **Marketplace** for items
+- 📋 **Voice chat** integration
+- 📋 **Multi-language** support
+
+## 🤝 Đóng Góp
+
+Chúng tôi hoan nghênh mọi đóng góp! Vui lòng:
+
+1. **Fork** repository
+2. **Tạo feature branch** (`git checkout -b feature/AmazingFeature`)
+3. **Commit changes** (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** lên branch (`git push origin feature/AmazingFeature`)
+5. **Tạo Pull Request**
+
+### **Coding Standards**
+- Sử dụng **ES6+ features** và **modern CSS**
+- **Semantic HTML** với accessibility
+- **Descriptive commit messages**
+- **Modular code** với single responsibility
+- **Comprehensive documentation**
+
+## 📄 License & Credits
+
+**© 2025 MU PK CLEAR Community**
+
+Licensed under [MIT License](LICENSE) - See [LICENSE](LICENSE) file for details.
+
+### **Credits**
+- **Game Assets:** MU Online by Webzen
+- **Icons:** Custom designed for MU PK CLEAR
+- **Fonts:** System fonts với web-safe fallbacks
+- **Development:** Community-driven project
+
+### **Disclaimer**
+This project is not affiliated with Webzen Inc. or official MU Online. All trademarks and copyrights belong to their respective owners.
 
 ---
-Made with ❤️ cho cộng đồng MU PK CLEAR
+
+<div align="center">
+
+**Made with ❤️ for the MU PK CLEAR Community**
+
+[🌐 Website](https://phuclocluutru-png.github.io/mu-online-website/) • [🐛 Issues](https://github.com/phuclocluutru-png/mu-online-website/issues) • [📧 Contact](mailto:contact@pkclear.com)
+
+</div>
