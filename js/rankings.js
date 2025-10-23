@@ -162,7 +162,7 @@ async function fetchRanking(panelId) {
         if (!res.ok) {
             console.warn(`API request failed for ${panelId}:`, res.status);
             // For main ranking panels, fallback to mock data
-            if (['top-players', 'top-guild', 'top-boss'].includes(panelId)) {
+            if (['top-players', 'top-guild', 'top-boss',].includes(panelId)) {
                 return await fetchMockData(panelId);
             }
             // For top-boss-guild, don't fallback to mock data
@@ -180,8 +180,8 @@ async function fetchRanking(panelId) {
                 return await fetchMockData(panelId);
             }
             data = json;
-        } else if (panelId === 'top-guild' || panelId === 'top-boss') {
-            // Guild and Top Boss APIs return {ok, time, items}
+        } else if (panelId === 'top-guild' || panelId === 'top-boss' || panelId === 'top-boss-guild') {
+            // Guild, Top Boss, and Top Boss Guild APIs return {ok, time, items}
             if (!json.ok || !Array.isArray(json.items) || json.items.length === 0) {
                 console.warn(`Invalid API response for ${panelId}:`, json);
                 return await fetchMockData(panelId);
