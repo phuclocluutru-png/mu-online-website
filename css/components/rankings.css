@@ -105,8 +105,15 @@
     box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.55);
 }
 
-.rankings__tab:hover {
-    background: rgba(124, 58, 237, 0.4);
+.rankings__tab:focus {
+    outline: none;
+    /* Remove default focus outline */
+}
+
+.rankings__tab {
+    /* ... existing styles ... */
+    scroll-margin: 0;
+    /* Prevent scroll jump when focused */
 }
 
 .rankings__tab-indicator {
@@ -178,11 +185,17 @@
     text-align: left;
     padding: 0.75rem 0.6rem;
     /* narrower sides keep height */
-    background: linear-gradient(95deg, #5b2ca2, #7c3aed 55%, #a78bfa);
-    color: #fff;
-    font-weight: 600;
+    background: linear-gradient(95deg, #2d1b69 0%, #5b2ca2 40%, #7c3aed 70%, #5b2ca2 90%, #2d1b69 100%);
+    color: #ffffff;
+    font-weight: 700;
     letter-spacing: 0.05em;
     font-size: 0.78rem;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.rankings__table thead th:last-child {
+    border-right: none;
 }
 
 .rankings__table tbody td {
@@ -639,6 +652,38 @@
 
 .event-times-pop__rewardVal {
     font-weight: 700;
+}
+
+/* Top Rankings Styling */
+.rankings__table tbody tr:nth-child(1) {
+    background: url('/images/top2.png') center center / cover no-repeat;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.rankings__table tbody tr:nth-child(1) td {
+    background: transparent !important;
+    color: var(--color-gold-bright);
+    font-size: 1.2rem;
+    font-weight: 900;
+    text-shadow: 0 0 4px rgba(39, 1, 61, 0.8), 0 0 15px #23012799;
+}
+
+/* Override hover effects for top rankings to preserve background */
+.rankings__table tbody tr:nth-child(1):hover {
+    background: url('/images/top2.png') center center / cover no-repeat !important;
+    transform: none;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        filter: brightness(1.2);
+    }
+
+    50% {
+        filter: brightness(0.7);
+    }
 }
 
 @keyframes float {

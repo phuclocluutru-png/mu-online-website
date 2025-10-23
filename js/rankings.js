@@ -38,6 +38,14 @@ const FULL_TO_SHORT_CLASS_MAP = {
     'Rage Fighter': 'RF', 'Fist Master': 'RF'
 };
 
+// Function to format numbers with thousand separators (dots)
+function formatNumber(num) {
+    if (num === null || num === undefined || num === '') return '';
+    const number = typeof num === 'string' ? parseFloat(num) : num;
+    if (isNaN(number)) return num.toString();
+    return number.toLocaleString('vi-VN').replace(/,/g, '.');
+}
+
 function getClassName(classNumber) {
     if (typeof classNumber === 'string') {
         // If it's already a proper class name, check if we have a short version
@@ -83,7 +91,15 @@ function getClassName(classNumber) {
 
 function isValidGuildHex(hexStr) {
     const normalized = normalizeGuildHex(hexStr);
-    return /^[0-9a-f]{64}$/.test(normalized);
+    const isValid = /^[0-9a-f]{64}$/.test(normalized);
+    console.log('Guild hex validation:', {
+        original: hexStr,
+        originalLength: hexStr ? hexStr.length : 0,
+        normalized: normalized,
+        normalizedLength: normalized.length,
+        isValid: isValid
+    });
+    return isValid;
 }
 
 function renderGuildLogo(hexStr, size = 32) {
@@ -142,21 +158,21 @@ async function fetchRanking(panelId) {
         // Use production API endpoint
         let apiUrl;
         if (panelId === 'top-players') {
-            apiUrl = `https://api.pkclear.com/character/top?limit=10`;
+            apiUrl = `https://api.pkclear.com/character/top?limit=5`;
         } else if (panelId === 'top-guild') {
-            apiUrl = `https://api.pkclear.com/guild/top?limit=10`;
+            apiUrl = `https://api.pkclear.com/guild/top?limit=5`;
         } else if (panelId === 'top-boss') {
-            apiUrl = `https://api.pkclear.com/topboss?limit=10`;
+            apiUrl = `https://api.pkclear.com/topboss?limit=5`;
         } else if (panelId === 'top-boss-guild') {
-            apiUrl = `https://api.pkclear.com/topbossguild?limit=10`;
+            apiUrl = `https://api.pkclear.com/topbossguild?limit=5`;
         } else if (panelId === 'top-loan-chien') {
-            apiUrl = `https://api.pkclear.com/loan-chien?limit=10`;
+            apiUrl = `https://api.pkclear.com/loan-chien?limit=5`;
         } else if (panelId === 'top-bc') {
-            apiUrl = `https://api.pkclear.com/bc?limit=10`;
+            apiUrl = `https://api.pkclear.com/bc?limit=5`;
         } else if (panelId === 'top-dv') {
-            apiUrl = `https://api.pkclear.com/dv?limit=10`;
+            apiUrl = `https://api.pkclear.com/dv?limit=5`;
         } else if (panelId === 'top-cc') {
-            apiUrl = `https://api.pkclear.com/cc?limit=10`;
+            apiUrl = `https://api.pkclear.com/cc?limit=5`;
         } else {
             // For other endpoints, fallback to mock data
             return await fetchMockData(panelId);
@@ -225,7 +241,8 @@ async function fetchRanking(panelId) {
             return data.map(item => ({
                 name: item.Name,
                 points: item.TotalPoint,
-                guildLogo: renderGuildLogo(item.GuildMarkHex, 32)
+                totalBoss: item.TotalBossCount,
+                guildLogo: renderGuildLogo(item.GuildMarkHex, 46)
             }));
         } else if (panelId === 'top-boss-guild') {
             return data.map(item => ({
@@ -233,14 +250,32 @@ async function fetchRanking(panelId) {
                 name: item.G_Name,
                 owner: item.G_Master,
                 boss: item.TotalBossPoints,
+                totalBoss: item.TotalBossCount,
                 star: item.TopMember || 'N/A'
             }));
-        } else if (panelId === 'top-loan-chien' || panelId === 'top-bc' || panelId === 'top-dv' || panelId === 'top-cc') {
+        } else if (panelId === 'top-loan-chien') {
+            return data.map(item => ({
+                name: item.Name,
+                kills: item.Kills,
+                deads: item.Deads,
+                score: item.Score,
+                guild: item.GuildName || '',
+                guildLogo: renderGuildLogo(item.GuildMarkHex, 46)
+            }));
+        } else if (panelId === 'top-bc' || panelId === 'top-dv') {
+            return data.map(item => ({
+                name: item.Name,
+                score: item.Score,
+                monsterKills: item.KillMonsterCount,
+                guild: item.GuildName || '',
+                guildLogo: renderGuildLogo(item.GuildMarkHex, 46)
+            }));
+        } else if (panelId === 'top-cc') {
             return data.map(item => ({
                 name: item.Name,
                 score: item.Score,
                 guild: item.GuildName || '',
-                guildLogo: renderGuildLogo(item.GuildMarkHex, 32)
+                guildLogo: renderGuildLogo(item.GuildMarkHex, 46)
             }));
         }
 
@@ -284,7 +319,35 @@ async function fetchMockData(panelId) {
             return rankingData['top-boss'].map(item => ({
                 name: item.name,
                 points: item.points,
-                guildLogo: renderGuildLogo(null, 32) // Use placeholder for mock data
+                totalBoss: item.totalBoss,
+                guildLogo: renderGuildLogo(item.GuildMarkHex, 46)
+            }));
+        } else if (panelId === 'top-loan-chien') {
+            // Return mock loan-chien data from rankings-data.js
+            return rankingData['top-loan-chien'].map(item => ({
+                name: item.name,
+                kills: item.kills,
+                deads: item.deads,
+                score: item.score,
+                guild: item.guild,
+                guildLogo: renderGuildLogo(item.GuildMarkHex, 46)
+            }));
+        } else if (panelId === 'top-bc' || panelId === 'top-dv') {
+            // Return mock bc/dv data from rankings-data.js
+            return rankingData[panelId].map(item => ({
+                name: item.name,
+                score: item.score,
+                monsterKills: item.monsterKills,
+                guild: item.guild,
+                guildLogo: renderGuildLogo(item.GuildMarkHex, 46)
+            }));
+        } else if (panelId === 'top-cc') {
+            // Return mock cc data from rankings-data.js (without monsterKills)
+            return rankingData[panelId].map(item => ({
+                name: item.name,
+                score: item.score,
+                guild: item.guild,
+                guildLogo: renderGuildLogo(item.GuildMarkHex, 46)
             }));
         }
         return null;
@@ -323,23 +386,27 @@ export function initRankings() {
             let cells = [];
             switch (panelId) {
                 case 'top-players':
-                    const guildLogoHtml = renderGuildLogo(row.guildMarkHex, 32);
-                    cells = [row.name, row.level, row.reset, row.relife, row.class, row.guild || '', guildLogoHtml];
+                    const guildLogoHtml = renderGuildLogo(row.guildMarkHex, 46);
+                    cells = [row.name, formatNumber(row.level), formatNumber(row.reset), formatNumber(row.relife), row.class, row.guild || '', guildLogoHtml];
                     break;
                 case 'top-guild':
-                    cells = [row.logo, row.name, row.owner, row.members];
+                    cells = [row.logo, row.name, row.owner, formatNumber(row.members)];
                     break;
                 case 'top-boss':
-                    cells = [row.name, row.points, row.guildLogo];
+                    cells = [row.name, formatNumber(row.points), formatNumber(row.totalBoss), row.guildLogo];
                     break;
                 case 'top-boss-guild':
-                    cells = [row.logo, row.name, row.owner, row.boss, row.star];
+                    cells = [row.logo, row.name, row.owner, formatNumber(row.boss), formatNumber(row.totalBoss), row.star];
                     break;
                 case 'top-loan-chien':
+                    cells = [row.name, formatNumber(row.kills), formatNumber(row.deads), formatNumber(row.score), row.guild, row.guildLogo];
+                    break;
                 case 'top-bc':
                 case 'top-dv':
+                    cells = [row.name, formatNumber(row.score), formatNumber(row.monsterKills), row.guild, row.guildLogo];
+                    break;
                 case 'top-cc':
-                    cells = [row.name, row.score, row.guild, row.guildLogo];
+                    cells = [row.name, formatNumber(row.score), row.guild, row.guildLogo];
                     break;
             }
             cells.forEach(html => {
@@ -354,7 +421,8 @@ export function initRankings() {
     // Initial render (async)
     renderPanel('top-players');
     tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent any default scroll behavior
             if (tab.classList.contains('is-active')) return;
             tabs.forEach(t => t.classList.remove('is-active'));
             panels.forEach(p => p.classList.remove('is-visible'));
