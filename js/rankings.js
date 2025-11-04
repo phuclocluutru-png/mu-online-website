@@ -461,6 +461,11 @@ export function initRankings() {
     // Initial render (async)
     renderPanel('top-players');
     tabs.forEach(tab => {
+        // Prevent mousedown from focusing the button which can trigger browser scroll/jump
+        tab.addEventListener('mousedown', (ev) => {
+            ev.preventDefault();
+        });
+
         tab.addEventListener('click', (e) => {
             e.preventDefault(); // Prevent any default scroll behavior
             if (tab.classList.contains('is-active')) return;

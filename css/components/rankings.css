@@ -22,6 +22,11 @@
     /* prevent vertical stretch; ranking card keeps natural height */
 }
 
+/* Global var for ranking row height so we can compute reserved heights */
+:root {
+    --ranking-row-h: 56px;
+}
+
 /* Card wrapper for tabs + panels */
 .rankings__card {
     background: linear-gradient(170deg, #221935 0%, #2d1e4f 55%, #1a1830 100%);
@@ -161,10 +166,16 @@
 }
 
 /* Table */
-.rankings__tables {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.rankings__table {
+    max-height: calc(var(--ranking-row-h) * 5 + 1px);
+    /* 1px buffer for borders */
+}
+
+/* Reserve vertical space for the entire rankings content so panels switching
+   doesn't change page layout (prevents jumping when switching tabs) */
+.rankings__content {
+    min-height: calc(var(--ranking-row-h) * 5 + 140px);
+    /* header + controls buffer */
 }
 
 .rankings__table {
