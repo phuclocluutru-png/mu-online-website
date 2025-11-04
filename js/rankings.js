@@ -377,40 +377,76 @@ export function initRankings() {
         if (!panel) return;
         const tbody = panel.querySelector('tbody');
         if (!tbody) return;
-        let data = rankingData[panelId];
+        // Start with mock data if available, otherwise empty array
+        let data = Array.isArray(rankingData[panelId]) ? rankingData[panelId] : [];
         const apiData = await fetchRanking(panelId);
-        if (apiData) {
+        if (Array.isArray(apiData)) {
             data = apiData;
         }
-        if (!data) return;
+        // Ensure panels that expect top-5 always render 5 rows.
+        const desiredCount = 5;
+        // Make a shallow copy we can extend with placeholders
+        const rows = Array.isArray(data) ? data.slice(0) : [];
+        while (rows.length < desiredCount) {
+            // Create panel-specific placeholder rows
+            let placeholder = {};
+            switch (panelId) {
+                case 'top-players':
+                    placeholder = { name: 'Chưa có', level: '', reset: '', relife: '', class: '', guild: '', guildMarkHex: '' };
+                    break;
+                case 'top-guild':
+                    placeholder = { logo: '<div class="guild-logo-placeholder">-</div>', name: 'Chưa có', owner: '', members: '' };
+                    break;
+                case 'top-boss':
+                    placeholder = { name: 'Chưa có', points: '', totalBoss: '', guildLogo: '<div class="guild-logo-placeholder">-</div>' };
+                    break;
+                case 'top-boss-guild':
+                    placeholder = { logo: '<div class="guild-logo-placeholder">-</div>', name: 'Chưa có', owner: '', boss: '', totalBoss: '', star: '' };
+                    break;
+                case 'top-loan-chien':
+                    placeholder = { name: 'Chưa có', kills: '', deads: '', score: '', guild: '', guildLogo: '<div class="guild-logo-placeholder">-</div>' };
+                    break;
+                case 'top-bc':
+                case 'top-dv':
+                    placeholder = { name: 'Chưa có', score: '', monsterKills: '', guild: '', guildLogo: '<div class="guild-logo-placeholder">-</div>' };
+                    break;
+                case 'top-cc':
+                    placeholder = { name: 'Chưa có', score: '', guild: '', guildLogo: '<div class="guild-logo-placeholder">-</div>' };
+                    break;
+                default:
+                    placeholder = { name: 'Chưa có' };
+            }
+            rows.push(placeholder);
+        }
+
         tbody.innerHTML = '';
         const frag = document.createDocumentFragment();
-        data.forEach(row => {
+        rows.forEach(row => {
             const tr = document.createElement('tr');
             let cells = [];
             switch (panelId) {
                 case 'top-players':
-                    const guildLogoHtml = renderGuildLogo(row.guildMarkHex, 46);
+                    const guildLogoHtml = row.guildMarkHex ? renderGuildLogo(row.guildMarkHex, 46) : (row.guildLogo || '<div class="guild-logo-placeholder">-</div>');
                     cells = [row.name, formatNumber(row.level), formatNumber(row.reset), formatNumber(row.relife), row.class, row.guild || '', guildLogoHtml];
                     break;
                 case 'top-guild':
-                    cells = [row.logo, row.name, row.owner, formatNumber(row.members)];
+                    cells = [row.logo || '<div class="guild-logo-placeholder">-</div>', row.name, row.owner, formatNumber(row.members)];
                     break;
                 case 'top-boss':
-                    cells = [row.name, formatNumber(row.points), formatNumber(row.totalBoss), row.guildLogo];
+                    cells = [row.name, formatNumber(row.points), formatNumber(row.totalBoss), row.guildLogo || '<div class="guild-logo-placeholder">-</div>'];
                     break;
                 case 'top-boss-guild':
-                    cells = [row.logo, row.name, row.owner, formatNumber(row.boss), formatNumber(row.totalBoss), row.star];
+                    cells = [row.logo || '<div class="guild-logo-placeholder">-</div>', row.name, row.owner, formatNumber(row.boss), formatNumber(row.totalBoss), row.star];
                     break;
                 case 'top-loan-chien':
-                    cells = [row.name, formatNumber(row.kills), formatNumber(row.deads), formatNumber(row.score), row.guild, row.guildLogo];
+                    cells = [row.name, formatNumber(row.kills), formatNumber(row.deads), formatNumber(row.score), row.guild, row.guildLogo || '<div class="guild-logo-placeholder">-</div>'];
                     break;
                 case 'top-bc':
                 case 'top-dv':
-                    cells = [row.name, formatNumber(row.score), formatNumber(row.monsterKills), row.guild, row.guildLogo];
+                    cells = [row.name, formatNumber(row.score), formatNumber(row.monsterKills), row.guild, row.guildLogo || '<div class="guild-logo-placeholder">-</div>'];
                     break;
                 case 'top-cc':
-                    cells = [row.name, formatNumber(row.score), row.guild, row.guildLogo];
+                    cells = [row.name, formatNumber(row.score), row.guild, row.guildLogo || '<div class="guild-logo-placeholder">-</div>'];
                     break;
             }
             cells.forEach(html => {

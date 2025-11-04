@@ -213,6 +213,35 @@
     transition: all 0.3s ease;
 }
 
+/* Ensure table reserves vertical space for exactly 5 rows so the card height is stable
+   - Each row has a fixed min-height so missing rows (placeholders) keep layout consistent */
+.rankings__table tbody tr {
+    min-height: 56px;
+    /* adjust if needed to match your visual design */
+    height: 56px;
+}
+
+/* Reserve total height for 5 rows (5 * 56px + borders). This keeps the card height fixed
+   so panels with fewer items don't collapse. */
+.rankings__table {
+    --row-h: 56px;
+    max-height: calc(var(--row-h) * 5 + 1px);
+    /* 1px buffer for borders */
+}
+
+/* Placeholder styling for empty cells */
+.rankings__table tbody tr td {
+    color: var(--color-silver);
+}
+
+.rankings__table tbody tr td:empty {
+    opacity: 0.55;
+}
+
+.guild-logo-placeholder {
+    opacity: 0.6;
+}
+
 .rankings__table tbody tr:hover {
     background: rgba(92, 54, 150, 0.25);
     transform: translateY(-1px);
