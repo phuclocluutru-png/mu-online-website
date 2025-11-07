@@ -608,18 +608,32 @@
     margin: 1.2rem 0 1.4rem;
     aspect-ratio: 16 / 9;
     display: flex;
-    /* center iframe & avoid unexpected crop */
     align-items: stretch;
-    /* iframe takes full height */
     justify-content: center;
-    background: #000;
-    /* plain black */
-    border: none;
-    border-radius: 3px;
-    /* subtle radius */
-    box-shadow: 0 6px 18px -8px rgba(0, 0, 0, .55);
+    background: radial-gradient(circle at 50% 40%, rgba(60, 40, 100, .35) 0%, rgba(26, 24, 48, .85) 70%), #000;
+    /* subtle textured dark */
+    border: 1px solid rgba(124, 58, 237, .45);
+    /* thin purple border */
+    border-radius: 10px;
+    /* stronger radius for card feel */
+    box-shadow:
+        0 4px 14px -6px rgba(0, 0, 0, .65),
+        /* depth */
+        0 0 0 1px rgba(255, 215, 0, .10),
+        /* faint gold ring */
+        0 0 22px -6px rgba(124, 58, 237, .55);
+    /* soft outer glow */
     overflow: hidden;
-    /* keep radius clipping */
+}
+
+.postView__content .postView__videoWrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(145deg, rgba(255, 215, 0, .18), rgba(124, 58, 237, .18));
+    mix-blend-mode: overlay;
+    opacity: .25;
+    pointer-events: none;
 }
 
 .postView__content .postView__videoWrap iframe {
