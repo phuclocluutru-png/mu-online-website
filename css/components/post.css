@@ -589,41 +589,43 @@
     font-size: .83rem;
     line-height: 1.55;
     color: var(--color-silver);
+}
 
-    /* Responsive embedded video wrapper */
-    .postView__content .postView__videoWrap {
-        position: relative;
-        width: 100%;
-        max-width: 860px;
-        margin: 1.4rem auto 1.8rem;
-        aspect-ratio: 16 / 9;
-        background: radial-gradient(circle at 50% 50%, rgba(124, 58, 237, .25), rgba(34, 25, 53, .6));
-        border: 1px solid rgba(124, 58, 237, .35);
-        border-radius: 14px;
-        box-shadow: 0 10px 28px -8px rgba(92, 54, 150, .55), 0 0 0 2px rgba(255, 215, 0, .18) inset;
-        overflow: hidden;
-    }
+/* Responsive embedded video wrapper (moved out of nested block) */
+.postView__content .postView__videoWrap {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    /* full width of article */
+    margin: 1.4rem 0 1.8rem;
+    /* no horizontal auto needed when full width */
+    aspect-ratio: 16 / 9;
+    background: radial-gradient(circle at 50% 50%, rgba(124, 58, 237, .25), rgba(34, 25, 53, .6));
+    border: 1px solid rgba(124, 58, 237, .35);
+    border-radius: 14px;
+    box-shadow: 0 10px 28px -8px rgba(92, 54, 150, .55), 0 0 0 2px rgba(255, 215, 0, .18) inset;
+    overflow: hidden;
+}
 
-    .postView__content .postView__videoWrap iframe {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
-        display: block;
-        border-radius: inherit;
-    }
+.postView__content .postView__videoWrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    border-radius: inherit;
+}
 
-    /* Center standalone iframes (fallback if not wrapped yet) */
-    .postView__content iframe[src*="youtube.com"],
-    .postView__content iframe[src*="youtube-nocookie.com"] {
-        display: block;
-        margin: 1.4rem auto;
-        max-width: 860px;
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        height: auto;
-    }
+/* Fallback for standalone YouTube iframes not yet wrapped */
+.postView__content iframe[src*="youtube.com"],
+.postView__content iframe[src*="youtube-nocookie.com"] {
+    display: block;
+    margin: 1.4rem 0;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
 }
 
 .postView__content h2,

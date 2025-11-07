@@ -603,6 +603,9 @@ function enhanceEmbeds(root) {
                 const allowList = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
                 ifr.setAttribute('allow', allowList);
                 ifr.setAttribute('allowfullscreen', '');
+                // Remove fixed width/height to ensure CSS responsive sizing
+                ifr.removeAttribute('width');
+                ifr.removeAttribute('height');
                 // Wrap if not already wrapped
                 if (!ifr.parentElement.classList.contains('postView__videoWrap')) {
                     const wrap = document.createElement('div');
