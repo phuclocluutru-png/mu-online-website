@@ -92,10 +92,10 @@ Deny from all
 RedirectMatch 404 /\.git
 
 # Prevent hotlinking of images
-RewriteCond % { HTTP_REFERER } !^$
-RewriteCond % { HTTP_REFERER } !^https?://(www\.)?pkclear\.com [NC]
-RewriteCond % { HTTP_REFERER } !^https?://(www\.)?github\.io [NC]
-RewriteRule \.(?:jpe?g | png | gif | bmp | webp)$ - [F, NC]
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^https?://(www\.)?pkclear\.com [NC]
+RewriteCond %{HTTP_REFERER} !^https?://(www\.)?github\.io [NC]
+RewriteRule \.(?:jpe?g|png|gif|bmp|webp)$ - [F,NC]
 
 # Custom error pages (uncomment and modify paths as needed)
 # ErrorDocument 404 /404.html
@@ -106,15 +106,15 @@ RewriteRule \.(?:jpe?g | png | gif | bmp | webp)$ - [F, NC]
 # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # Remove trailing slash (canonicalize URLs)
-RewriteCond % { REQUEST_FILENAME } !-d
-RewriteRule ^(.+)/$ $1 [R=301, L]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/$ $1 [R=301,L]
 
 # --- Dynamic SSR for post share previews ---
-# If requesting /pages/post.html with an id param, route to server-side renderer (post-ssr.php)
-RewriteCond % { QUERY_STRING } (?:^ | &)id=[0-9]+(?:& | $)
+# If requesting /pages/post.html?id=123 render with PHP (server-side OG tags)
+RewriteCond %{QUERY_STRING} (?:^|&)id=([0-9]+)(?:&|$)
 RewriteRule ^pages/post\.html$ /post-ssr.php [L]
 
 # Handle SPA routing (fallback) – keep last
-RewriteCond % { REQUEST_FILENAME } !-f
-RewriteCond % { REQUEST_FILENAME } !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.html [L]
