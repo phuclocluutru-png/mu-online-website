@@ -611,8 +611,14 @@ function enhanceEmbeds(root) {
                 if (!ifr.parentElement.classList.contains('postView__videoWrap')) {
                     const wrap = document.createElement('div');
                     wrap.className = 'postView__videoWrap';
-                    ifr.parentElement.insertBefore(wrap, ifr);
+                    const parentEl = ifr.parentElement;
+                    parentEl.insertBefore(wrap, ifr);
                     wrap.appendChild(ifr);
+                    // If parent is a paragraph, remove its margin to avoid visual vertical offset
+                    const parentP = wrap.closest('p');
+                    if (parentP) {
+                        parentP.style.margin = '0';
+                    }
                 }
             }
         });
