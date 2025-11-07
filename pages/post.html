@@ -12,6 +12,46 @@
     <link rel="stylesheet" href="../css/components/header.css" />
     <link rel="stylesheet" href="../css/components/footer.css" />
     <link rel="stylesheet" href="../css/components/modal-download.css" />
+    <!-- Open Graph & Twitter static fallbacks -->
+    <meta property="og:site_name" content="MU PKClear" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Bài viết - MU PKClear" />
+    <meta property="og:description" content="Cộng đồng MU Online PK Clear - Tin tức, hướng dẫn và sự kiện." />
+    <meta property="og:url" content="https://pkclear.com/pages/post.html" />
+    <meta property="og:image" content="https://pkclear.com/images/Logo%20PK%20CLEAR%20-.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Bài viết - MU PKClear" />
+    <meta name="twitter:description" content="Cộng đồng MU Online PK Clear - Tin tức, hướng dẫn và sự kiện." />
+    <meta name="twitter:image" content="https://pkclear.com/images/Logo%20PK%20CLEAR%20-.png" />
+    <link rel="canonical" href="https://pkclear.com/pages/post.html" />
+    <script>
+        // Client-side dynamic OG meta (note: most social crawlers do NOT execute JS; server-side rendering recommended)
+        (function () {
+            const params = new URLSearchParams(location.search);
+            const id = params.get('id');
+            if (!id) return;
+            const apiBase = 'https://mu.pkclear.com/wp-json/wp/v2'; // Adjust if different domain
+            fetch(`${apiBase}/posts/${id}?_embed`).then(r => r.json()).then(post => {
+                if (!post || !post.title) return;
+                const strip = html => (html || '').replace(/<[^>]+>/g, '');
+                const title = strip(post.title.rendered);
+                const desc = strip(post.excerpt?.rendered).slice(0, 160).trim();
+                const media = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+                const image = media || 'https://pkclear.com/images/Logo%20PK%20CLEAR%20-.png';
+                const url = location.href.split('#')[0];
+                const ensureProp = (p, v) => { let el = document.querySelector(`meta[property='${p}']`); if (!el) { el = document.createElement('meta'); el.setAttribute('property', p); document.head.appendChild(el); } el.setAttribute('content', v); };
+                const ensureName = (n, v) => { let el = document.querySelector(`meta[name='${n}']`); if (!el) { el = document.createElement('meta'); el.setAttribute('name', n); document.head.appendChild(el); } el.setAttribute('content', v); };
+                ensureProp('og:title', title);
+                ensureProp('og:description', desc || 'Bài viết MU PKClear');
+                ensureProp('og:url', url);
+                ensureProp('og:image', image);
+                ensureName('twitter:title', title);
+                ensureName('twitter:description', desc || 'Bài viết MU PKClear');
+                ensureName('twitter:image', image);
+                document.title = `${title} | MU PKClear`;
+            }).catch(() => { });
+        })();
+    </script>
 </head>
 
 <body>
