@@ -227,10 +227,19 @@
 }
 
 .postView__catGroup:hover {
-    border-color: rgba(255, 215, 0, .5);
-    background: rgba(34, 25, 53, .75);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(92, 54, 150, .3);
+    background: radial-gradient(circle at 50% 40%, rgba(60, 40, 100, .35) 0%, rgba(26, 24, 48, .85) 70%), #000;
+    /* subtle textured dark */
+    border: 1px solid rgba(124, 58, 237, .45);
+    /* thin purple border */
+    border-radius: 10px;
+    /* slightly stronger radius */
+    box-shadow:
+        0 4px 14px -6px rgba(0, 0, 0, .65),
+        /* depth */
+        0 0 0 1px rgba(255, 215, 0, .10),
+        /* faint gold ring */
+        0 0 22px -6px rgba(124, 58, 237, .55);
+    /* soft outer glow */
 }
 
 .postView__catGroupHeader {
@@ -606,7 +615,7 @@
     background: #000;
     /* plain black */
     border: none;
-    border-radius: 8px;
+    border-radius: 3px;
     /* subtle radius */
     box-shadow: 0 6px 18px -8px rgba(0, 0, 0, .55);
     overflow: hidden;
