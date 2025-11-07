@@ -79,6 +79,8 @@ function renderPost(raw) {
                 <div class="postView__relatedList" id="post-related-list"></div>
             </div>
         `;
+
+    enhanceEmbeds(article);
 }
 
 async function loadPost() {
@@ -514,6 +516,8 @@ async function loadSinglePost(postId) {
             <div class="postView__content">${safeContent}</div>
         `;
 
+        enhanceEmbeds(article);
+
         // Add breadcrumb click handlers
         article.querySelectorAll('.breadcrumb-link').forEach(link => {
             link.addEventListener('click', () => {
@@ -577,3 +581,38 @@ window.addEventListener('popstate', (event) => {
         loadPost();
     }
 });
+
+// Wrap and standardize embedded iframes (e.g., YouTube) for styling & responsiveness
+function enhanceEmbeds(root) {
+    try {
+        const content = root.querySelector('.postView__content');
+        if (!content) return;
+        const iframes = [...content.querySelectorAll('iframe')];
+        iframes.forEach(ifr => {
+            const src = (ifr.getAttribute('src') || '').trim();
+            if (!src) return;
+            // Force https
+            if (src.startsWith('//')) {
+                ifr.src = 'https:' + src;
+            } else if (src.startsWith('http:')) {
+                ifr.src = src.replace(/^http:/, 'https:');
+            }
+            // YouTube specific adjustments
+            if (/youtube\.com|youtube-nocookie\.com/.test(src)) {
+                // Add common allow attributes for better playback
+                const allowList = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+                ifr.setAttribute('allow', allowList);
+                ifr.setAttribute('allowfullscreen', '');
+                // Wrap if not already wrapped
+                if (!ifr.parentElement.classList.contains('postView__videoWrap')) {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'postView__videoWrap';
+                    ifr.parentElement.insertBefore(wrap, ifr);
+                    wrap.appendChild(ifr);
+                }
+            }
+        });
+    } catch (e) {
+        console.warn('enhanceEmbeds failed', e);
+    }
+}
