@@ -606,6 +606,7 @@ function enhanceEmbeds(root) {
                 // Remove fixed width/height to ensure CSS responsive sizing
                 ifr.removeAttribute('width');
                 ifr.removeAttribute('height');
+                ifr.classList.add('is-video-processed');
                 // Wrap if not already wrapped
                 if (!ifr.parentElement.classList.contains('postView__videoWrap')) {
                     const wrap = document.createElement('div');
