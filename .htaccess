@@ -116,3 +116,5 @@ RewriteRule ^(.+)/$ $1 [R=301,L]
 # SSR post previews
 RewriteCond %{QUERY_STRING} (?:^|&)id=[0-9]+(?:&|$)
 RewriteRule ^pages/post\.html$ /post-ssr.php [L]
+
+RewriteRule ^share/post/([0-9]+)/?$ /share/post.php?id=$1 [L,QSA]
