@@ -2,8 +2,9 @@
 Options -MultiViews
 RewriteEngine On
 
-# Nếu là bot MXH -> gắn cờ crawler=1 và chuyển nội bộ sang share/post.php
-RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|WhatsApp|TelegramBot|Zalo|ZaloPC|ZaloBot|SocialBot|Embedly|VKShare|Viber|Line|bot|crawler|spider|preview|embed|fetch|analyzer) [NC]
+# Chỉ coi là crawler khi UA là BOT MXH (KHÔNG match Zalo/ZaloPC của người dùng)
+RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|WhatsApp|TelegramBot|ZaloBot|Embedly|VKShare|Viber|Line|bot|crawler|spider) [NC]
 RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+) [NC]
+# Gắn cờ crawler=1 để PHP biết đây là request của crawler
 RewriteRule ^post\.html$ /share/post.php?id=%2&crawler=1 [L,QSA]
 </IfModule>
