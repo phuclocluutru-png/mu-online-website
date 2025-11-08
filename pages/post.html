@@ -25,6 +25,38 @@
     <meta name="twitter:image" content="https://pkclear.com/images/Logo%20PK%20CLEAR%20-.png" />
     <link rel="canonical" href="https://pkclear.com/pages/post.html" />
     <script>
+        (function () {
+  function getPostId() {
+    // Ưu tiên id trong query (?id=123 ...)
+    var m = location.search.match(/[?&]id=(\d+)/);
+    if (m) return parseInt(m[1], 10);
+
+    // Fallback: nếu sau này bạn cho phép mở trực tiếp /p/123
+    var m2 = location.pathname.match(/\/p\/(\d+)/);
+    if (m2) return parseInt(m2[1], 10);
+
+    return null;
+  }
+
+  var postId = getPostId();
+  if (!postId) {
+    window.renderError && window.renderError('Không tìm thấy ID bài viết.');
+    return;
+  }
+
+  // Ví dụ gọi WP REST trực tiếp (hoặc endpoint proxy của bạn)
+  fetch('/wp-json/wp/v2/posts/' + postId + '?_embed', { credentials: 'omit' })
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(data => {
+      // render...
+    })
+    .catch(err => {
+      window.renderError && window.renderError('Không tải được bài viết (' + err.message + ')');
+    });
+})();
         // Client-side dynamic OG meta (note: most social crawlers do NOT execute JS; server-side rendering recommended)
         (function () {
             const params = new URLSearchParams(location.search);
