@@ -5,22 +5,29 @@
 #RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|Zalo|ZaloPC|ZaloBot) [NC]
 #RewriteRule ^post\.html$ /share/post.php?id=%2 [L,QSA]
 
-#<IfModule mod_rewrite.c>
-#RewriteEngine On
-
-# MXH (FB/Twitter/Discord/LinkedIn/Slack/Pinterest/Zalo) quét /pages/post.html?id=123
-# -> render server-side từ /share/post.php?id=123 để có og:title/og:image động
-#RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+) [NC]
-#RewriteCond %{THE_REQUEST} \s/+pages/post\.html [NC]
-#RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|Zalo|ZaloPC|ZaloBot) [NC]
-#RewriteRule ^post\.html$ /share/post.php?id=%2 [L,QSA]
-#</IfModule>
-
+# ============ MXH PREVIEW & ALIASES ============
 <IfModule mod_rewrite.c>
 RewriteEngine On
+
+# Pretty URL cho link share đã OK:
+RewriteRule ^share/post/([0-9]+)/?$ /share/post.php?id=$1 [L,QSA]
+
+# Alias sạch cache (tuỳ chọn): /p/123 -> /pages/post.html?id=123
+RewriteRule ^p/([0-9]+)/?$ /pages/post.html?id=$1 [L,QSA]
+
+# --- BOT MXH: phục vụ OG động khi quét /pages/post.html?id=123 ---
+# Điều kiện: đúng đường dẫn + có tham số id
 RewriteCond %{REQUEST_URI} ^/pages/post\.html$ [NC]
 RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+) [NC]
-RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|WhatsApp|TelegramBot|Zalo|ZaloPC|ZaloBot) [NC]
+
+# Điều kiện UA: MỞ RỘNG TỐI ĐA để "dính" Zalo/Discord/… trong thực tế
+# 1) Danh sách UA "chính danh"
+RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|WhatsApp|TelegramBot|Zalo|ZaloPC|ZaloBot) [NC,OR]
+# 2) Bắt mọi dạng crawler/bot phổ biến
+RewriteCond %{HTTP_USER_AGENT} (bot|crawler|spider|preview|embed) [NC]
+
+# Rewrite nội bộ sang trang PHP đã render OG
 RewriteRule ^pages/post\.html$ /share/post.php?id=%2 [L,QSA]
 </IfModule>
+# ============ /MXH PREVIEW & ALIASES ============
 
