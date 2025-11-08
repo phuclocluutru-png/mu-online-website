@@ -1,7 +1,4 @@
 <?php
-// public_html/share/post.php
-// Trả OG cho crawler; người dùng thật được 302 sang trang bài viết.
-
 $SITE_BASE   = 'https://pkclear.com';
 $READ_LINK   = $SITE_BASE . '/pages/post.html?id=';
 $FALLBACK_OG = $SITE_BASE . '/images/og-default-1200x630.jpg';
@@ -11,22 +8,11 @@ if ($id <= 0) { http_response_code(404); header('Content-Type: text/plain; chars
 
 $link = $READ_LINK . $id;
 
-// --- Phân biệt crawler vs người dùng ---
-// Cờ từ rewrite (chính xác nhất)
-$flagCrawler = isset($_GET['crawler']) && $_GET['crawler'] === '1';
-// UA bot (phòng trường hợp truy cập trực tiếp /share/post/123 từ MXH)
-$ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
-$uaLooksBot = (bool)preg_match(
-  '/facebookexternalhit|Facebot|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|WhatsApp|TelegramBot|ZaloBot|SocialBot|Embedly|VKShare|Viber|Line|bot|crawler|spider|preview|embed|fetch|analyzer/i',
-  $ua
-);
-// Header điều hướng do người dùng bấm (crawler thường không có)
-$hasUserNav = isset($_SERVER['HTTP_SEC_FETCH_USER']) || isset($_SERVER['HTTP_UPGRADE_INSECURE_REQUESTS']);
+// ---- Chỉ crawler (được gắn bởi rewrite) mới ở lại trang OG ----
+$isCrawler = (isset($_GET['crawler']) && $_GET['crawler'] === '1');
 
-$isCrawler = $flagCrawler || ($uaLooksBot && !$hasUserNav);
-
-// --- Người dùng thật -> 302 tới trang đọc bài ---
 if (!$isCrawler) {
+  // Người dùng thật: luôn 302 tới trang đọc bài
   header('Cache-Control: no-cache, no-store, must-revalidate');
   header('Pragma: no-cache');
   header('Expires: 0');
@@ -34,7 +20,7 @@ if (!$isCrawler) {
   exit;
 }
 
-// --- Từ đây là luồng cho crawler (trả OG) ---
+// ---- Từ đây là luồng crawler: render OG ----
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 header('Pragma: no-cache');
@@ -67,11 +53,10 @@ $title = html_entity_decode(strip_tags($rawTitle), ENT_QUOTES, 'UTF-8');
 $desc  = html_entity_decode(strip_tags($rawDesc),  ENT_QUOTES, 'UTF-8');
 $desc  = trim(preg_replace('/\s+/', ' ', $desc));
 if ($desc === '') $desc = 'Cộng đồng MU Online PK Clear - Tin tức, hướng dẫn và sự kiện.';
-
 $img = $data['_embedded']['wp:featuredmedia'][0]['source_url'] ?? '';
 if ($img === '') $img = $FALLBACK_OG;
 
-$published = $data['date']     ?? '';
+$published = $data['date'] ?? '';
 $modified  = $data['modified'] ?? '';
 
 $imgW = $imgH = null;
@@ -79,9 +64,7 @@ if (ini_get('allow_url_fopen')) {
   if ($info = @getimagesize($img)) { $imgW = (int)$info[0]; $imgH = (int)$info[1]; }
 }
 
-function clip($s, $n=300){
-  return function_exists('mb_strimwidth') ? mb_strimwidth($s,0,$n,'…','UTF-8') : (strlen($s)>$n?substr($s,0,$n-3).'...':$s);
-}
+function clip($s,$n=300){ return function_exists('mb_strimwidth') ? mb_strimwidth($s,0,$n,'…','UTF-8') : (strlen($s)>$n?substr($s,0,$n-3).'...':$s); }
 ?>
 <!doctype html>
 <html lang="vi">
@@ -90,7 +73,6 @@ function clip($s, $n=300){
 <title><?= htmlspecialchars($title) ?></title>
 <link rel="canonical" href="<?= htmlspecialchars($link) ?>">
 
-<!-- Open Graph -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="MU PKClear">
 <meta property="og:title" content="<?= htmlspecialchars($title) ?>">
@@ -108,14 +90,13 @@ function clip($s, $n=300){
 <?php if ($published): ?><meta property="article:published_time" content="<?= htmlspecialchars($published) ?>"><?php endif; ?>
 <?php if ($modified):  ?><meta property="article:modified_time"  content="<?= htmlspecialchars($modified)  ?>"><?php endif; ?>
 
-<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="<?= htmlspecialchars($title) ?>">
 <meta name="twitter:description" content="<?= htmlspecialchars(clip($desc)) ?>">
 <meta name="twitter:image" content="<?= htmlspecialchars($img) ?>">
 </head>
 <body>
-<!-- Chỉ dành cho crawler -->
+<!-- trang dành cho crawler -->
 Nếu bạn là người dùng, vui lòng mở bài viết: <a href="<?= htmlspecialchars($link) ?>"><?= htmlspecialchars($title) ?></a>.
 </body>
 </html>
