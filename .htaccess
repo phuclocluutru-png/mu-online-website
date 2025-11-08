@@ -107,6 +107,6 @@ RewriteRule ^share/post/([0-9]+)/?$ share/post.php?id=$1 [L, QSA]
 # RewriteCond %{REQUEST_FILENAME} !-f
 # RewriteCond %{REQUEST_FILENAME} !-d
 # RewriteRule . index.html [L]
-
+RewriteRule ^pages/post\.html$ /share/post.php?id=%2 [L,QSA]
 # End of file
 >>>>>>> 87617b5 (fix: simplify per-directory post SSR rewrite and clean hotlink/trailing slash rules)
