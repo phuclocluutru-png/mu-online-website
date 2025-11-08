@@ -1,6 +1,17 @@
+#RewriteEngine On
+## Khi bot MXH quét /pages/post.html?id=123 -> trả về trang OG động
+#RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+) [NC]
+## THÊM 'Zalo' vào đây
+#RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|Zalo|ZaloPC|ZaloBot) [NC]
+#RewriteRule ^post\.html$ /share/post.php?id=%2 [L,QSA]
+
+<IfModule mod_rewrite.c>
 RewriteEngine On
-# Khi bot MXH quét /pages/post.html?id=123 -> trả về trang OG động
+
+# MXH (FB/Twitter/Discord/LinkedIn/Slack/Pinterest/Zalo) quét /pages/post.html?id=123
+# -> render server-side từ /share/post.php?id=123 để có og:title/og:image động
 RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+) [NC]
-# THÊM 'Zalo' vào đây
+RewriteCond %{THE_REQUEST} \s/+pages/post\.html [NC]
 RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|Zalo|ZaloPC|ZaloBot) [NC]
 RewriteRule ^post\.html$ /share/post.php?id=%2 [L,QSA]
+</IfModule>
