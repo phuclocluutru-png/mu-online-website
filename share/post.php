@@ -1,6 +1,6 @@
 <?php
 $SITE_BASE   = 'https://pkclear.com';
-$READ_LINK   = $SITE_BASE . '/pages/post.html?id=';
+$READ_LINK   = $SITE_BASE . '/p/';
 $FALLBACK_OG = $SITE_BASE . '/images/og-default-1200x630.jpg';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
