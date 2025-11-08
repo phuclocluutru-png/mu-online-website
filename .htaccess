@@ -113,13 +113,9 @@ RewriteRule ^pages/post\.html$ /share/post.php?id=%2 [L,QSA]
 >>>>>>> 87617b5 (fix: simplify per-directory post SSR rewrite and clean hotlink/trailing slash rules)
 <IfModule mod_rewrite.c>
 RewriteEngine On
-
-# --- MXH (FB/Twitter/Discord/LinkedIn/Slack/Pinterest/Zalo/…)
-# Khi bot quét /pages/post.html?id=123 -> render server-side qua /share/post.php
 RewriteCond %{REQUEST_URI} ^/pages/post\.html$ [NC]
 RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+) [NC]
-
-# Mở rộng tối đa: cứ UA có chữ "Zalo" là match
 RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|WhatsApp|TelegramBot|Zalo|ZaloPC|ZaloBot) [NC]
 RewriteRule ^pages/post\.html$ /share/post.php?id=%2 [L,QSA]
 </IfModule>
+
