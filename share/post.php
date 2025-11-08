@@ -1,28 +1,32 @@
 <?php
 // public_html/share/post.php
-// Trả OG cho bot MXH; người dùng thật được 302 sang trang đọc bài.
+// Trả OG cho crawler; người dùng thật được 302 sang trang bài viết.
 
-// ------- Cấu hình -------
 $SITE_BASE   = 'https://pkclear.com';
 $READ_LINK   = $SITE_BASE . '/pages/post.html?id=';
 $FALLBACK_OG = $SITE_BASE . '/images/og-default-1200x630.jpg';
 
-// ------- Nhận id -------
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($id <= 0) { http_response_code(404); header('Content-Type: text/plain; charset=utf-8'); exit('Not found'); }
 
-// ------- Link bài thật -------
 $link = $READ_LINK . $id;
 
-// ------- Xác định có phải bot MXH không -------
-$ua   = $_SERVER['HTTP_USER_AGENT'] ?? '';
-$isBot = (bool)preg_match(
-  '/facebookexternalhit|Facebot|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|WhatsApp|TelegramBot|Zalo|ZaloPC|ZaloBot|SocialBot|Embedly|VKShare|Viber|Line|bot|crawler|spider|preview|embed|fetch|analyzer/i',
+// --- Phân biệt crawler vs người dùng ---
+// Cờ từ rewrite (chính xác nhất)
+$flagCrawler = isset($_GET['crawler']) && $_GET['crawler'] === '1';
+// UA bot (phòng trường hợp truy cập trực tiếp /share/post/123 từ MXH)
+$ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
+$uaLooksBot = (bool)preg_match(
+  '/facebookexternalhit|Facebot|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|WhatsApp|TelegramBot|ZaloBot|SocialBot|Embedly|VKShare|Viber|Line|bot|crawler|spider|preview|embed|fetch|analyzer/i',
   $ua
 );
+// Header điều hướng do người dùng bấm (crawler thường không có)
+$hasUserNav = isset($_SERVER['HTTP_SEC_FETCH_USER']) || isset($_SERVER['HTTP_UPGRADE_INSECURE_REQUESTS']);
 
-// ------- Nếu KHÔNG phải bot -> 302 về trang đọc bài (sửa lỗi Zalo không meta-refresh) -------
-if (!$isBot) {
+$isCrawler = $flagCrawler || ($uaLooksBot && !$hasUserNav);
+
+// --- Người dùng thật -> 302 tới trang đọc bài ---
+if (!$isCrawler) {
   header('Cache-Control: no-cache, no-store, must-revalidate');
   header('Pragma: no-cache');
   header('Expires: 0');
@@ -30,13 +34,12 @@ if (!$isBot) {
   exit;
 }
 
-// ------- Từ đây là luồng dành cho BOT (render OG) -------
+// --- Từ đây là luồng cho crawler (trả OG) ---
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 header('Pragma: no-cache');
 header('Expires: 0');
 
-// Gọi WP REST API để lấy dữ liệu
 $api = $SITE_BASE . "/wp-json/wp/v2/posts/$id?_embed";
 
 function http_get($url) {
@@ -58,7 +61,6 @@ if (!$resp) { http_response_code(404); exit('Not found'); }
 $data = json_decode($resp, true);
 if (!is_array($data)) { http_response_code(500); exit('Bad response'); }
 
-// Trích thông tin
 $rawTitle = $data['title']['rendered']   ?? 'MU PKClear';
 $rawDesc  = $data['excerpt']['rendered'] ?? '';
 $title = html_entity_decode(strip_tags($rawTitle), ENT_QUOTES, 'UTF-8');
@@ -72,7 +74,6 @@ if ($img === '') $img = $FALLBACK_OG;
 $published = $data['date']     ?? '';
 $modified  = $data['modified'] ?? '';
 
-// Lấy kích thước ảnh (nếu allow_url_fopen bật)
 $imgW = $imgH = null;
 if (ini_get('allow_url_fopen')) {
   if ($info = @getimagesize($img)) { $imgW = (int)$info[0]; $imgH = (int)$info[1]; }
@@ -112,11 +113,9 @@ function clip($s, $n=300){
 <meta name="twitter:title" content="<?= htmlspecialchars($title) ?>">
 <meta name="twitter:description" content="<?= htmlspecialchars(clip($desc)) ?>">
 <meta name="twitter:image" content="<?= htmlspecialchars($img) ?>">
-
 </head>
 <body>
-<!-- Dành cho bot – không auto refresh để tránh xung đột khi render preview -->
-Nếu bạn không được chuyển tiếp, bấm vào đây:
-<a href="<?= htmlspecialchars($link) ?>"><?= htmlspecialchars($title) ?></a>.
+<!-- Chỉ dành cho crawler -->
+Nếu bạn là người dùng, vui lòng mở bài viết: <a href="<?= htmlspecialchars($link) ?>"><?= htmlspecialchars($title) ?></a>.
 </body>
 </html>
