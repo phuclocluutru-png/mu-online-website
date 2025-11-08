@@ -65,56 +65,25 @@ Deny from all
 
 RedirectMatch 404 /\.git
 
-<<<<<<< HEAD
-# Prevent hotlinking images (first block)
-=======
-# Prevent hotlinking images (single rule set)
->>>>>>> 87617b5 (fix: simplify per-directory post SSR rewrite and clean hotlink/trailing slash rules)
-RewriteCond % { HTTP_REFERER } !^$
-RewriteCond % { HTTP_REFERER } !^https?://(www\.)?pkclear\.com [NC]
-RewriteRule \.(?:jpe?g | png | gif | bmp | webp)$ - [F, NC]
-
-<<<<<<< HEAD
-# Custom error pages (uncomment and modify paths as needed)
-# ErrorDocument 404 /404.html
-# ErrorDocument 500 /500.html
-
-# Force HTTPS (uncomment if you have SSL)
-# RewriteCond %{HTTPS} off
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-# Prevent hotlinking images (duplicate removed)
-# (Already handled above) 
-
-# Remove trailing slash
-=======
-# Remove trailing slash from non-directories
->>>>>>> 87617b5 (fix: simplify per-directory post SSR rewrite and clean hotlink/trailing slash rules)
-RewriteCond % { REQUEST_FILENAME } !-d
-RewriteRule ^(.+)/$ $1 [R=301, L]
-
-# Server-side rendered post preview (dynamic Open Graph meta)
-RewriteCond % { QUERY_STRING } (?:^ | &)id=[0-9]+(?:& | $)
-RewriteRule ^pages/post\.html$ post-ssr.php [L]
-
-<<<<<<< HEAD
-RewriteRule ^share/post/([0-9]+)/?$ share/post.php?id=$1 [L, QSA]
-=======
-# Pretty share URL: /share/post/123 -> share/post.php?id=123
-RewriteRule ^share/post/([0-9]+)/?$ share/post.php?id=$1 [L, QSA]
-
-# SPA fallback (if desired; comment out if WordPress handles routing)
-# RewriteCond %{REQUEST_FILENAME} !-f
-# RewriteCond %{REQUEST_FILENAME} !-d
-# RewriteRule . index.html [L]
-RewriteRule ^pages/post\.html$ /share/post.php?id=%2 [L,QSA]
-# End of file
-
->>>>>>> 87617b5 (fix: simplify per-directory post SSR rewrite and clean hotlink/trailing slash rules)
+# ============ MXH PREVIEW & ALIASES ============
 <IfModule mod_rewrite.c>
 RewriteEngine On
+
+# Pretty URL cho link share (đang dùng OK)
+RewriteRule ^share/post/([0-9]+)/?$ /share/post.php?id=$1 [L,QSA]
+
+# Alias sạch cache (tuỳ chọn): /p/123 -> /pages/post.html?id=123
+RewriteRule ^p/([0-9]+)/?$ /pages/post.html?id=$1 [L,QSA]
+
+# Bot MXH quét /pages/post.html?id=123 --> render OG động
 RewriteCond %{REQUEST_URI} ^/pages/post\.html$ [NC]
 RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+) [NC]
-RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|WhatsApp|TelegramBot|Zalo|ZaloPC|ZaloBot) [NC]
+
+# Bắt thật rộng UA của bot (gồm cả Zalo/ZaloPC và các biến thể)
+RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|WhatsApp|TelegramBot|Zalo|ZaloPC|ZaloBot) [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} (bot|crawler|spider|preview|embed) [NC]
+
+# Rewrite NỘI BỘ sang trang đã render OG
 RewriteRule ^pages/post\.html$ /share/post.php?id=%2 [L,QSA]
 </IfModule>
+# ============ /MXH PREVIEW & ALIASES ============
