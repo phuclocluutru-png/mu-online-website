@@ -1,17 +1,9 @@
 <IfModule mod_rewrite.c>
-# Tránh Apache "đoán file" gây lệch rule
 Options -MultiViews
 RewriteEngine On
 
-# 1) Đặt cờ môi trường nếu là bot MXH (bắt rộng, gồm cả Zalo/ZaloPC)
-RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|WhatsApp|TelegramBot|Zalo|ZaloPC|ZaloBot|SocialBot|Embedly|VKShare|Viber|Line|Preview|bot|crawler|spider|embed|fetch|analyzer) [NC]
-RewriteRule ^ - [E=MXHBOT:1]
-
-# 2) Chỉ khi là bot MXH + đang truy vấn post.html?id=123
-#    mới rewrite nội bộ sang share/post.php để trả OG động
-RewriteCond %{ENV:MXHBOT} =1
+# Nếu là bot MXH -> gắn cờ crawler=1 và chuyển nội bộ sang share/post.php
+RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Facebot|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest|WhatsApp|TelegramBot|Zalo|ZaloPC|ZaloBot|SocialBot|Embedly|VKShare|Viber|Line|bot|crawler|spider|preview|embed|fetch|analyzer) [NC]
 RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+) [NC]
-RewriteRule ^post\.html$ /share/post.php?id=%2 [L,QSA]
-
-# (Không thêm rule khác ở đây để tránh ảnh hưởng người dùng)
+RewriteRule ^post\.html$ /share/post.php?id=%2&crawler=1 [L,QSA]
 </IfModule>
