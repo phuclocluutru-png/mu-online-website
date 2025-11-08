@@ -1,0 +1,5 @@
+RewriteEngine On
+# Khi bot mạng xã hội quét /pages/post.html?id=123 -> chuyển ngầm sang PHP tạo OG
+RewriteCond %{QUERY_STRING} (^|&)id=([0-9]+) [NC]
+RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit|Twitterbot|Discordbot|LinkedInBot|Slackbot|Pinterest) [NC]
+RewriteRule ^post\.html$ /share/post.php?id=%2 [L,QSA]
