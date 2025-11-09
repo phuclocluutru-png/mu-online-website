@@ -51,6 +51,7 @@ $bgVersion = asset_version('images/BG WEB.png');
             <ul class="banner-news__navList">
               <li><button type="button" class="banner-news__btn" data-action="home">Trang chủ</button></li>
               <li><button type="button" class="banner-news__btn" data-action="news">Tin tức</button></li>
+              <li><button type="button" class="banner-news__btn" data-action="guide">Hướng Dẫn</button></li>
               <li><button type="button" class="banner-news__btn" data-action="fanpage">Fanpage</button></li>
               <li><button type="button" class="banner-news__btn" data-action="community">Cộng đồng</button></li>
               <li><button type="button" class="banner-news__btn banner-news__btn--highlight" data-action="admin">Liên hệ Admin</button></li>

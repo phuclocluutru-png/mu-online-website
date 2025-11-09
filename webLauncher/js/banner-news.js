@@ -2,7 +2,8 @@
     // Simple mapping from data-action to URL. Opens in external browser when possible.
     var actionLinks = {
         home: 'https://pkclear.com/',
-        community: 'https://zalo.me/g/yigzjy890'
+        community: 'https://zalo.me/g/yigzjy890',
+        guide: 'huongdan.html' // Local hướng dẫn
     };
 
     function openExternal(url) {
@@ -35,6 +36,8 @@
                     console.log('[banner-news] Fanpage: chưa có URL cấu hình.');
                 } else if (act === 'admin') {
                     console.log('[banner-news] Liên hệ Admin: sẽ mở modal hoặc chat sau.');
+                } else if (act === 'guide') {
+                    console.log('[banner-news] Hướng Dẫn: file huongdan.html chưa tìm thấy hoặc sẽ được bổ sung.');
                 }
             }
         });
