@@ -1,6 +1,6 @@
 <?php
 // Global version seed (change manually if cần ép reload toàn bộ)
-$GLOBAL_VERSION = '20251110-2'; // bump thủ công để ép cache reload toàn bộ assets
+$GLOBAL_VERSION = '20251110-3'; // bump tiếp sau revert grid -> flex
 
 // Gửi header chống cache (HTML, CSS, JS) để launcher / trình duyệt cũ không giữ bản cũ
 header('Cache-Control: no-cache, no-store, must-revalidate');

@@ -118,30 +118,30 @@ body {
     overflow: hidden;
 }
 
-/* NAV LIST: dùng grid để chia đều chính xác theo số nút, tránh mọi sai số flex + border.
-   Nếu thay đổi số nút => cập nhật repeat(6,1fr) tương ứng.
-   (auto-fit có thể wrap ngoài ý muốn trong control cũ, nên cố định số cột an toàn) */
+/* NAV LIST (flex legacy safe) */
 .banner-news__navList {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    /* 6 nút hiện tại */
+    display: flex;
     width: 100%;
     height: 100%;
+    align-items: stretch;
+    justify-content: stretch;
     gap: 0;
+    flex-wrap: nowrap;
 }
 
 /* BUTTONS: ban đầu thiết kế 5 nút cố định 112px + nút cuối co giãn.
    Sau khi thêm nút (6 hoặc thay đổi số lượng) ta chuyển sang flex:1 để tự chia đều 100% chiều rộng.
    Giải pháp này loại bỏ sai số subpixel và luôn kín full width bất kể số nút. */
+/*.banner-news__btn base styles (unchanged except re-ordered)*/
 .banner-news__btn {
     flex: 1 1 0;
-    /* mỗi nút chia đều, không cần tính tay 559px */
+    /* chia đều */
+    min-width: 0;
     background: linear-gradient(180deg, #2d2241, #4d3a6d);
     color: #fff;
-    font-size: 16px;
     font-size: clamp(13px, calc(var(--banner-nav-height) * 0.42), 20px);
     font-weight: 600;
     letter-spacing: .035em;
@@ -156,8 +156,6 @@ body {
     line-height: var(--banner-nav-height);
     height: 100%;
     transition: background .25s, transform .15s, box-shadow .25s, font-size .2s;
-    min-width: 0;
-    /* cho phép chữ co */
 }
 
 /* Viền phân cách giữa các nút (dùng border-left để không gây dư nền cuối) */
