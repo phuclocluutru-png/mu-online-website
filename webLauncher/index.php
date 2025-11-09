@@ -52,6 +52,7 @@ $bgVersion = file_exists($bgPath) ? filemtime($bgPath) : time();
   <script src="js/events-data.js?v=<?php echo $bgVersion; ?>"></script>
   <script src="js/time-utils.js?v=<?php echo $bgVersion; ?>"></script>
   <script src="js/events.js?v=<?php echo $bgVersion; ?>"></script>
+  <script src="js/banner-news.js?v=<?php echo $bgVersion; ?>"></script>
   <script>
     // Fallback for legacy browser (no DOMContentLoaded in some old cases)
     (function(){
