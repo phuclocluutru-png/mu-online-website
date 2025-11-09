@@ -61,21 +61,22 @@ body {
 .banner-news {
     position: relative;
     width: 559px;
-    /* giữ đúng kích thước yêu cầu */
+    /* Tổng chiều cao panel = display (359) + nav (50) = 409 */
     height: 409px;
-    /* 359 + 50 = 409 (toàn bộ panel chiều cao) */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
     gap: 0;
+    /* CSS variables để dễ bảo trì kích thước vùng nút */
+    --banner-nav-height: 50px;
 }
 
 .banner-news__display {
     position: relative;
     width: 559px;
-    /* giảm nhẹ chiều cao để dành thêm không gian căn giữa nav */
-    height: 353px;
+    /* Chiều cao vùng hiển thị nội dung (409 - 50 = 359) */
+    height: 359px;
     background: linear-gradient(135deg, rgba(50, 34, 78, 0.85), rgba(110, 68, 175, 0.85));
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 6px 6px 0 0;
@@ -97,18 +98,18 @@ body {
 
 .banner-news__nav {
     width: 559px;
-    /* chiều cao nav chiếm toàn bộ phần còn lại: 409 - 353 = 56 */
-    height: 56px;
+    /* Chiều cao nav chuẩn yêu cầu */
+    height: var(--banner-nav-height);
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-top: none;
     border-radius: 0 0 6px 6px;
     backdrop-filter: blur(4px);
     display: flex;
-    align-items: stretch; /* nút cao full */
+    align-items: stretch;
     justify-content: stretch;
-    /* thêm chút đệm trên dưới để chữ không dính sát viền panel */
-    padding: 2px 0;
+    padding: 0;
+    /* bỏ padding để nút chiếm full height */
 }
 
 .banner-news__navList {
@@ -125,23 +126,27 @@ body {
 }
 
 .banner-news__btn {
-    /* mỗi nút chia đều chiều ngang, cao full (trừ padding nav 2px) */
+    /* Mỗi nút chia đều chiều ngang, cao full nav */
     flex: 1 1 0;
     background: linear-gradient(180deg, #2d2241, #4d3a6d);
     color: #fff;
-    font-size: 14px; /* tăng kích thước chữ cho dễ đọc */
+    /* Tự co chữ dựa theo chiều cao vùng nav, tránh quá nhỏ */
+    font-size: clamp(12px, calc(var(--banner-nav-height) * 0.30), 16px);
     font-weight: 600;
     letter-spacing: .035em;
-    border: 0; /* bỏ viền riêng, dùng separator */
+    border: 0;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     text-transform: uppercase;
     position: relative;
-    padding: 6px 10px; /* thêm padding dọc để nút "dày" hơn */
-    line-height: 1.1;
-    transition: background .25s, transform .15s, box-shadow .25s;
+    padding: 0 12px;
+    /* Chỉ padding ngang, không dọc để cao full */
+    line-height: 1;
+    /* reset line-height để flex căn giữa chuẩn */
+    height: 100%;
+    transition: background .25s, transform .15s, box-shadow .25s, font-size .2s;
 }
 
 /* Viền phân cách giữa các nút thay thế gap */
@@ -149,8 +154,8 @@ body {
     content: "";
     position: absolute;
     left: 0;
-    top: 6px;
-    bottom: 6px;
+    top: 6%;
+    bottom: 6%;
     width: 1px;
     background: rgba(255, 255, 255, 0.18);
 }
