@@ -46,3 +46,9 @@ jobs:
           README.md
           package*.json
           .gitignore
+          # Avoid failing when remote has legacy folder named "web Launcher" (with space)
+          # The action previously errored trying to remove /web Launcher (FTP 550)
+          web Launcher/**
+          web Launcher
+        # Reduce risk of deletion errors; don't attempt a full clean slate
+        dangerous-clean-slate: false
