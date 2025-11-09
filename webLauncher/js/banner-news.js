@@ -31,8 +31,6 @@
                 // Placeholder actions for other buttons (could be replaced later)
                 if (act === 'news') {
                     console.log('[banner-news] Tin tức: chưa triển khai nội dung.');
-                } else if (act === 'ranking') {
-                    console.log('[banner-news] Bảng Xếp Hạng: sẽ mở trang ranking sau.');
                 } else if (act === 'fanpage') {
                     console.log('[banner-news] Fanpage: chưa có URL cấu hình.');
                 } else if (act === 'admin') {
