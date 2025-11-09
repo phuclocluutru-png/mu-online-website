@@ -57,6 +57,11 @@ body {
     width: 560px;
 }
 
+/* Loại bỏ padding 1px của panel news để banner + nav không bị dư viền nền đen */
+.panel.panel-news {
+    padding: 0;
+}
+
 /* ===== Banner News (Phần Banner tin tức) ===== */
 .banner-news {
     position: relative;
@@ -125,13 +130,19 @@ body {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     width: 100%;
     height: 100%;
     align-items: stretch;
     justify-content: stretch;
     gap: 0;
-    /* không khoảng hở đen giữa các nút */
+    /* Grid chia đều cột, hạn chế sai số làm dư 1-2px nền đen cuối hàng */
+}
+
+/* Cho li không thêm layer layout gây sai số width */
+.banner-news__navList>li {
+    display: contents;
 }
 
 .banner-news__btn {
@@ -166,15 +177,9 @@ body {
     /* Cho phép chữ co lại nếu quá dài thay vì phá layout */
 }
 
-/* Viền phân cách giữa các nút thay thế gap */
-.banner-news__btn+.banner-news__btn::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 6%;
-    bottom: 6%;
-    width: 1px;
-    background: rgba(255, 255, 255, 0.18);
+/* Viền phân cách giữa các nút (dùng border-left để không gây dư nền cuối) */
+.banner-news__btn+.banner-news__btn {
+    border-left: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 /* Bo góc chỉ ở hai nút đầu cuối */
