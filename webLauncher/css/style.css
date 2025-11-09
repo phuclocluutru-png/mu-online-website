@@ -54,21 +54,24 @@ body {
 }
 
 .panel-news {
-    width: 560px;
+    width: 559px;
+    /* đồng bộ với banner bên trong để không dư 1px border-box */
 }
 
 /* Loại bỏ padding 1px của panel news để banner + nav không bị dư viền nền đen */
 .panel.panel-news {
     padding: 0;
+    border: 0;
+    /* bỏ border ngoài để tránh viền đôi & nền đen hé lộ do chênh lệch box-sizing */
 }
 
 /* ===== Banner News (Phần Banner tin tức) ===== */
 .banner-news {
     position: relative;
-    /* Cố định 559px để thanh nút chia đều chính xác theo yêu cầu */
-    width: 559px;
-    /* Tổng chiều cao panel = display (359) + nav (50) = 409 */
+    width: 100%;
+    /* chiếm full panel-news (đã chuẩn 559px, không border ngoài) */
     height: 409px;
+    /* 359 + 50 */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -79,7 +82,7 @@ body {
 
 .banner-news__display {
     position: relative;
-    width: 559px;
+    width: 100%;
     height: 359px;
     background: linear-gradient(135deg, rgba(50, 34, 78, 0.85), rgba(110, 68, 175, 0.85));
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -101,7 +104,7 @@ body {
 }
 
 .banner-news__nav {
-    width: 559px;
+    width: 100%;
     height: var(--banner-nav-height);
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -113,7 +116,6 @@ body {
     justify-content: stretch;
     padding: 0;
     overflow: hidden;
-    /* cắt mọi sai số làm lộ nền */
 }
 
 .banner-news__navList {
