@@ -1,6 +1,6 @@
 <?php
 // Global version seed (change manually if cần ép reload toàn bộ)
-$GLOBAL_VERSION = '20251110-10'; // bump sau fix trắng: fallback background + gộp highlight
+$GLOBAL_VERSION = '20251110-8'; // bump sau điều chỉnh width nút & hiệu ứng highlight admin
 
 // Gửi header chống cache (HTML, CSS, JS) để launcher / trình duyệt cũ không giữ bản cũ
 header('Cache-Control: no-cache, no-store, must-revalidate');
