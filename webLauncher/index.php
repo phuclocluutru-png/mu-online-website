@@ -1,6 +1,25 @@
 <?php
-$bgPath = __DIR__ . '/images/BG WEB.png';
-$bgVersion = file_exists($bgPath) ? filemtime($bgPath) : time();
+// Global version seed (change manually if cần ép reload toàn bộ)
+$GLOBAL_VERSION = date('Ymd'); // hoặc đặt chuỗi cố định ví dụ '20251110-1'
+
+// Gửi header chống cache (HTML, CSS, JS) để launcher / trình duyệt cũ không giữ bản cũ
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
+header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+
+// Hàm tạo version dựa trên filemtime + GLOBAL_VERSION (nếu file không tồn tại trả về timestamp hiện tại)
+function asset_version(string $relative): string {
+  global $GLOBAL_VERSION;
+  $path = __DIR__ . '/' . ltrim($relative, '/');
+  if (is_file($path)) {
+    return $GLOBAL_VERSION.'-'.filemtime($path);
+  }
+  return $GLOBAL_VERSION.'-'.time();
+}
+
+// Giữ riêng version cho background nếu muốn dùng nơi khác
+$bgVersion = asset_version('images/BG WEB.png');
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -8,11 +27,15 @@ $bgVersion = file_exists($bgPath) ? filemtime($bgPath) : time();
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>PKClear Launcher</title>
-  <link rel="stylesheet" href="css/style.css?v=<?php echo $bgVersion; ?>">
+  <!-- Mỗi asset có version riêng (filemtime) để bust cache -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <link rel="stylesheet" href="css/style.css?v=<?php echo asset_version('css/style.css'); ?>">
 </head>
 <body>
   <div class="canvas">
-    <img class="canvas-bg" src="images/BG WEB.png?v=<?php echo $bgVersion; ?>" alt="">
+  <img class="canvas-bg" src="images/BG WEB.png?v=<?php echo $bgVersion; ?>" alt="">
     <div class="layout">
       <section class="panel panel-news">
         <!-- Banner tin tức: Kích thước tổng thể khu panel ~560px (nằm trong canvas 823x409). 
@@ -48,11 +71,13 @@ $bgVersion = file_exists($bgPath) ? filemtime($bgPath) : time();
   <!-- Event tooltip -->
   <div id="event-times-pop" class="event-times-pop"></div>
 
-  <script src="js/event-drops.js?v=<?php echo $bgVersion; ?>"></script>
-  <script src="js/events-data.js?v=<?php echo $bgVersion; ?>"></script>
-  <script src="js/time-utils.js?v=<?php echo $bgVersion; ?>"></script>
-  <script src="js/events.js?v=<?php echo $bgVersion; ?>"></script>
-  <script src="js/banner-news.js?v=<?php echo $bgVersion; ?>"></script>
+  <script src="js/event-drops.js?v=<?php echo asset_version('js/event-drops.js'); ?>"></script>
+  <script src="js/events-data.js?v=<?php echo asset_version('js/events-data.js'); ?>"></script>
+  <script src="js/time-utils.js?v=<?php echo asset_version('js/time-utils.js'); ?>"></script>
+  <script src="js/events.js?v=<?php echo asset_version('js/events.js'); ?>"></script>
+  <script src="js/banner-news.js?v=<?php echo asset_version('js/banner-news.js'); ?>"></script>
+  <!-- Debug: nguồn file index đang chạy: -->
+  <?php echo "<!-- INDEX_FILE=".__FILE__." VERSION=$GLOBAL_VERSION -->"; ?>
   <script>
     // Fallback for legacy browser (no DOMContentLoaded in some old cases)
     (function(){
