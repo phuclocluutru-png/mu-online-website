@@ -153,6 +153,9 @@ body {
     text-transform: uppercase;
     position: relative;
     padding: 0 12px;
+    /* Fallback chiều cao cố định cho môi trường không hỗ trợ CSS variable */
+    height: 50px;
+    line-height: 50px;
     height: var(--banner-nav-height);
     line-height: var(--banner-nav-height);
     transition: background .25s, transform .15s, box-shadow .25s, font-size .2s;
