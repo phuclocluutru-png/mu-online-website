@@ -196,8 +196,12 @@ body {
 }
 
 .banner-news__btn--highlight {
-    background: linear-gradient(90deg, #7c3aed, #f59e0b);
-    border-color: rgba(255, 255, 255, 0.5);
+    /* Chiều cao cố định 50px (fallback) + dùng var để đồng bộ */
+    height: 50px;
+    line-height: 50px;
+    /* fallback legacy */
+    height: var(--banner-nav-height);
+    line-height: var(--banner-nav-height);
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2), 0 0 14px rgba(255, 196, 68, 0.55);
 }
 

@@ -1,6 +1,6 @@
 <?php
 // Global version seed (change manually if cần ép reload toàn bộ)
-$GLOBAL_VERSION = '20251110-3'; // bump tiếp sau revert grid -> flex
+$GLOBAL_VERSION = '20251110-4'; // bump sau chỉnh chiều cao nút cố định 50px
 
 // Gửi header chống cache (HTML, CSS, JS) để launcher / trình duyệt cũ không giữ bản cũ
 header('Cache-Control: no-cache, no-store, must-revalidate');
