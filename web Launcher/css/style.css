@@ -1,0 +1,340 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #10131a;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 16px;
+    color: #222222;
+}
+
+.canvas {
+    position: relative;
+    width: 823px;
+    height: 409px;
+    overflow: hidden;
+}
+
+.canvas-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+    pointer-events: none;
+}
+
+.layout {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    color: #ffffff;
+}
+
+.panel {
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.panel-news {
+    width: 560px;
+}
+
+.panel-events {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 6px;
+}
+
+.panel-events h2 {
+    text-align: center;
+}
+
+.panel h2 {
+    margin: 0;
+    font-size: 22px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.placeholder {
+    margin: 0;
+    color: rgba(34, 34, 34, 0.65);
+    letter-spacing: 0.04em;
+}
+
+/* Events styles */
+.events {
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 5px;
+    height: 407px;
+    width: 264px;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.events__list {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow-y: auto;
+    flex: 1;
+    /* Legacy IE scrollbar colors for embedded launcher control */
+    scrollbar-face-color: #24173b;
+    scrollbar-track-color: rgba(255, 255, 255, 0.08);
+    scrollbar-shadow-color: #0d0718;
+    scrollbar-highlight-color: #3b2a5c;
+    scrollbar-3dlight-color: #3b2a5c;
+    scrollbar-darkshadow-color: #0d0718;
+    scrollbar-arrow-color: #f6c744;
+    -ms-overflow-style: none;
+    /* Hide default gutter to emulate thinner bar; pseudo custom track below */
+}
+
+/* Custom slimmer scrollbar for modern engines */
+.events__list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.events__list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+}
+
+.events__list::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #7c3aed, #f6c744);
+    border-radius: 6px;
+}
+
+.events__list::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #9d4bff, #ffdb70);
+}
+
+.event {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    font-size: 12px;
+    min-width: 0;
+}
+
+.event__name {
+    flex: 1;
+    font-weight: 600;
+    color: #ffffff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.event__countdown {
+    font-family: monospace;
+    color: #ffd700;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.event__status {
+    padding: 2px 4px;
+    border-radius: 4px;
+    background: rgba(92, 54, 150, 0.35);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+.event__status.is-active {
+    background: linear-gradient(90deg, #7c3aed, #f59e0b);
+    color: #fff;
+}
+
+/* Tooltip */
+.event-times-pop {
+    position: fixed;
+    z-index: 999;
+    min-width: 150px;
+    max-width: 250px;
+    background: rgba(34, 25, 53, 0.92);
+    border: 1px solid rgba(124, 58, 237, 0.35);
+    border-radius: 8px;
+    padding: 10px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    font-size: 12px;
+    color: #ffffff;
+    display: none;
+    pointer-events: none;
+}
+
+.event-times-pop.is-visible {
+    display: block;
+}
+
+.event-times-pop__title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #f6d365;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.event-times-pop__duration {
+    font-weight: 600;
+    font-size: 11px;
+    opacity: 0.75;
+    text-transform: none;
+}
+
+.event-times-pop__list,
+.event-times-pop__drops {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.event-times-pop__list--grid {
+    font-size: 0;
+}
+
+.event-times-pop__list--grid li {
+    display: inline-block;
+    width: 33.333%;
+    box-sizing: border-box;
+    padding: 6px 6px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    text-align: center;
+    font-size: 12px;
+}
+
+.event-times-pop__drops--grid {
+    font-size: 0;
+}
+
+.event-times-pop__section {
+    margin-top: 8px;
+}
+
+.event-times-pop__sectionTitle {
+    font-weight: 600;
+    font-size: 11px;
+    margin-bottom: 4px;
+    color: #cbb2ff;
+    text-transform: uppercase;
+}
+
+.event-times-pop__meta {
+    margin-bottom: 4px;
+    font-size: 9px;
+}
+
+.event-times-pop__metaLabel {
+    font-weight: 600;
+    color: #ffd700;
+}
+
+.event-times-pop__metaValue {
+    color: #ffffff;
+}
+
+.event-times-pop__note {
+    margin-bottom: 4px;
+    font-size: 9px;
+    color: #cccccc;
+    font-style: italic;
+}
+
+.event-times-pop__drop {
+    display: inline-block;
+    width: 20%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 4px 2px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.event-times-pop__dropThumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    flex: none;
+}
+
+.event-times-pop__dropThumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.event-times-pop__dropName {
+    display: block;
+    font-size: 9px;
+    color: #ffe7a9;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.event-times-pop__fallback {
+    display: block;
+    padding: 4px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    text-align: center;
+    font-size: 11px;
+}
+
+.event-times-pop__reward {
+    margin-top: 8px;
+    font-weight: 600;
+    font-size: 12px;
+    color: #ffe7a9;
+}
+
+.event-times-pop__rewardValue {
+    color: #ffd95c;
+    margin-left: 6px;
+    font-weight: 700;
+}
+
+.event-times-pop__empty {
+    margin: 0;
+    font-size: 11px;
+    opacity: 0.8;
+}
