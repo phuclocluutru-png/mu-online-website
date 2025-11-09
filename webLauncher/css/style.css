@@ -130,8 +130,8 @@ body {
     flex: 1 1 0;
     background: linear-gradient(180deg, #2d2241, #4d3a6d);
     color: #fff;
-    /* Tự co chữ dựa theo chiều cao vùng nav, tránh quá nhỏ */
-    font-size: clamp(12px, calc(var(--banner-nav-height) * 0.30), 16px);
+    /* Tự co chữ dựa theo chiều cao vùng nav, tăng tỷ lệ để chữ nhìn đầy hơn (0.30 -> 0.42) */
+    font-size: clamp(13px, calc(var(--banner-nav-height) * 0.42), 20px);
     font-weight: 600;
     letter-spacing: .035em;
     border: 0;
@@ -143,10 +143,12 @@ body {
     position: relative;
     padding: 0 12px;
     /* Chỉ padding ngang, không dọc để cao full */
-    line-height: 1;
-    /* reset line-height để flex căn giữa chuẩn */
+    line-height: var(--banner-nav-height);
+    /* Dự phòng cho môi trường cũ không align-items chuẩn: line-height = chiều cao nav */
     height: 100%;
     transition: background .25s, transform .15s, box-shadow .25s, font-size .2s;
+    min-width: 0;
+    /* Cho phép chữ co lại nếu quá dài thay vì phá layout */
 }
 
 /* Viền phân cách giữa các nút thay thế gap */
