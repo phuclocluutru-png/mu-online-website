@@ -137,7 +137,7 @@ body {
    Giải pháp này loại bỏ sai số subpixel và luôn kín full width bất kể số nút. */
 /* Base button: fixed width 93.16px (559 / 6). Nút cuối sẽ fill nếu rounding thiếu 1px. */
 .banner-news__btn {
-    /* Thu nhỏ 5 nút đầu còn 88px để nút Admin rộng hơn */
+    /* Width cố định cho 5 nút thường: 88px (5*88=440). Nút cuối: 119px => tổng 559px */
     flex: 0 0 88px;
     width: 88px;
     min-width: 88px;
@@ -177,10 +177,10 @@ body {
 
 /* Nút cuối fill phần dư do rounding (ví dụ tổng 558.96px) */
 .banner-news__btn:last-child {
-    flex: 1 1 auto;
-    width: auto;
-    min-width: 110px;
-    /* rộng hơn dễ nhìn */
+    flex: 0 0 119px;
+    /* 559 - 440 = 119 */
+    width: 119px;
+    min-width: 119px;
 }
 
 /* Nút cuối nới lỏng: chiếm phần dư còn lại (559 - 112*4 = 111px) tránh gap do 0.8px rounding */
