@@ -65,9 +65,8 @@ body {
 /* ===== Banner News (Phần Banner tin tức) ===== */
 .banner-news {
     position: relative;
-    /* width cũ: 559px gây dư mép đen do panel dùng box-sizing:border-box (border+padding) => content chỉ ~556px.
-       Đổi sang 100% để khớp vừa khít vùng khả dụng bên trong .panel-news, tránh dư 1-3px nền đen. */
-    width: 100%;
+    /* Cố định 559px để thanh nút chia đều chính xác theo yêu cầu */
+    width: 559px;
     /* Tổng chiều cao panel = display (359) + nav (50) = 409 */
     height: 409px;
     display: flex;
@@ -75,17 +74,12 @@ body {
     justify-content: flex-start;
     align-items: stretch;
     gap: 0;
-    /* CSS variables để dễ bảo trì kích thước vùng nút */
     --banner-nav-height: 50px;
-    /* Modern engines */
-    /* Fallback cho engine cũ (IE / WebBrowser Control) không hỗ trợ CSS variables */
 }
 
 .banner-news__display {
     position: relative;
-    /* width cũ: 559px -> gây lệch do vùng thực tế nhỏ hơn; chuyển 100% theo parent */
-    width: 100%;
-    /* Chiều cao vùng hiển thị nội dung (409 - 50 = 359) */
+    width: 559px;
     height: 359px;
     background: linear-gradient(135deg, rgba(50, 34, 78, 0.85), rgba(110, 68, 175, 0.85));
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -107,13 +101,8 @@ body {
 }
 
 .banner-news__nav {
-    /* width cũ: 559px -> đổi 100% để tránh dư viền đen bên phải */
-    width: 100%;
-    /* Chiều cao nav chuẩn yêu cầu */
-    height: 50px;
-    /* Fallback legacy */
+    width: 559px;
     height: var(--banner-nav-height);
-    /* Modern override */
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-top: none;
@@ -123,7 +112,8 @@ body {
     align-items: stretch;
     justify-content: stretch;
     padding: 0;
-    /* bỏ padding để nút chiếm full height */
+    overflow: hidden;
+    /* cắt mọi sai số làm lộ nền */
 }
 
 .banner-news__navList {
@@ -173,7 +163,8 @@ body {
 
 /* Viền phân cách giữa các nút (dùng border-left để không gây dư nền cuối) */
 .banner-news__btn+.banner-news__btn {
-    border-left: 1px solid rgba(255, 255, 255, 0.18);
+    /* Dùng box-shadow thay border để không cộng thêm chiều rộng thực tế */
+    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.18);
 }
 
 /* Bo góc chỉ ở hai nút đầu cuối */
