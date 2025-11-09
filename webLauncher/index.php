@@ -15,7 +15,25 @@ $bgVersion = file_exists($bgPath) ? filemtime($bgPath) : time();
     <img class="canvas-bg" src="images/BG WEB.png?v=<?php echo $bgVersion; ?>" alt="">
     <div class="layout">
       <section class="panel panel-news">
-        <h2>Phần Banner tin tức</h2>
+        <!-- Banner tin tức: Kích thước tổng thể khu panel ~560px (nằm trong canvas 823x409). 
+             Chia làm 2 phần:
+             - Vùng hiển thị (display area) 559x359
+             - Thanh điều hướng (nav) 559x50 -->
+        <div class="banner-news">
+          <div class="banner-news__display" id="bannerNewsDisplay">
+            <!-- Nội dung tin tức / ảnh / slider sẽ được load ở đây bằng JS sau này -->
+            <div class="banner-news__placeholder">Nội dung Tin tức / Hình ảnh</div>
+          </div>
+          <nav class="banner-news__nav" aria-label="Điều hướng tin tức">
+            <ul class="banner-news__navList">
+              <li><button type="button" class="banner-news__btn" data-action="home">Trang chủ</button></li>
+              <li><button type="button" class="banner-news__btn" data-action="news">Tin tức</button></li>
+              <li><button type="button" class="banner-news__btn" data-action="fanpage">Fanpage</button></li>
+              <li><button type="button" class="banner-news__btn" data-action="community">Cộng đồng</button></li>
+              <li><button type="button" class="banner-news__btn banner-news__btn--highlight" data-action="admin">Liên hệ Admin</button></li>
+            </ul>
+          </nav>
+        </div>
       </section>
       <section class="panel panel-events">
         <div class="events">

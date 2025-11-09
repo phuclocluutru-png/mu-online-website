@@ -57,6 +57,137 @@ body {
     width: 560px;
 }
 
+/* ===== Banner News (Phần Banner tin tức) ===== */
+.banner-news {
+    position: relative;
+    width: 559px;
+    /* giữ đúng kích thước yêu cầu */
+    height: 409px;
+    /* 359 + 50 = 409 (toàn bộ panel chiều cao) */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 0;
+}
+
+.banner-news__display {
+    position: relative;
+    width: 559px;
+    height: 359px;
+    background: linear-gradient(135deg, rgba(50, 34, 78, 0.85), rgba(110, 68, 175, 0.85));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px 6px 0 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner-news__placeholder {
+    font-size: 18px;
+    letter-spacing: .05em;
+    font-weight: 600;
+    color: #ffe7a9;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, .6);
+    opacity: .85;
+    user-select: none;
+}
+
+.banner-news__nav {
+    width: 559px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 6px;
+}
+
+.banner-news__navList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.banner-news__btn {
+    flex: 1;
+    background: linear-gradient(180deg, #2d2241, #4d3a6d);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    position: relative;
+    padding: 4px 2px;
+    transition: background .25s, transform .15s;
+}
+
+.banner-news__btn:hover {
+    background: linear-gradient(180deg, #3a2954, #6d4fa3);
+}
+
+.banner-news__btn:active {
+    transform: translateY(1px);
+}
+
+.banner-news__btn--highlight {
+    background: linear-gradient(90deg, #7c3aed, #f59e0b);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 0 12px rgba(255, 196, 68, 0.55);
+}
+
+.banner-news__btn--highlight:hover {
+    background: linear-gradient(90deg, #9d4bff, #ffb340);
+}
+
+/* Scroll / degrade gracefully: nếu chiều rộng hẹp hơn thì cho thu nhỏ chữ */
+@media (max-width: 880px) {
+    .banner-news {
+        width: 100%;
+    }
+
+    .banner-news__display,
+    .banner-news__nav {
+        width: 100%;
+    }
+
+    .banner-news__btn {
+        font-size: 11px;
+    }
+}
+
+/* Nếu launcher nhúng vào một control quá nhỏ: stack nav thành 2 hàng */
+@media (max-width: 600px) {
+    .banner-news__navList {
+        flex-wrap: wrap;
+    }
+
+    .banner-news__btn {
+        flex: 1 1 calc(50% - 6px);
+    }
+
+    .banner-news__btn:last-child {
+        flex-basis: 100%;
+    }
+}
+
 .panel-events {
     flex: 1;
     display: flex;
