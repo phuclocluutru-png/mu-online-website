@@ -70,6 +70,8 @@ body {
     gap: 0;
     /* CSS variables để dễ bảo trì kích thước vùng nút */
     --banner-nav-height: 50px;
+    /* Modern engines */
+    /* Fallback cho engine cũ (IE / WebBrowser Control) không hỗ trợ CSS variables */
 }
 
 .banner-news__display {
@@ -99,7 +101,10 @@ body {
 .banner-news__nav {
     width: 559px;
     /* Chiều cao nav chuẩn yêu cầu */
+    height: 50px;
+    /* Fallback legacy */
     height: var(--banner-nav-height);
+    /* Modern override */
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-top: none;
@@ -131,7 +136,10 @@ body {
     background: linear-gradient(180deg, #2d2241, #4d3a6d);
     color: #fff;
     /* Tự co chữ dựa theo chiều cao vùng nav, tăng tỷ lệ để chữ nhìn đầy hơn (0.30 -> 0.42) */
+    font-size: 16px;
+    /* Fallback legacy không hỗ trợ clamp()/CSS vars */
     font-size: clamp(13px, calc(var(--banner-nav-height) * 0.42), 20px);
+    /* Modern override */
     font-weight: 600;
     letter-spacing: .035em;
     border: 0;
@@ -143,7 +151,10 @@ body {
     position: relative;
     padding: 0 12px;
     /* Chỉ padding ngang, không dọc để cao full */
+    line-height: 50px;
+    /* Fallback legacy */
     line-height: var(--banner-nav-height);
+    /* Modern override */
     /* Dự phòng cho môi trường cũ không align-items chuẩn: line-height = chiều cao nav */
     height: 100%;
     transition: background .25s, transform .15s, box-shadow .25s, font-size .2s;
