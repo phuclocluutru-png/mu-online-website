@@ -118,17 +118,19 @@ body {
     overflow: hidden;
 }
 
+/* NAV LIST: dùng grid để chia đều chính xác theo số nút, tránh mọi sai số flex + border.
+   Nếu thay đổi số nút => cập nhật repeat(6,1fr) tương ứng.
+   (auto-fit có thể wrap ngoài ý muốn trong control cũ, nên cố định số cột an toàn) */
 .banner-news__navList {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    /* 6 nút hiện tại */
     width: 100%;
     height: 100%;
-    align-items: stretch;
-    justify-content: stretch;
     gap: 0;
-    /* Quay lại flex để tương thích môi trường embedded cũ; không tạo bug mất nút */
 }
 
 /* BUTTONS: ban đầu thiết kế 5 nút cố định 112px + nút cuối co giãn.
@@ -234,13 +236,8 @@ body {
     }
 }
 
-/* Safety: bảo đảm mặc định luôn một hàng và đủ chiều cao */
-.banner-news__navList {
-    flex-wrap: nowrap;
-}
-
+/* Safety override cho button khi grid: bỏ flex sizing riêng lẻ, height giữ 100% */
 .banner-news__btn {
-    flex: 1 1 0;
     min-width: 0;
 }
 

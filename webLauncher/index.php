@@ -1,6 +1,6 @@
 <?php
 // Global version seed (change manually if cần ép reload toàn bộ)
-$GLOBAL_VERSION = date('Ymd'); // hoặc đặt chuỗi cố định ví dụ '20251110-1'
+$GLOBAL_VERSION = '20251110-2'; // bump thủ công để ép cache reload toàn bộ assets
 
 // Gửi header chống cache (HTML, CSS, JS) để launcher / trình duyệt cũ không giữ bản cũ
 header('Cache-Control: no-cache, no-store, must-revalidate');
