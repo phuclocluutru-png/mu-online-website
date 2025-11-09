@@ -96,8 +96,8 @@ body {
 
 .banner-news__nav {
     width: 559px;
-    /* tăng chiều cao để nút lớn hơn */
-    height: 60px;
+    /* thu lại chiều cao để tránh lòi ra ngoài panel */
+    height: 52px;
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-top: none;
@@ -106,7 +106,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 8px;
+    padding: 4px 6px;
 }
 
 .banner-news__navList {
@@ -116,15 +116,14 @@ body {
     display: flex;
     width: 100%;
     height: 100%;
-    align-items: center;
-    /* gom nút gần nhau hơn thay vì trải đều */
+    align-items: stretch;
     justify-content: center;
-    gap: 3px;
+    gap: 4px;
 }
 
 .banner-news__btn {
-    /* bỏ flex:1 để tránh kéo giãn toàn chiều rộng khi justify-content:center */
-    flex: 0 0 auto;
+    /* quay lại flex:1 để tự co giãn cho đủ hàng, tránh overflow */
+    flex: 1 1 0;
     background: linear-gradient(180deg, #2d2241, #4d3a6d);
     color: #fff;
     font-size: 14px;
@@ -138,9 +137,7 @@ body {
     justify-content: center;
     text-transform: uppercase;
     position: relative;
-    padding: 10px 18px;
-    min-width: 110px;
-    height: 100%;
+    padding: 8px 14px;
     line-height: 1;
     transition: background .25s, transform .15s, box-shadow .25s;
 }
