@@ -222,19 +222,26 @@ body {
     }
 }
 
-/* Nếu launcher nhúng vào một control quá nhỏ: stack nav thành 2 hàng */
-@media (max-width: 600px) {
+/* Responsive: chỉ khi viewport RẤT hẹp (<480px) mới cho wrap 2 hàng.
+   Tránh trigger sớm làm hỏng chiều cao cố định 50px khi control/webview nhỏ ~560px. */
+@media (max-width: 480px) {
     .banner-news__navList {
         flex-wrap: wrap;
     }
 
     .banner-news__btn {
-        flex: 1 1 calc(50% - 6px);
+        flex: 1 1 50%;
     }
+}
 
-    .banner-news__btn:last-child {
-        flex-basis: 100%;
-    }
+/* Safety: bảo đảm mặc định luôn một hàng và đủ chiều cao */
+.banner-news__navList {
+    flex-wrap: nowrap;
+}
+
+.banner-news__btn {
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 .panel-events {
