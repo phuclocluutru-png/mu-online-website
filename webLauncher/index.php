@@ -1,6 +1,6 @@
 <?php
 // Global version seed (change manually if cần ép reload toàn bộ)
-$GLOBAL_VERSION = '20251110-7'; // bump sau thêm fallback height 50px cho các nút thường
+$GLOBAL_VERSION = '20251110-8'; // bump sau điều chỉnh width nút & hiệu ứng highlight admin
 
 // Gửi header chống cache (HTML, CSS, JS) để launcher / trình duyệt cũ không giữ bản cũ
 header('Cache-Control: no-cache, no-store, must-revalidate');
@@ -54,7 +54,7 @@ $bgVersion = asset_version('images/BG WEB.png');
               <li><button type="button" class="banner-news__btn" data-action="guide">Hướng Dẫn</button></li>
               <li><button type="button" class="banner-news__btn" data-action="fanpage">Fanpage</button></li>
               <li><button type="button" class="banner-news__btn" data-action="community">Cộng đồng</button></li>
-              <li><button type="button" class="banner-news__btn banner-news__btn--highlight" data-action="admin">Liên hệ Admin</button></li>
+              <li><button type="button" class="banner-news__btn banner-news__btn--highlight" data-action="admin">Liên hệ Ad</button></li>
             </ul>
           </nav>
         </div>

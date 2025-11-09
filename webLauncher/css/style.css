@@ -137,9 +137,10 @@ body {
    Giải pháp này loại bỏ sai số subpixel và luôn kín full width bất kể số nút. */
 /* Base button: fixed width 93.16px (559 / 6). Nút cuối sẽ fill nếu rounding thiếu 1px. */
 .banner-news__btn {
-    flex: 0 0 93.16px;
-    width: 93.16px;
-    min-width: 93.16px;
+    /* Thu nhỏ 5 nút đầu còn 88px để nút Admin rộng hơn */
+    flex: 0 0 88px;
+    width: 88px;
+    min-width: 88px;
     background: linear-gradient(180deg, #2d2241, #4d3a6d);
     color: #fff;
     font-size: clamp(13px, calc(var(--banner-nav-height) * 0.42), 20px);
@@ -165,7 +166,7 @@ body {
 /* Separator bằng đường kẻ thay vì khoảng trống để không làm tràn chiều rộng tổng */
 .banner-news__btn+.banner-news__btn {
     margin-left: 0;
-    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.15);
+    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.16);
 }
 
 /* Fallback legacy nếu margin-left gây lỗi co giãn (IE7/8 rare): dùng đường kẻ mờ thay vì gap.
@@ -178,12 +179,40 @@ body {
 .banner-news__btn:last-child {
     flex: 1 1 auto;
     width: auto;
-    min-width: 93.16px;
+    min-width: 110px;
+    /* rộng hơn dễ nhìn */
 }
 
 /* Nút cuối nới lỏng: chiếm phần dư còn lại (559 - 112*4 = 111px) tránh gap do 0.8px rounding */
 /* Không cần rule last-child nới rộng nữa vì tất cả flex:1 */
 /* .banner-news__btn:last-child { } */
+
+/* Highlight nâng cấp cho nút Liên hệ Admin */
+.banner-news__btn--highlight {
+    background: linear-gradient(90deg, #7c3aed, #ec9a1f, #f6d743);
+    background-size: 180% 100%;
+    animation: adminGlow 6s linear infinite;
+    box-shadow: 0 0 0 2px rgba(255, 200, 70, 0.45), 0 0 14px rgba(255, 196, 68, 0.6), 0 0 30px -4px rgba(124, 58, 237, 0.55);
+}
+
+.banner-news__btn--highlight:hover {
+    background-position: 100% 0;
+    box-shadow: 0 0 0 2px rgba(255, 220, 110, 0.7), 0 0 20px rgba(255, 196, 68, 0.85), 0 0 40px -4px rgba(124, 58, 237, 0.7);
+}
+
+@keyframes adminGlow {
+    0% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
+}
 
 /* Bo góc chỉ ở hai nút đầu cuối */
 .banner-news__btn:first-child {
