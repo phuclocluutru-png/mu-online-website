@@ -131,17 +131,16 @@ body {
     /* Quay lại flex để tương thích môi trường embedded cũ; không tạo bug mất nút */
 }
 
+/* BUTTONS: ban đầu thiết kế 5 nút cố định 112px + nút cuối co giãn.
+   Sau khi thêm nút (6 hoặc thay đổi số lượng) ta chuyển sang flex:1 để tự chia đều 100% chiều rộng.
+   Giải pháp này loại bỏ sai số subpixel và luôn kín full width bất kể số nút. */
 .banner-news__btn {
-    /* 5 nút: dùng width tính toán để tránh subpixel rounding. 559px tổng - (4px chia đều đường kẻ giả nếu có) vẫn ~559.
-       Chia: 559 / 5 = 111.8 -> ta làm 4 nút đầu 112px, nút cuối auto fill phần còn lại để luôn kín. */
-    flex: 0 0 112px;
+    flex: 1 1 0;
+    /* mỗi nút chia đều, không cần tính tay 559px */
     background: linear-gradient(180deg, #2d2241, #4d3a6d);
     color: #fff;
-    /* Tự co chữ dựa theo chiều cao vùng nav, tăng tỷ lệ để chữ nhìn đầy hơn (0.30 -> 0.42) */
     font-size: 16px;
-    /* Fallback legacy không hỗ trợ clamp()/CSS vars */
     font-size: clamp(13px, calc(var(--banner-nav-height) * 0.42), 20px);
-    /* Modern override */
     font-weight: 600;
     letter-spacing: .035em;
     border: 0;
@@ -152,16 +151,11 @@ body {
     text-transform: uppercase;
     position: relative;
     padding: 0 12px;
-    /* Chỉ padding ngang, không dọc để cao full */
-    line-height: 50px;
-    /* Fallback legacy */
     line-height: var(--banner-nav-height);
-    /* Modern override */
-    /* Dự phòng cho môi trường cũ không align-items chuẩn: line-height = chiều cao nav */
     height: 100%;
     transition: background .25s, transform .15s, box-shadow .25s, font-size .2s;
     min-width: 0;
-    /* Cho phép chữ co lại nếu quá dài thay vì phá layout */
+    /* cho phép chữ co */
 }
 
 /* Viền phân cách giữa các nút (dùng border-left để không gây dư nền cuối) */
@@ -170,9 +164,8 @@ body {
 }
 
 /* Nút cuối nới lỏng: chiếm phần dư còn lại (559 - 112*4 = 111px) tránh gap do 0.8px rounding */
-.banner-news__btn:last-child {
-    flex: 1 1 auto;
-}
+/* Không cần rule last-child nới rộng nữa vì tất cả flex:1 */
+/* .banner-news__btn:last-child { } */
 
 /* Bo góc chỉ ở hai nút đầu cuối */
 .banner-news__btn:first-child {
