@@ -1,6 +1,6 @@
 <?php
 // Global version seed (change manually if cần ép reload toàn bộ)
-$GLOBAL_VERSION = '20251110-5'; // bump sau thêm gap 1px giữa các nút
+$GLOBAL_VERSION = '20251110-6'; // bump sau set width cố định 93.16px
 
 // Gửi header chống cache (HTML, CSS, JS) để launcher / trình duyệt cũ không giữ bản cũ
 header('Cache-Control: no-cache, no-store, must-revalidate');
