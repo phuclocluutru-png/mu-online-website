@@ -2,6 +2,7 @@
     // Simple mapping from data-action to URL. Opens in external browser when possible.
     var actionLinks = {
         home: 'https://pkclear.com/',
+        news: 'https://pkclear.com/pages/post.html?cat=latest',
         community: 'https://zalo.me/g/yigzjy890',
         guide: 'huongdan.html' // Local hướng dẫn
     };
