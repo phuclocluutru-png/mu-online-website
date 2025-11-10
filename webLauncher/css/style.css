@@ -85,7 +85,8 @@ body {
     width: 100%;
     height: 359px;
     /* Fallback màu nền đặc nếu gradient không render (legacy) */
-    background: #2e1f47;
+    /* solid fallback first (older IE / embedded webviews), then gradient for modern engines */
+    background-color: #2e1f47;
     background: linear-gradient(135deg, rgba(50, 34, 78, 0.85), rgba(110, 68, 175, 0.85));
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 6px 6px 0 0;
@@ -93,6 +94,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    /* Ensure banner area doesn't collapse or get covered by other elements in legacy webviews */
+    min-height: 200px;
+    /* safety minimum so UI still shows even if variables break */
+    z-index: 0;
+    position: relative;
 }
 
 .banner-news__placeholder {
@@ -103,10 +109,14 @@ body {
     text-shadow: 0 2px 4px rgba(0, 0, 0, .6);
     opacity: .85;
     user-select: none;
+    background: transparent;
+    /* ensure placeholder text doesn't get a white bg from unexpected rules */
 }
 
 .banner-news__nav {
     width: 100%;
+    /* Fallback for environments that don't support CSS custom properties */
+    height: 50px;
     height: var(--banner-nav-height);
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -118,6 +128,8 @@ body {
     justify-content: stretch;
     padding: 0;
     overflow: hidden;
+    z-index: 1;
+    /* keep nav above display area */
 }
 
 /* NAV LIST (flex legacy safe) */

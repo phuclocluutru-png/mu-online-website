@@ -1,6 +1,6 @@
 <?php
 // Global version seed (change manually if cần ép reload toàn bộ)
-$GLOBAL_VERSION = '20251110-11'; // bump sau fix trắng: fallback background + gộp highlight
+$GLOBAL_VERSION = '20251110-12'; // bumped to force asset reload after white-box fix
 
 // Gửi header chống cache (HTML, CSS, JS) để launcher / trình duyệt cũ không giữ bản cũ
 header('Cache-Control: no-cache, no-store, must-revalidate');
@@ -42,8 +42,10 @@ $bgVersion = asset_version('images/BG WEB.png');
              Chia làm 2 phần:
              - Vùng hiển thị (display area) 559x359
              - Thanh điều hướng (nav) 559x50 -->
-        <div class="banner-news">
-          <div class="banner-news__display" id="bannerNewsDisplay">
+        <div class="banner-news" style="position:relative; z-index:9999;">
+          <div class="banner-news__display" id="bannerNewsDisplay" style="background:#2e1f47 !important;min-height:200px !important;">
+            <!-- Debug badge: visible indicator để kiểm tra overlay (bỏ khi xong) -->
+            <div style="position:absolute;left:8px;top:8px;z-index:99999;background:rgba(0,0,0,0.6);color:#fff;padding:6px 10px;border-radius:4px;font-weight:700;">BANNER TEST</div>
             <!-- Nội dung tin tức / ảnh / slider sẽ được load ở đây bằng JS sau này -->
             <div class="banner-news__placeholder">Nội dung Tin tức / Hình ảnh</div>
           </div>

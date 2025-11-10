@@ -22,6 +22,34 @@
     function initBannerNav() {
         var nav = document.querySelector('.banner-news__nav');
         if (!nav) return;
+        // Ensure banner display has a solid fallback background in legacy embedded webviews
+        (function ensureBannerFallback() {
+            try {
+                var display = document.getElementById('bannerNewsDisplay');
+                if (!display) return;
+                // If browser doesn't support CSS.supports for linear-gradient, apply solid bg
+                var supportsGradient = false;
+                if (window.CSS && typeof CSS.supports === 'function') {
+                    try {
+                        supportsGradient = CSS.supports('background-image', 'linear-gradient(0deg, #000, #000)');
+                    } catch (e) {
+                        supportsGradient = false;
+                    }
+                }
+                if (!supportsGradient) {
+                    try {
+                        // setProperty with priority to override inline/author styles in some engines
+                        display.style.setProperty('background', '#2e1f47', 'important');
+                        display.style.setProperty('min-height', '200px', 'important');
+                    } catch (e) {
+                        display.style.background = '#2e1f47';
+                        display.style.minHeight = display.style.minHeight || '200px';
+                    }
+                }
+            } catch (e) {
+                // swallow errors on very old engines
+            }
+        })();
         nav.addEventListener('click', function (ev) {
             var btn = ev.target.closest('.banner-news__btn');
             if (!btn) return;
