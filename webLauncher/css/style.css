@@ -80,6 +80,14 @@ body {
     --banner-nav-height: 50px;
 }
 
+/* Put a single border around the whole banner block to avoid a 1px seam
+   caused by adjacent borders on .banner-news__display and .banner-news__nav */
+.banner-news {
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
 .banner-news__display {
     position: relative;
     width: 100%;
@@ -88,8 +96,10 @@ body {
     /* solid fallback first (older IE / embedded webviews), then gradient for modern engines */
     background-color: #2e1f47;
     background: linear-gradient(135deg, rgba(50, 34, 78, 0.85), rgba(110, 68, 175, 0.85));
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    /* border moved to wrapper to avoid seam */
+    border: none;
     border-radius: 6px 6px 0 0;
+    /* visual radius, wrapper handles clipping */
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -119,9 +129,10 @@ body {
     height: 50px;
     height: var(--banner-nav-height);
     background: rgba(0, 0, 0, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-top: none;
+    /* border moved to wrapper; remove local border to avoid seam */
+    border: none;
     border-radius: 0 0 6px 6px;
+    /* visual radius only */
     backdrop-filter: blur(4px);
     display: flex;
     align-items: stretch;
@@ -202,6 +213,10 @@ body {
     background-size: 180% 100%;
     animation: adminGlow 6s linear infinite;
     box-shadow: 0 0 0 2px rgba(255, 200, 70, .45), 0 0 14px rgba(255, 196, 68, .6), 0 0 30px -4px rgba(124, 58, 237, .55);
+    /* Make admin button slightly wider than others */
+    flex: 1.6 1 0;
+    min-width: 110px;
+    /* keeps it readable on narrow views */
     height: 50px;
     line-height: 50px;
     /* fallback */
