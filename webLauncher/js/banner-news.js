@@ -51,7 +51,16 @@
             }
         })();
         nav.addEventListener('click', function (ev) {
-            var btn = ev.target.closest('.banner-news__btn');
+            // IE11- không có .closest, dùng vòng lặp cha
+            var el = ev.target;
+            var btn = null;
+            while (el && el !== nav) {
+                if (el.className && typeof el.className === 'string' && el.className.indexOf('banner-news__btn') !== -1) {
+                    btn = el;
+                    break;
+                }
+                el = el.parentNode;
+            }
             if (!btn) return;
             var act = btn.getAttribute('data-action');
             if (actionLinks[act]) {
