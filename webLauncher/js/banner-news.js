@@ -183,16 +183,61 @@
                 });
 
                 var fsBtn = makeBtn('⤢', 'Fullscreen', function () {
-                    if (document.fullscreenElement) {
-                        document.exitFullscreen();
-                    } else if (display.requestFullscreen) {
-                        display.requestFullscreen();
+                    try {
+                        // unified + vendor prefixed fallbacks
+                        var isFull = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+                        if (isFull) {
+                            if (document.exitFullscreen) document.exitFullscreen();
+                            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                            else if (document.msExitFullscreen) document.msExitFullscreen();
+                            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+                        } else {
+                            var target = display || vid;
+                            if (target.requestFullscreen) target.requestFullscreen();
+                            else if (target.webkitRequestFullscreen) target.webkitRequestFullscreen();
+                            else if (target.msRequestFullscreen) target.msRequestFullscreen();
+                            else if (target.mozRequestFullScreen) target.mozRequestFullScreen();
+                            else if (vid.requestFullscreen) vid.requestFullscreen();
+                            else console.warn('[banner-news] fullscreen API not available in this environment');
+                        }
+                    } catch (e) {
+                        console.warn('[banner-news] fullscreen error', e);
                     }
                 });
 
                 var pipBtn = makeBtn('⧉', 'Picture-in-Picture', function () {
-                    if (vid.requestPictureInPicture) {
-                        vid.requestPictureInPicture().catch(function (e) { console.warn('PIP failed', e); });
+                    try {
+                        // Standard PIP (Chrome, Edge)
+                        if (vid.requestPictureInPicture) {
+                            // Some browsers require the video to be playing and not muted restrictions may apply
+                            var ensurePlay = Promise.resolve();
+                            if (vid.paused) {
+                                ensurePlay = vid.play().catch(function (e) { console.warn('[banner-news] play before PIP failed', e); });
+                            }
+                            ensurePlay.then(function () {
+                                // If already in PIP, exit
+                                if (document.pictureInPictureElement) {
+                                    document.exitPictureInPicture().catch(function (e) { console.warn('[banner-news] exit PIP failed', e); });
+                                    return;
+                                }
+                                vid.requestPictureInPicture().catch(function (e) { console.warn('[banner-news] request PIP failed', e); });
+                            });
+                            return;
+                        }
+
+                        // WebKit Safari fallback
+                        if (typeof vid.webkitSupportsPresentationMode === 'function' && vid.webkitSupportsPresentationMode('picture-in-picture')) {
+                            try {
+                                vid.webkitSetPresentationMode('picture-in-picture');
+                            } catch (e) {
+                                console.warn('[banner-news] webkit PIP failed', e);
+                            }
+                            return;
+                        }
+
+                        console.warn('[banner-news] Picture-in-Picture not supported in this environment');
+                    } catch (e) {
+                        console.warn('[banner-news] PIP handler error', e);
                     }
                 });
 
