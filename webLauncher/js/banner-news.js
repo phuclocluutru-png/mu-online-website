@@ -241,23 +241,67 @@
 
                 overlay.appendChild(muteBtn);
                 overlay.appendChild(fsBtn);
-                // Browser fullscreen: request fullscreen on the document element (actual browser fullscreen)
+                // Browser fullscreen: create a controlled fullscreen wrapper so the video can be sized with object-fit:cover
                 var browserFsBtn = makeBtn('⛶', 'Xem toàn màn hình', function () {
                     try {
-                        var docEl = document.documentElement;
-                        var isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-                        if (isFs) {
-                            // exit
+                        var isFsNow = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+                        if (isFsNow) {
+                            // exit fullscreen
                             if (document.exitFullscreen) document.exitFullscreen();
                             else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
                             else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
                             else if (document.msExitFullscreen) document.msExitFullscreen();
                             return;
                         }
-                        if (docEl.requestFullscreen) docEl.requestFullscreen();
-                        else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen();
-                        else if (docEl.mozRequestFullScreen) docEl.mozRequestFullScreen();
-                        else if (docEl.msRequestFullscreen) docEl.msRequestFullscreen();
+
+                        // Create or reuse a fullscreen wrapper element and move video+overlay into it
+                        var existing = document.getElementById('banner-news-fullscreen-wrapper');
+                        var wrapper = existing || document.createElement('div');
+                        if (!existing) {
+                            wrapper.id = 'banner-news-fullscreen-wrapper';
+                            wrapper.style.position = 'fixed';
+                            wrapper.style.left = '0';
+                            wrapper.style.top = '0';
+                            wrapper.style.width = '100vw';
+                            wrapper.style.height = '100vh';
+                            wrapper.style.zIndex = '2147483650';
+                            wrapper.style.background = '#000';
+                        }
+
+                        // inner container to host the video and overlay
+                        var inner = document.createElement('div');
+                        inner.style.width = '100%';
+                        inner.style.height = '100%';
+                        inner.style.display = 'flex';
+                        inner.style.alignItems = 'stretch';
+                        inner.style.justifyContent = 'stretch';
+                        inner.style.position = 'relative';
+
+                        // remember original owner so we can restore later
+                        if (!wrapper._originalParent) {
+                            wrapper._originalParent = display;
+                            wrapper._originalNext = display.nextSibling;
+                        }
+
+                        // move nodes
+                        inner.appendChild(vid);
+                        inner.appendChild(overlay);
+                        // clear any previous children and append inner
+                        while (wrapper.firstChild) wrapper.removeChild(wrapper.firstChild);
+                        wrapper.appendChild(inner);
+                        document.body.appendChild(wrapper);
+
+                        // force video sizing to cover to avoid letterbox
+                        vid.style.width = '100%';
+                        vid.style.height = '100%';
+                        vid.style.objectFit = 'cover';
+
+                        // Request fullscreen on the wrapper element
+                        var req = wrapper.requestFullscreen || wrapper.webkitRequestFullscreen || wrapper.mozRequestFullScreen || wrapper.msRequestFullscreen;
+                        if (req) {
+                            try { req.call(wrapper); }
+                            catch (e) { console.warn('[banner-news] requestFullscreen failed', e); }
+                        }
                     } catch (e) {
                         console.warn('[banner-news] browser fullscreen request failed', e);
                     }
@@ -318,6 +362,23 @@
                         vid.style.width = '';
                         vid.style.height = '';
                         vid.style.objectFit = 'cover';
+
+                        // If we used the fullscreen wrapper, restore video+overlay back to original display
+                        var wrapper = document.getElementById('banner-news-fullscreen-wrapper');
+                        if (wrapper && wrapper._originalParent) {
+                            try {
+                                // move vid and overlay back
+                                display.appendChild(vid);
+                                display.appendChild(overlay);
+                                // remove wrapper from DOM
+                                if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
+                                // clear saved refs
+                                delete wrapper._originalParent;
+                                delete wrapper._originalNext;
+                            } catch (e) {
+                                console.warn('[banner-news] restore after fullscreen failed', e);
+                            }
+                        }
                     }
                     // Update browser fullscreen button icon to indicate state
                     try {
