@@ -207,38 +207,115 @@
                     }
                 });
 
-                // Fit toggle: single button toggles video fit between 'cover' and 'contain'
-                var fsBtn = makeBtn('⤢', 'Chuyển chế độ hiển thị (Cover/Contain)', function () {
-                    console.log('[banner-news] fit toggle clicked');
+                // Smart wide-toggle: expand/collapse like ⇔ / ⇒⇐ but choose scale by width/height (Smart Cover)
+                var fsBtn = makeBtn('⇔', 'Xem trên diện rộng / thu lại (Smart)', function () {
                     try {
-                        var current = (vid.style.objectFit || getComputedStyle(vid).objectFit) || 'cover';
-                        var next = current === 'cover' ? 'contain' : 'cover';
-                        vid.style.objectFit = next;
-                        try { localStorage.setItem('banner-news-fit', next); } catch (e) { }
-                        // update icon: use ⤢ for cover, ⤡ for contain
-                        fsBtn.innerText = next === 'cover' ? '⤢' : '⤡';
-                        // small transient HUD (non-blocking)
+                        // toggled state stored on display._isSmartMax
+                        var isMax = !!display._isSmartMax;
+                        if (isMax) {
+                            // collapse: restore saved styles
+                            try {
+                                display._isSmartMax = false;
+                                // restore display
+                                if (display._prevStyles) {
+                                    display.style.position = display._prevStyles.position || '';
+                                    display.style.left = display._prevStyles.left || '';
+                                    display.style.top = display._prevStyles.top || '';
+                                    display.style.width = display._prevStyles.width || '';
+                                    display.style.height = display._prevStyles.height || '';
+                                    display.style.zIndex = display._prevStyles.zIndex || '';
+                                    display.style.overflow = display._prevStyles.overflow || '';
+                                    delete display._prevStyles;
+                                }
+                                // restore video
+                                if (vid._prevStyles) {
+                                    vid.style.position = vid._prevStyles.position || '';
+                                    vid.style.left = vid._prevStyles.left || '';
+                                    vid.style.top = vid._prevStyles.top || '';
+                                    vid.style.transform = vid._prevStyles.transform || '';
+                                    vid.style.width = vid._prevStyles.width || '';
+                                    vid.style.height = vid._prevStyles.height || '';
+                                    vid.style.objectFit = vid._prevStyles.objectFit || '';
+                                    delete vid._prevStyles;
+                                }
+                                fsBtn.innerText = '⇔';
+                            } catch (e) { console.warn('[banner-news] collapse smart max failed', e); }
+                            return;
+                        }
+
+                        // expand: save prev styles
                         try {
-                            var hid = 'banner-news-fit-hud';
-                            var ex = document.getElementById(hid);
-                            if (ex && ex.parentNode) ex.parentNode.removeChild(ex);
-                            var hud = document.createElement('div');
-                            hud.id = hid;
-                            hud.style.position = 'absolute';
-                            hud.style.left = '12px';
-                            hud.style.top = '12px';
-                            hud.style.padding = '6px 10px';
-                            hud.style.background = 'rgba(0,0,0,0.6)';
-                            hud.style.color = '#fff';
-                            hud.style.borderRadius = '6px';
-                            hud.style.fontSize = '12px';
-                            hud.style.zIndex = '2147483650';
-                            hud.innerText = next === 'cover' ? 'Fit: Cover' : 'Fit: Contain';
-                            display.appendChild(hud);
-                            setTimeout(function () { try { if (hud.parentNode) hud.parentNode.removeChild(hud); } catch (e) { } }, 1200);
+                            display._isSmartMax = true;
+                            display._prevStyles = display._prevStyles || {
+                                position: display.style.position || '',
+                                left: display.style.left || '',
+                                top: display.style.top || '',
+                                width: display.style.width || '',
+                                height: display.style.height || '',
+                                zIndex: display.style.zIndex || '',
+                                overflow: display.style.overflow || ''
+                            };
+                            vid._prevStyles = vid._prevStyles || {
+                                position: vid.style.position || '',
+                                left: vid.style.left || '',
+                                top: vid.style.top || '',
+                                transform: vid.style.transform || '',
+                                width: vid.style.width || '',
+                                height: vid.style.height || '',
+                                objectFit: vid.style.objectFit || ''
+                            };
                         } catch (e) { }
+
+                        // Set display to cover canvas
+                        try {
+                            var canvas = document.querySelector('.canvas') || document.body;
+                            if (canvas && getComputedStyle(canvas).position === 'static') canvas.style.position = 'relative';
+                            display.style.position = 'absolute';
+                            display.style.left = '0';
+                            display.style.top = '0';
+                            display.style.width = '100%';
+                            display.style.height = '100%';
+                            display.style.zIndex = '2147483640';
+                            display.style.overflow = 'hidden';
+                        } catch (e) { }
+
+                        // Smart Cover sizing
+                        try {
+                            var boxW = display.clientWidth || display.offsetWidth;
+                            var boxH = display.clientHeight || display.offsetHeight;
+                            var vidW = vid.videoWidth || vid.clientWidth || 1280;
+                            var vidH = vid.videoHeight || vid.clientHeight || 720;
+                            var AR_video = vidW / vidH;
+                            var AR_box = boxW / boxH;
+
+                            var scale;
+                            if (AR_box > AR_video) {
+                                // box wider than video: scale by width
+                                scale = boxW / vidW;
+                            } else {
+                                // scale by height
+                                scale = boxH / vidH;
+                            }
+                            // ensure cover: if other dimension still smaller, increase
+                            var coverScale = Math.max(boxW / vidW, boxH / vidH);
+                            if (scale < coverScale) scale = coverScale;
+                            // cap extreme upscale
+                            if (scale > 1) scale = Math.min(scale, 1.12);
+
+                            var finalW = Math.round(vidW * scale);
+                            var finalH = Math.round(vidH * scale);
+
+                            vid.style.position = 'absolute';
+                            vid.style.left = '50%';
+                            vid.style.top = '50%';
+                            vid.style.transform = 'translate(-50%,-50%)';
+                            vid.style.width = finalW + 'px';
+                            vid.style.height = finalH + 'px';
+                            vid.style.objectFit = 'none';
+                            fsBtn.innerText = '⇒⇐';
+                        } catch (e) { console.warn('[banner-news] smart cover sizing failed', e); }
                     } catch (e) {
-                        console.warn('[banner-news] fit toggle error', e);
+                        console.warn('[banner-news] smart wide-toggle error', e);
                     }
                 });
                 // Picture-in-Picture removed per user preference (only 3 buttons required)
