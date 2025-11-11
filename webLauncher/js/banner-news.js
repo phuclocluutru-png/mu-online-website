@@ -345,6 +345,46 @@
                 var startBase = Math.floor(Math.random() * baseCandidates.length);
                 tryPlayFromBase(startBase);
 
+                // Fit mode toggle (cover / contain) via double-click on the video
+                try {
+                    // Read saved preference
+                    var savedFit = null;
+                    try { savedFit = localStorage.getItem('banner-news-fit'); } catch (e) { savedFit = null; }
+                    if (savedFit === 'contain') vid.style.objectFit = 'contain';
+
+                    function showHud(text) {
+                        try {
+                            var hId = 'banner-news-fit-hud';
+                            var existingHud = document.getElementById(hId);
+                            if (existingHud && existingHud.parentNode) existingHud.parentNode.removeChild(existingHud);
+                            var hud = document.createElement('div');
+                            hud.id = hId;
+                            hud.style.position = 'absolute';
+                            hud.style.left = '16px';
+                            hud.style.top = '16px';
+                            hud.style.padding = '8px 12px';
+                            hud.style.background = 'rgba(0,0,0,0.6)';
+                            hud.style.color = '#fff';
+                            hud.style.borderRadius = '6px';
+                            hud.style.fontSize = '13px';
+                            hud.style.zIndex = '2147483650';
+                            hud.innerText = text;
+                            display.appendChild(hud);
+                            setTimeout(function () { try { if (hud.parentNode) hud.parentNode.removeChild(hud); } catch (e) { } }, 1400);
+                        } catch (e) { }
+                    }
+
+                    vid.addEventListener('dblclick', function () {
+                        try {
+                            var current = (vid.style.objectFit || getComputedStyle(vid).objectFit) || 'cover';
+                            var next = current === 'cover' ? 'contain' : 'cover';
+                            vid.style.objectFit = next;
+                            try { localStorage.setItem('banner-news-fit', next); } catch (e) { }
+                            showHud(next === 'cover' ? 'Fit: Cover' : 'Fit: Contain');
+                        } catch (e) { }
+                    });
+                } catch (e) { }
+
                 // Ensure fullscreen fills viewport: some browsers keep element sizing and cause letterboxing.
                 function onFullscreenChange() {
                     var fsElem = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
