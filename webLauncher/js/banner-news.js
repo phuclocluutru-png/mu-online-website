@@ -197,41 +197,37 @@
                     }
                 });
 
-                // Wide toggle: expand video horizontally / collapse. Single button toggles icons between ⇔ and ⇒⇐
-                var fsBtn = makeBtn('⇔', 'Xem trên diện rộng / thu lại', function () {
+                // Fit toggle: single button toggles video fit between 'cover' and 'contain'
+                var fsBtn = makeBtn('⤢', 'Chuyển chế độ hiển thị (Cover/Contain)', function () {
                     try {
-                        var canvas = document.querySelector('.canvas') || document.body;
-                        var isMax = display.classList.contains('banner-news--maximized');
-                        if (isMax) {
-                            // revert
-                            display.classList.remove('banner-news--maximized');
-                            display.style.position = '';
-                            display.style.left = '';
-                            display.style.top = '';
-                            display.style.width = '';
-                            display.style.height = '';
-                            display.style.zIndex = '';
-                            vid.style.objectFit = 'cover';
-                            fsBtn.innerText = '⇔';
-                        } else {
-                            // ensure canvas is positioned for absolute children
-                            if (canvas && getComputedStyle(canvas).position === 'static') {
-                                canvas.style.position = 'relative';
-                            }
-                            display.classList.add('banner-news--maximized');
-                            display.style.position = 'absolute';
-                            display.style.left = '0';
-                            display.style.top = '0';
-                            display.style.width = '100%';
-                            display.style.height = '100%';
-                            display.style.zIndex = '2147483640';
-                            vid.style.width = '100%';
-                            vid.style.height = '100%';
-                            vid.style.objectFit = 'cover';
-                            fsBtn.innerText = '⇒⇐';
-                        }
+                        var current = (vid.style.objectFit || getComputedStyle(vid).objectFit) || 'cover';
+                        var next = current === 'cover' ? 'contain' : 'cover';
+                        vid.style.objectFit = next;
+                        try { localStorage.setItem('banner-news-fit', next); } catch (e) { }
+                        // update icon: use ⤢ for cover, ⤡ for contain
+                        fsBtn.innerText = next === 'cover' ? '⤢' : '⤡';
+                        // small transient HUD (non-blocking)
+                        try {
+                            var hid = 'banner-news-fit-hud';
+                            var ex = document.getElementById(hid);
+                            if (ex && ex.parentNode) ex.parentNode.removeChild(ex);
+                            var hud = document.createElement('div');
+                            hud.id = hid;
+                            hud.style.position = 'absolute';
+                            hud.style.left = '12px';
+                            hud.style.top = '12px';
+                            hud.style.padding = '6px 10px';
+                            hud.style.background = 'rgba(0,0,0,0.6)';
+                            hud.style.color = '#fff';
+                            hud.style.borderRadius = '6px';
+                            hud.style.fontSize = '12px';
+                            hud.style.zIndex = '2147483650';
+                            hud.innerText = next === 'cover' ? 'Fit: Cover' : 'Fit: Contain';
+                            display.appendChild(hud);
+                            setTimeout(function () { try { if (hud.parentNode) hud.parentNode.removeChild(hud); } catch (e) { } }, 1200);
+                        } catch (e) { }
                     } catch (e) {
-                        console.warn('[banner-news] in-panel maximize error', e);
+                        console.warn('[banner-news] fit toggle error', e);
                     }
                 });
                 // Picture-in-Picture removed per user preference (only 3 buttons required)
