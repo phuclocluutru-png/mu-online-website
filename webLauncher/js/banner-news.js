@@ -236,6 +236,27 @@
                         }
 
                         console.warn('[banner-news] Picture-in-Picture not supported in this environment');
+                        // Fallback: open a small popup window with the same video so user can keep watching
+                        try {
+                            var currentSrc = (vid.currentSrc && vid.currentSrc.length) ? vid.currentSrc : (vid.querySelector('source') ? vid.querySelector('source').src : null);
+                            if (currentSrc) {
+                                var w = window.open('', 'pkclear_pip_fallback', 'width=640,height=360');
+                                if (w) {
+                                    var doc = w.document;
+                                    doc.open();
+                                    doc.write('<!doctype html><html><head><title>Video</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;">');
+                                    doc.write('<video src="' + currentSrc + '" style="width:100%;height:100%;max-width:100%;max-height:100%;" controls autoplay></video>');
+                                    doc.write('</body></html>');
+                                    doc.close();
+                                } else {
+                                    console.warn('[banner-news] popup blocked or unavailable for PIP fallback');
+                                }
+                            } else {
+                                console.warn('[banner-news] no currentSrc available for PIP fallback');
+                            }
+                        } catch (e) {
+                            console.warn('[banner-news] PIP popup fallback failed', e);
+                        }
                     } catch (e) {
                         console.warn('[banner-news] PIP handler error', e);
                     }
