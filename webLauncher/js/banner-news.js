@@ -202,10 +202,21 @@
 
                 // Container styles: ensure display is positioned for overlay
                 display.style.position = 'relative';
-                display.appendChild(overlay);
+                display.style.overflow = 'visible';
+                // overlay will be appended after the video is inserted. don't append now (innerHTML below will remove it)
 
                 // Insert video into display (replace placeholder)
                 display.innerHTML = '';
+                // remove any previous overlay to avoid duplicates
+                var existing = document.getElementById('banner-news-overlay');
+                if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+
+                // ensure overlay has a stable id and forced visibility
+                overlay.id = 'banner-news-overlay';
+                overlay.style.zIndex = '2147483647';
+                overlay.style.pointerEvents = 'auto';
+                overlay.style.visibility = 'visible';
+
                 display.appendChild(vid);
                 display.appendChild(overlay);
                 // Start with a random base (video1 or video2)
