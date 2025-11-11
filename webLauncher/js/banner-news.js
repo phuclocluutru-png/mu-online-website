@@ -283,6 +283,10 @@
                             wrapper._originalNext = display.nextSibling;
                         }
 
+                        // remember previous controls/overlay positions to restore later
+                        if (typeof vid._prevControls === 'undefined') vid._prevControls = vid.controls;
+                        if (typeof overlay._prevBottom === 'undefined') overlay._prevBottom = overlay.style.bottom || '8px';
+
                         // move nodes
                         inner.appendChild(vid);
                         inner.appendChild(overlay);
@@ -295,6 +299,16 @@
                         vid.style.width = '100%';
                         vid.style.height = '100%';
                         vid.style.objectFit = 'cover';
+
+                        // Ensure native play controls are available in fullscreen unless user previously had them
+                        try {
+                            vid.controls = true;
+                        } catch (e) { }
+
+                        // Move our custom overlay up so it doesn't overlap native controls
+                        try {
+                            overlay.style.bottom = '64px';
+                        } catch (e) { }
 
                         // Request fullscreen on the wrapper element
                         var req = wrapper.requestFullscreen || wrapper.webkitRequestFullscreen || wrapper.mozRequestFullScreen || wrapper.msRequestFullscreen;
@@ -367,6 +381,11 @@
                         var wrapper = document.getElementById('banner-news-fullscreen-wrapper');
                         if (wrapper && wrapper._originalParent) {
                             try {
+                                // restore native controls state
+                                try { vid.controls = !!vid._prevControls; } catch (e) { }
+                                // restore overlay position
+                                try { overlay.style.bottom = overlay._prevBottom || '8px'; } catch (e) { }
+
                                 // move vid and overlay back
                                 display.appendChild(vid);
                                 display.appendChild(overlay);
