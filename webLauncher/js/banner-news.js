@@ -3,6 +3,7 @@
     var actionLinks = {
         home: 'https://pkclear.com/',
         news: 'https://pkclear.com/pages/post.html?cat=latest',
+        fanpage: 'https://www.facebook.com/mupkclear',
         community: 'https://zalo.me/g/yigzjy890',
         guide: 'huongdan.html' // Local hướng dẫn
     };
@@ -79,6 +80,73 @@
                 }
             }
         });
+        // Video rotation: insert a video element into #bannerNewsDisplay when present
+        (function initVideoRotation() {
+            try {
+                var display = document.getElementById('bannerNewsDisplay');
+                if (!display) return;
+
+                // Configure your video sources here (relative to webLauncher/)
+                var videos = [
+                    'assets/video/video1.mp4',
+                    'assets/video/video2.mp4'
+                ];
+
+                // Create video element
+                var vid = document.createElement('video');
+                vid.setAttribute('playsinline', ''); // mobile inline playback
+                vid.setAttribute('webkit-playsinline', '');
+                vid.setAttribute('muted', ''); // muted allows autoplay in many webviews
+                vid.setAttribute('controls', '');
+                vid.style.width = '100%';
+                vid.style.height = '100%';
+                vid.style.objectFit = 'cover';
+
+                // Helper to load and play a given index
+                var current = Math.floor(Math.random() * videos.length);
+                function loadAndPlay(i) {
+                    if (i < 0 || i >= videos.length) return;
+                    current = i;
+                    // clear existing sources
+                    while (vid.firstChild) vid.removeChild(vid.firstChild);
+                    var src = document.createElement('source');
+                    src.src = videos[i];
+                    src.type = 'video/mp4';
+                    vid.appendChild(src);
+                    // load then play, ignore promise rejections for legacy engines
+                    try {
+                        vid.load();
+                        var p = vid.play();
+                        if (p && typeof p.then === 'function') {
+                            p.catch(function (e) { /* ignore autoplay block */ });
+                        }
+                    } catch (e) {
+                        // older embedded webviews may not support promises
+                    }
+                }
+
+                // On end, switch to the other video (rotate)
+                vid.addEventListener('ended', function () {
+                    var next = (current + 1) % videos.length;
+                    loadAndPlay(next);
+                });
+
+                // Basic error handling: try next video on error
+                vid.addEventListener('error', function () {
+                    var next = (current + 1) % videos.length;
+                    loadAndPlay(next);
+                });
+
+                // Insert video into display (replace placeholder)
+                display.innerHTML = '';
+                display.appendChild(vid);
+                // Start with a random video
+                loadAndPlay(current);
+            } catch (e) {
+                // swallow errors to keep launcher stable
+                console.warn('[banner-news] video init failed', e);
+            }
+        })();
     }
 
     if (document.readyState === 'complete' || document.readyState === 'interactive') {

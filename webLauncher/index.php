@@ -37,9 +37,12 @@ $bgVersion = asset_version('images/BG WEB.png');
   <div class="canvas">
   <img class="canvas-bg" src="images/BG WEB.png?v=<?php echo $bgVersion; ?>" alt="">
     <div class="layout">
-      <!-- panel-news removed per request. Original content backed up in backups/panel-news/ -->
-      <section class="panel panel-news--removed" aria-hidden="true">
-        <!-- Placeholder kept so layout spacing remains; redesign the news panel here later. -->
+      <!-- panel-news: minimal video display inserted. Original full implementation is in backups/panel-news/ -->
+      <section class="panel panel-news--removed" aria-hidden="false">
+        <!-- Video display area: banner-news JS will populate a <video> element here. -->
+        <div id="bannerNewsDisplay" class="banner-news__display" style="background:#2e1f47;min-height:200px;">
+          <div class="banner-news__placeholder">Video loader placeholder</div>
+        </div>
       </section>
       <section class="panel panel-events">
         <div class="events">
