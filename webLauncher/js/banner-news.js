@@ -148,7 +148,7 @@
                 var overlay = document.createElement('div');
                 overlay.style.position = 'absolute';
                 overlay.style.right = '8px';
-                overlay.style.bottom = '8px';
+                overlay.style.bottom = '3px';
                 overlay.style.display = 'flex';
                 overlay.style.gap = '8px';
                 overlay.style.zIndex = '2147483652';
