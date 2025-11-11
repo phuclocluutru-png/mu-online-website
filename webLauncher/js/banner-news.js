@@ -177,9 +177,24 @@
                     return b;
                 }
 
-                var muteBtn = makeBtn('🔈', 'Toggle mute', function () {
+                // Persistent mute: read saved preference if present
+                try {
+                    var saved = localStorage.getItem('banner-news-muted');
+                    if (saved !== null) {
+                        vid.muted = saved === '1';
+                    }
+                } catch (e) {
+                    // ignore localStorage failures
+                }
+
+                var muteBtn = makeBtn(vid.muted ? '🔇' : '🔈', 'Toggle mute', function () {
                     vid.muted = !vid.muted;
                     muteBtn.innerText = vid.muted ? '🔇' : '🔈';
+                    try {
+                        localStorage.setItem('banner-news-muted', vid.muted ? '1' : '0');
+                    } catch (e) {
+                        // ignore
+                    }
                 });
 
                 // In-panel maximize: expand video display to fill the launcher's canvas area (not browser fullscreen)
@@ -217,6 +232,68 @@
                         }
                     } catch (e) {
                         console.warn('[banner-news] in-panel maximize error', e);
+                    }
+                });
+
+                // Theater (cinema) mode: dark backdrop, centered larger video like YouTube's theater view
+                var theaterBtn = makeBtn('🎬', 'Theater mode', function () {
+                    try {
+                        var existingTheater = document.getElementById('banner-news-theater');
+                        var inTheater = !!existingTheater;
+                        if (inTheater) {
+                            // Exit theater: move video and overlay back to original display
+                            var body = document.body;
+                            var theater = existingTheater;
+                            // move video back
+                            if (theater._originalParent) {
+                                theater._originalParent.appendChild(vid);
+                                theater._originalParent.appendChild(overlay);
+                            } else {
+                                display.appendChild(vid);
+                                display.appendChild(overlay);
+                            }
+                            theater.parentNode.removeChild(theater);
+                            theaterBtn.innerText = '🎬';
+                        } else {
+                            // Enter theater: create overlay and move video+controls into it
+                            var th = document.createElement('div');
+                            th.id = 'banner-news-theater';
+                            th.style.position = 'fixed';
+                            th.style.left = '0';
+                            th.style.top = '0';
+                            th.style.width = '100vw';
+                            th.style.height = '100vh';
+                            th.style.background = 'rgba(0,0,0,0.95)';
+                            th.style.display = 'flex';
+                            th.style.alignItems = 'center';
+                            th.style.justifyContent = 'center';
+                            th.style.zIndex = '2147483646';
+                            // inner container to constrain size
+                            var inner = document.createElement('div');
+                            inner.style.width = '85%';
+                            inner.style.maxWidth = '1400px';
+                            inner.style.aspectRatio = '16/9';
+                            inner.style.background = '#000';
+                            inner.style.display = 'flex';
+                            inner.style.alignItems = 'stretch';
+                            inner.style.justifyContent = 'stretch';
+                            th.appendChild(inner);
+                            // remember original parent to restore later
+                            th._originalParent = display;
+                            // move video and controls into theater inner
+                            inner.appendChild(vid);
+                            inner.appendChild(overlay);
+                            // append a click-to-exit handler on backdrop (but not clicks inside inner)
+                            th.addEventListener('click', function (e) {
+                                if (e.target === th) {
+                                    theaterBtn.click();
+                                }
+                            });
+                            document.body.appendChild(th);
+                            theaterBtn.innerText = '✕';
+                        }
+                    } catch (e) {
+                        console.warn('[banner-news] theater toggle failed', e);
                     }
                 });
 
@@ -279,7 +356,32 @@
 
                 overlay.appendChild(muteBtn);
                 overlay.appendChild(fsBtn);
+                overlay.appendChild(theaterBtn);
                 overlay.appendChild(pipBtn);
+
+                // Browser fullscreen: request fullscreen on the document element (actual browser fullscreen)
+                var browserFsBtn = makeBtn('⛶', 'Browser fullscreen', function () {
+                    try {
+                        var docEl = document.documentElement;
+                        var isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+                        if (isFs) {
+                            // exit
+                            if (document.exitFullscreen) document.exitFullscreen();
+                            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+                            else if (document.msExitFullscreen) document.msExitFullscreen();
+                            return;
+                        }
+                        if (docEl.requestFullscreen) docEl.requestFullscreen();
+                        else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen();
+                        else if (docEl.mozRequestFullScreen) docEl.mozRequestFullScreen();
+                        else if (docEl.msRequestFullscreen) docEl.msRequestFullscreen();
+                    } catch (e) {
+                        console.warn('[banner-news] browser fullscreen request failed', e);
+                    }
+                });
+                // append browser fullscreen button last (separate from pip)
+                overlay.appendChild(browserFsBtn);
 
                 // Container styles: ensure display is positioned for overlay
                 display.style.position = 'relative';
@@ -307,14 +409,17 @@
                 // Ensure fullscreen fills viewport: some browsers keep element sizing and cause letterboxing.
                 function onFullscreenChange() {
                     var fsElem = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
-                    var isFs = fsElem === display;
-                    if (isFs) {
+                    var isFsDisplay = fsElem === display;
+                    var isFsDoc = fsElem === document.documentElement || fsElem === document.body;
+                    if (isFsDisplay || isFsDoc) {
                         // Force the container and video to match viewport
                         try {
+                            display.style.position = 'absolute';
                             display.style.width = '100vw';
                             display.style.height = '100vh';
                             display.style.left = '0';
                             display.style.top = '0';
+                            display.style.zIndex = '2147483646';
                             vid.style.width = '100%';
                             vid.style.height = '100%';
                             vid.style.objectFit = 'cover';
@@ -323,14 +428,22 @@
                         }
                     } else {
                         // Revert to original sizing rules
+                        display.style.position = '';
                         display.style.width = '';
                         display.style.height = '';
                         display.style.left = '';
                         display.style.top = '';
+                        display.style.zIndex = '';
                         vid.style.width = '';
                         vid.style.height = '';
                         vid.style.objectFit = 'cover';
                     }
+                    // Update browser fullscreen button icon to indicate state
+                    try {
+                        var isFsNow = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+                        if (isFsNow) browserFsBtn && (browserFsBtn.innerText = '⤫');
+                        else browserFsBtn && (browserFsBtn.innerText = '⛶');
+                    } catch (e) { }
                 }
 
                 document.addEventListener('fullscreenchange', onFullscreenChange);
