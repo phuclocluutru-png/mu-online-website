@@ -57,43 +57,58 @@
                 if (!display) return;
 
                 // Configure your video sources here (relative to webLauncher/)
-                // Try several filename variants because servers are case-sensitive.
+                // We'll choose a random base video (video1/video2) each launch, then try casing variants
                 var baseNames = [
-                    'video1.mp4',
-                    'video2.mp4'
+                    'Video1.mp4',
+                    'Video2.mp4'
                 ];
-                var candidates = [];
-                baseNames.forEach(function (name) {
-                    candidates.push('assets/video/' + name.toLowerCase());
-                    candidates.push('assets/video/' + name.charAt(0).toUpperCase() + name.slice(1));
-                    candidates.push('assets/video/' + name);
-                });
-                // Remove duplicates while preserving order
-                var videos = candidates.filter(function (v, i) { return candidates.indexOf(v) === i; });
 
-                // Create video element
+                // Build per-base candidate lists (lowercase, capitalized, original)
+                var baseCandidates = baseNames.map(function (name) {
+                    var list = [];
+                    list.push('assets/video/' + name); // try exact first
+                    list.push('assets/video/' + name.toLowerCase());
+                    list.push('assets/video/' + (name.charAt(0).toUpperCase() + name.slice(1)));
+                    // de-dup preserve order
+                    return list.filter(function (v, i, a) { return a.indexOf(v) === i; });
+                });
+
+                // Flattened fallback list (if needed)
+                var flattened = [].concat.apply([], baseCandidates);
+
+                // Create video element (no native controls)
                 var vid = document.createElement('video');
                 vid.setAttribute('playsinline', ''); // mobile inline playback
                 vid.setAttribute('webkit-playsinline', '');
-                vid.setAttribute('muted', ''); // muted allows autoplay in many webviews
-                vid.setAttribute('controls', '');
+                vid.muted = true; // muted allows autoplay in many webviews
+                // DO NOT show native controls; we'll add a tiny custom overlay
+                vid.controls = false;
                 vid.style.width = '100%';
                 vid.style.height = '100%';
                 vid.style.objectFit = 'cover';
+                vid.style.display = 'block';
 
-                // Helper to load and play a given index
-                var current = Math.floor(Math.random() * (videos.length || 1));
-                function loadAndPlay(i) {
-                    if (i < 0 || i >= videos.length) return;
-                    current = i;
+                // Helper to load and play a given source URL
+                var current = { baseIndex: 0, candidateIndex: 0 };
+
+                function tryPlayFromBase(baseIndex) {
+                    // try candidates for this base sequentially
+                    var list = baseCandidates[baseIndex] || [];
+                    if (!list.length) return false;
+                    current.baseIndex = baseIndex;
+                    current.candidateIndex = 0;
+                    loadAndPlay(list[current.candidateIndex]);
+                    return true;
+                }
+
+                function loadAndPlay(srcUrl) {
                     // clear existing sources
                     while (vid.firstChild) vid.removeChild(vid.firstChild);
                     var src = document.createElement('source');
-                    src.src = videos[i];
+                    src.src = srcUrl;
                     src.type = 'video/mp4';
                     vid.appendChild(src);
-                    console.log('[banner-news] loading video', videos[i]);
-                    // load then play, ignore promise rejections for legacy engines
+                    console.log('[banner-news] loading video', srcUrl);
                     try {
                         vid.load();
                         var p = vid.play();
@@ -105,29 +120,92 @@
                     }
                 }
 
-                // On end, switch to the next candidate (rotate among available files)
+                // On end, switch to the other base (video1 <-> video2) and try its candidates
                 vid.addEventListener('ended', function () {
-                    var next = (current + 1) % videos.length;
-                    loadAndPlay(next);
+                    var nextBase = (current.baseIndex + 1) % baseCandidates.length;
+                    tryPlayFromBase(nextBase);
                 });
 
-                // Basic error handling: try next candidate on error
+                // Basic error handling: try next candidate for current base, otherwise try next base
                 vid.addEventListener('error', function (ev) {
-                    console.warn('[banner-news] video error for', videos[current], ev);
-                    var next = (current + 1) % videos.length;
-                    // If we've cycled all candidates and none work, stop trying after one full loop
-                    if (next === 0 && current === videos.length - 1) {
-                        console.warn('[banner-news] all video candidates attempted, no playable source found');
+                    console.warn('[banner-news] video error for', baseCandidates[current.baseIndex][current.candidateIndex], ev);
+                    var list = baseCandidates[current.baseIndex];
+                    if (current.candidateIndex + 1 < list.length) {
+                        current.candidateIndex++;
+                        loadAndPlay(list[current.candidateIndex]);
                         return;
                     }
-                    loadAndPlay(next);
+                    // try other base
+                    var nextBase = (current.baseIndex + 1) % baseCandidates.length;
+                    if (nextBase !== current.baseIndex) {
+                        tryPlayFromBase(nextBase);
+                        return;
+                    }
+                    console.warn('[banner-news] all video candidates attempted, no playable source found');
                 });
+
+                // Build small custom control overlay (mute, fullscreen, pip)
+                var overlay = document.createElement('div');
+                overlay.style.position = 'absolute';
+                overlay.style.right = '8px';
+                overlay.style.bottom = '8px';
+                overlay.style.display = 'flex';
+                overlay.style.gap = '8px';
+                overlay.style.zIndex = '99999';
+
+                function makeBtn(iconText, title, onClick) {
+                    var b = document.createElement('button');
+                    b.type = 'button';
+                    b.title = title;
+                    b.style.width = '38px';
+                    b.style.height = '38px';
+                    b.style.borderRadius = '50%';
+                    b.style.border = '0';
+                    b.style.background = 'rgba(0,0,0,0.5)';
+                    b.style.color = '#fff';
+                    b.style.display = 'flex';
+                    b.style.alignItems = 'center';
+                    b.style.justifyContent = 'center';
+                    b.style.fontSize = '16px';
+                    b.innerText = iconText;
+                    b.addEventListener('click', onClick);
+                    return b;
+                }
+
+                var muteBtn = makeBtn('🔈', 'Toggle mute', function () {
+                    vid.muted = !vid.muted;
+                    muteBtn.innerText = vid.muted ? '🔇' : '🔈';
+                });
+
+                var fsBtn = makeBtn('⤢', 'Fullscreen', function () {
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    } else if (display.requestFullscreen) {
+                        display.requestFullscreen();
+                    }
+                });
+
+                var pipBtn = makeBtn('⧉', 'Picture-in-Picture', function () {
+                    if (vid.requestPictureInPicture) {
+                        vid.requestPictureInPicture().catch(function (e) { console.warn('PIP failed', e); });
+                    }
+                });
+
+                overlay.appendChild(muteBtn);
+                overlay.appendChild(fsBtn);
+                overlay.appendChild(pipBtn);
+
+                // Container styles: ensure display is positioned for overlay
+                display.style.position = 'relative';
+                display.appendChild(overlay);
 
                 // Insert video into display (replace placeholder)
                 display.innerHTML = '';
                 display.appendChild(vid);
-                // Start with a random video
-                loadAndPlay(current);
+                display.appendChild(overlay);
+                // Start with a random base (video1 or video2)
+                var startBase = Math.floor(Math.random() * baseCandidates.length);
+                tryPlayFromBase(startBase);
             } catch (e) {
                 // swallow errors to keep launcher stable
                 console.warn('[banner-news] video init failed', e);
