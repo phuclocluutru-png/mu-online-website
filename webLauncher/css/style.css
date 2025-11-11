@@ -53,39 +53,26 @@ body {
     text-align: center;
 }
 
-.panel-news {
+/* panel-news removed. Placeholder class keeps space for future redesign. */
+.panel-news,
+.panel.panel-news,
+.panel-news--removed {
     width: 559px;
-    /* đồng bộ với banner bên trong để không dư 1px border-box */
-}
-
-/* Loại bỏ padding 1px của panel news để banner + nav không bị dư viền nền đen */
-.panel.panel-news {
-    padding: 0;
-    border: 0;
-    /* bỏ border ngoài để tránh viền đôi & nền đen hé lộ do chênh lệch box-sizing */
+    /* placeholder: original rules moved to backups/panel-news/css.style.css.original */
 }
 
 /* ===== Banner News (Phần Banner tin tức) ===== */
-.banner-news {
-    position: relative;
-    width: 100%;
-    /* chiếm full panel-news (đã chuẩn 559px, không border ngoài) */
-    height: 409px;
-    /* 359 + 50 */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
-    gap: 0;
-    --banner-nav-height: 50px;
-}
-
-/* Put a single border around the whole banner block to avoid a 1px seam
-   caused by adjacent borders on .banner-news__display and .banner-news__nav */
-.banner-news {
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
-    overflow: hidden;
+/* banner-news block removed. Original detailed rules are preserved in backups/panel-news/css.style.css.original */
+.banner-news,
+.banner-news__display,
+.banner-news__nav,
+.banner-news__navList,
+.banner-news__btn,
+.banner-news__placeholder {
+    /* minimal placeholder to avoid empty ruleset lint warnings and keep selectors valid
+       Original detailed rules are preserved in backups/panel-news/css.style.css.original */
+    display: block;
+    box-sizing: border-box;
 }
 
 .banner-news__display {
