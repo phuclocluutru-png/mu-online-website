@@ -151,7 +151,9 @@
                 overlay.style.bottom = '8px';
                 overlay.style.display = 'flex';
                 overlay.style.gap = '8px';
-                overlay.style.zIndex = '99999';
+                overlay.style.zIndex = '2147483652';
+                overlay.style.pointerEvents = 'auto';
+                overlay.style.touchAction = 'manipulation';
 
                 function makeBtn(iconText, title, onClick) {
                     var b = document.createElement('button');
@@ -170,7 +172,14 @@
                     b.style.boxShadow = '0 2px 6px rgba(0,0,0,0.6)';
                     b.style.cursor = 'pointer';
                     b.innerText = iconText;
-                    b.addEventListener('click', onClick);
+                    b.addEventListener('click', function (e) { try { e.stopPropagation(); onClick(e); } catch (err) { onClick(e); } });
+                    // also support touch devices
+                    b.addEventListener('touchstart', function (e) { try { e.preventDefault(); e.stopPropagation(); onClick(e); } catch (err) { onClick(e); } });
+                    // ensure button can receive pointer events and sits above video
+                    b.style.zIndex = '2147483648';
+                    b.style.position = 'relative';
+                    b.disabled = false;
+                    b.style.pointerEvents = 'auto';
                     // Hover styles
                     b.addEventListener('mouseenter', function () { b.style.transform = 'scale(1.06)'; b.style.background = 'rgba(0,0,0,0.6)'; });
                     b.addEventListener('mouseleave', function () { b.style.transform = 'none'; b.style.background = 'rgba(0,0,0,0.45)'; });
@@ -188,6 +197,7 @@
                 }
 
                 var muteBtn = makeBtn(vid.muted ? '🔇' : '🔈', 'Tắt/bật âm', function () {
+                    console.log('[banner-news] mute button clicked');
                     vid.muted = !vid.muted;
                     muteBtn.innerText = vid.muted ? '🔇' : '🔈';
                     try {
@@ -199,6 +209,7 @@
 
                 // Fit toggle: single button toggles video fit between 'cover' and 'contain'
                 var fsBtn = makeBtn('⤢', 'Chuyển chế độ hiển thị (Cover/Contain)', function () {
+                    console.log('[banner-news] fit toggle clicked');
                     try {
                         var current = (vid.style.objectFit || getComputedStyle(vid).objectFit) || 'cover';
                         var next = current === 'cover' ? 'contain' : 'cover';
