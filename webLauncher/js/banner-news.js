@@ -288,6 +288,40 @@
                 // Start with a random base (video1 or video2)
                 var startBase = Math.floor(Math.random() * baseCandidates.length);
                 tryPlayFromBase(startBase);
+
+                // Ensure fullscreen fills viewport: some browsers keep element sizing and cause letterboxing.
+                function onFullscreenChange() {
+                    var fsElem = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+                    var isFs = fsElem === display;
+                    if (isFs) {
+                        // Force the container and video to match viewport
+                        try {
+                            display.style.width = '100vw';
+                            display.style.height = '100vh';
+                            display.style.left = '0';
+                            display.style.top = '0';
+                            vid.style.width = '100%';
+                            vid.style.height = '100%';
+                            vid.style.objectFit = 'cover';
+                        } catch (e) {
+                            console.warn('[banner-news] fullscreen style apply failed', e);
+                        }
+                    } else {
+                        // Revert to original sizing rules
+                        display.style.width = '';
+                        display.style.height = '';
+                        display.style.left = '';
+                        display.style.top = '';
+                        vid.style.width = '';
+                        vid.style.height = '';
+                        vid.style.objectFit = 'cover';
+                    }
+                }
+
+                document.addEventListener('fullscreenchange', onFullscreenChange);
+                document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+                document.addEventListener('mozfullscreenchange', onFullscreenChange);
+                document.addEventListener('MSFullscreenChange', onFullscreenChange);
             } catch (e) {
                 // swallow errors to keep launcher stable
                 console.warn('[banner-news] video init failed', e);
