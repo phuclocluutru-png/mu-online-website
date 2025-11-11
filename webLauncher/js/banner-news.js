@@ -295,10 +295,48 @@
                         wrapper.appendChild(inner);
                         document.body.appendChild(wrapper);
 
-                        // force video sizing to cover to avoid letterbox
-                        vid.style.width = '100%';
-                        vid.style.height = '100%';
-                        vid.style.objectFit = 'cover';
+
+                        // Save previous inline styles so we can restore on exit
+                        try {
+                            if (!vid._prevStyles) {
+                                vid._prevStyles = {
+                                    width: vid.style.width || '',
+                                    height: vid.style.height || '',
+                                    objectFit: vid.style.objectFit || '',
+                                    position: vid.style.position || '',
+                                    left: vid.style.left || '',
+                                    top: vid.style.top || '',
+                                    transform: vid.style.transform || ''
+                                };
+                            }
+                        } catch (e) { }
+
+                        // Compute sizing based on intrinsic video dimensions to avoid over-zoom.
+                        function applyFullscreenSizing() {
+                            try {
+                                var vw = window.innerWidth;
+                                var vh = window.innerHeight;
+                                var vidW = vid.videoWidth || vid.clientWidth || 1280;
+                                var vidH = vid.videoHeight || vid.clientHeight || 720;
+                                // cover scale: scale so both dimensions >= container
+                                var coverScale = Math.max(vw / vidW, vh / vidH);
+                                // cap upscale to avoid extreme zoom (12%) when original is much smaller
+                                if (coverScale > 1) coverScale = Math.min(coverScale, 1.12);
+                                // compute final size
+                                var finalW = Math.round(vidW * coverScale);
+                                var finalH = Math.round(vidH * coverScale);
+
+                                // position video absolutely centered inside wrapper
+                                vid.style.position = 'absolute';
+                                vid.style.left = '50%';
+                                vid.style.top = '50%';
+                                vid.style.transform = 'translate(-50%,-50%)';
+                                vid.style.width = finalW + 'px';
+                                vid.style.height = finalH + 'px';
+                                // we don't rely on object-fit here; set to 'none'
+                                vid.style.objectFit = 'none';
+                            } catch (e) { console.warn('[banner-news] applyFullscreenSizing failed', e); }
+                        }
 
                         // Ensure native play controls are available in fullscreen unless user previously had them
                         try {
@@ -306,9 +344,22 @@
                         } catch (e) { }
 
                         // Move our custom overlay up so it doesn't overlap native controls
-                        try {
-                            overlay.style.bottom = '64px';
-                        } catch (e) { }
+                        try { overlay.style.bottom = '64px'; } catch (e) { }
+
+                        // If metadata not ready, wait then apply sizing; otherwise apply now
+                        if (vid.videoWidth && vid.videoHeight) {
+                            applyFullscreenSizing();
+                        } else {
+                            // attempt to apply after metadata
+                            var _onMeta = function () { applyFullscreenSizing(); vid.removeEventListener('loadedmetadata', _onMeta); };
+                            vid.addEventListener('loadedmetadata', _onMeta);
+                            // also apply after a short delay as fallback
+                            setTimeout(applyFullscreenSizing, 250);
+                        }
+
+                        // recompute on resize while fullscreen
+                        wrapper._resizeHandler = function () { applyFullscreenSizing(); };
+                        window.addEventListener('resize', wrapper._resizeHandler);
 
                         // Request fullscreen on the wrapper element
                         var req = wrapper.requestFullscreen || wrapper.webkitRequestFullscreen || wrapper.mozRequestFullScreen || wrapper.msRequestFullscreen;
@@ -431,6 +482,21 @@
                                 display.appendChild(overlay);
                                 // remove wrapper from DOM
                                 if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
+                                // remove resize handler
+                                try { if (wrapper._resizeHandler) window.removeEventListener('resize', wrapper._resizeHandler); } catch (e) { }
+                                // restore previous inline styles saved earlier
+                                try {
+                                    if (vid._prevStyles) {
+                                        vid.style.position = vid._prevStyles.position || '';
+                                        vid.style.left = vid._prevStyles.left || '';
+                                        vid.style.top = vid._prevStyles.top || '';
+                                        vid.style.transform = vid._prevStyles.transform || '';
+                                        vid.style.width = vid._prevStyles.width || '';
+                                        vid.style.height = vid._prevStyles.height || '';
+                                        vid.style.objectFit = vid._prevStyles.objectFit || '';
+                                        delete vid._prevStyles;
+                                    }
+                                } catch (e) { }
                                 // clear saved refs
                                 delete wrapper._originalParent;
                                 delete wrapper._originalNext;
