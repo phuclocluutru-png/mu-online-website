@@ -157,18 +157,23 @@
                     var b = document.createElement('button');
                     b.type = 'button';
                     b.title = title;
-                    b.style.width = '38px';
-                    b.style.height = '38px';
+                    b.style.width = '42px';
+                    b.style.height = '42px';
                     b.style.borderRadius = '50%';
-                    b.style.border = '0';
-                    b.style.background = 'rgba(0,0,0,0.5)';
+                    b.style.border = '2px solid rgba(255,255,255,0.12)';
+                    b.style.background = 'rgba(0,0,0,0.45)';
                     b.style.color = '#fff';
                     b.style.display = 'flex';
                     b.style.alignItems = 'center';
                     b.style.justifyContent = 'center';
-                    b.style.fontSize = '16px';
+                    b.style.fontSize = '18px';
+                    b.style.boxShadow = '0 2px 6px rgba(0,0,0,0.6)';
+                    b.style.cursor = 'pointer';
                     b.innerText = iconText;
                     b.addEventListener('click', onClick);
+                    // Hover styles
+                    b.addEventListener('mouseenter', function () { b.style.transform = 'scale(1.06)'; b.style.background = 'rgba(0,0,0,0.6)'; });
+                    b.addEventListener('mouseleave', function () { b.style.transform = 'none'; b.style.background = 'rgba(0,0,0,0.45)'; });
                     return b;
                 }
 
