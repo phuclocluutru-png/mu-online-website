@@ -187,7 +187,7 @@
                     // ignore localStorage failures
                 }
 
-                var muteBtn = makeBtn(vid.muted ? '🔇' : '🔈', 'Toggle mute', function () {
+                var muteBtn = makeBtn(vid.muted ? '🔇' : '🔈', 'Tắt/bật âm', function () {
                     vid.muted = !vid.muted;
                     muteBtn.innerText = vid.muted ? '🔇' : '🔈';
                     try {
@@ -197,8 +197,8 @@
                     }
                 });
 
-                // In-panel maximize: expand video display to fill the launcher's canvas area (not browser fullscreen)
-                var fsBtn = makeBtn('⤢', 'Maximize in launcher', function () {
+                // Wide toggle: expand video horizontally / collapse. Single button toggles icons between ⇔ and ⇒⇐
+                var fsBtn = makeBtn('⇔', 'Xem trên diện rộng / thu lại', function () {
                     try {
                         var canvas = document.querySelector('.canvas') || document.body;
                         var isMax = display.classList.contains('banner-news--maximized');
@@ -212,7 +212,7 @@
                             display.style.height = '';
                             display.style.zIndex = '';
                             vid.style.objectFit = 'cover';
-                            fsBtn.innerText = '⤢';
+                            fsBtn.innerText = '⇔';
                         } else {
                             // ensure canvas is positioned for absolute children
                             if (canvas && getComputedStyle(canvas).position === 'static') {
@@ -228,139 +228,21 @@
                             vid.style.width = '100%';
                             vid.style.height = '100%';
                             vid.style.objectFit = 'cover';
-                            fsBtn.innerText = '❐';
+                            fsBtn.innerText = '⇒⇐';
                         }
                     } catch (e) {
                         console.warn('[banner-news] in-panel maximize error', e);
                     }
                 });
+                // Picture-in-Picture removed per user preference (only 3 buttons required)
+                // Browser fullscreen and wide-toggle will remain as requested.
 
-                // Theater (cinema) mode: dark backdrop, centered larger video like YouTube's theater view
-                var theaterBtn = makeBtn('🎬', 'Theater mode', function () {
-                    try {
-                        var existingTheater = document.getElementById('banner-news-theater');
-                        var inTheater = !!existingTheater;
-                        if (inTheater) {
-                            // Exit theater: move video and overlay back to original display
-                            var body = document.body;
-                            var theater = existingTheater;
-                            // move video back
-                            if (theater._originalParent) {
-                                theater._originalParent.appendChild(vid);
-                                theater._originalParent.appendChild(overlay);
-                            } else {
-                                display.appendChild(vid);
-                                display.appendChild(overlay);
-                            }
-                            theater.parentNode.removeChild(theater);
-                            theaterBtn.innerText = '🎬';
-                        } else {
-                            // Enter theater: create overlay and move video+controls into it
-                            var th = document.createElement('div');
-                            th.id = 'banner-news-theater';
-                            th.style.position = 'fixed';
-                            th.style.left = '0';
-                            th.style.top = '0';
-                            th.style.width = '100vw';
-                            th.style.height = '100vh';
-                            th.style.background = 'rgba(0,0,0,0.95)';
-                            th.style.display = 'flex';
-                            th.style.alignItems = 'center';
-                            th.style.justifyContent = 'center';
-                            th.style.zIndex = '2147483646';
-                            // inner container to constrain size
-                            var inner = document.createElement('div');
-                            inner.style.width = '85%';
-                            inner.style.maxWidth = '1400px';
-                            inner.style.aspectRatio = '16/9';
-                            inner.style.background = '#000';
-                            inner.style.display = 'flex';
-                            inner.style.alignItems = 'stretch';
-                            inner.style.justifyContent = 'stretch';
-                            th.appendChild(inner);
-                            // remember original parent to restore later
-                            th._originalParent = display;
-                            // move video and controls into theater inner
-                            inner.appendChild(vid);
-                            inner.appendChild(overlay);
-                            // append a click-to-exit handler on backdrop (but not clicks inside inner)
-                            th.addEventListener('click', function (e) {
-                                if (e.target === th) {
-                                    theaterBtn.click();
-                                }
-                            });
-                            document.body.appendChild(th);
-                            theaterBtn.innerText = '✕';
-                        }
-                    } catch (e) {
-                        console.warn('[banner-news] theater toggle failed', e);
-                    }
-                });
-
-                var pipBtn = makeBtn('⧉', 'Picture-in-Picture', function () {
-                    try {
-                        // Standard PIP (Chrome, Edge)
-                        if (vid.requestPictureInPicture) {
-                            // Some browsers require the video to be playing and not muted restrictions may apply
-                            var ensurePlay = Promise.resolve();
-                            if (vid.paused) {
-                                ensurePlay = vid.play().catch(function (e) { console.warn('[banner-news] play before PIP failed', e); });
-                            }
-                            ensurePlay.then(function () {
-                                // If already in PIP, exit
-                                if (document.pictureInPictureElement) {
-                                    document.exitPictureInPicture().catch(function (e) { console.warn('[banner-news] exit PIP failed', e); });
-                                    return;
-                                }
-                                vid.requestPictureInPicture().catch(function (e) { console.warn('[banner-news] request PIP failed', e); });
-                            });
-                            return;
-                        }
-
-                        // WebKit Safari fallback
-                        if (typeof vid.webkitSupportsPresentationMode === 'function' && vid.webkitSupportsPresentationMode('picture-in-picture')) {
-                            try {
-                                vid.webkitSetPresentationMode('picture-in-picture');
-                            } catch (e) {
-                                console.warn('[banner-news] webkit PIP failed', e);
-                            }
-                            return;
-                        }
-
-                        console.warn('[banner-news] Picture-in-Picture not supported in this environment');
-                        // Fallback: open a small popup window with the same video so user can keep watching
-                        try {
-                            var currentSrc = (vid.currentSrc && vid.currentSrc.length) ? vid.currentSrc : (vid.querySelector('source') ? vid.querySelector('source').src : null);
-                            if (currentSrc) {
-                                var w = window.open('', 'pkclear_pip_fallback', 'width=640,height=360');
-                                if (w) {
-                                    var doc = w.document;
-                                    doc.open();
-                                    doc.write('<!doctype html><html><head><title>Video</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;">');
-                                    doc.write('<video src="' + currentSrc + '" style="width:100%;height:100%;max-width:100%;max-height:100%;" controls autoplay></video>');
-                                    doc.write('</body></html>');
-                                    doc.close();
-                                } else {
-                                    console.warn('[banner-news] popup blocked or unavailable for PIP fallback');
-                                }
-                            } else {
-                                console.warn('[banner-news] no currentSrc available for PIP fallback');
-                            }
-                        } catch (e) {
-                            console.warn('[banner-news] PIP popup fallback failed', e);
-                        }
-                    } catch (e) {
-                        console.warn('[banner-news] PIP handler error', e);
-                    }
-                });
+                // PIP handler removed. Only three buttons remain: mute, wide-toggle, and browser fullscreen.
 
                 overlay.appendChild(muteBtn);
                 overlay.appendChild(fsBtn);
-                overlay.appendChild(theaterBtn);
-                overlay.appendChild(pipBtn);
-
                 // Browser fullscreen: request fullscreen on the document element (actual browser fullscreen)
-                var browserFsBtn = makeBtn('⛶', 'Browser fullscreen', function () {
+                var browserFsBtn = makeBtn('⛶', 'Xem toàn màn hình', function () {
                     try {
                         var docEl = document.documentElement;
                         var isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
@@ -380,7 +262,6 @@
                         console.warn('[banner-news] browser fullscreen request failed', e);
                     }
                 });
-                // append browser fullscreen button last (separate from pip)
                 overlay.appendChild(browserFsBtn);
 
                 // Container styles: ensure display is positioned for overlay
