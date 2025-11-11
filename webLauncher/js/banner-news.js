@@ -22,8 +22,6 @@
     }
 
     function initBannerNav() {
-        var nav = document.querySelector('.banner-news__nav');
-        if (!nav) return;
         // Ensure banner display has a solid fallback background in legacy embedded webviews
         (function ensureBannerFallback() {
             try {
@@ -50,34 +48,6 @@
                 }
             } catch (e) {
                 // swallow errors on very old engines
-            }
-        })();
-        nav.addEventListener('click', function (ev) {
-            // IE11- không có .closest, dùng vòng lặp cha
-            var el = ev.target;
-            var btn = null;
-            while (el && el !== nav) {
-                if (el.className && typeof el.className === 'string' && el.className.indexOf('banner-news__btn') !== -1) {
-                    btn = el;
-                    break;
-                }
-                el = el.parentNode;
-            }
-            if (!btn) return;
-            var act = btn.getAttribute('data-action');
-            if (actionLinks[act]) {
-                openExternal(actionLinks[act]);
-            } else {
-                // Placeholder actions for other buttons (could be replaced later)
-                if (act === 'news') {
-                    console.log('[banner-news] Tin tức: chưa triển khai nội dung.');
-                } else if (act === 'fanpage') {
-                    console.log('[banner-news] Fanpage: chưa có URL cấu hình.');
-                } else if (act === 'admin') {
-                    console.log('[banner-news] Liên hệ Admin: sẽ mở modal hoặc chat sau.');
-                } else if (act === 'guide') {
-                    console.log('[banner-news] Hướng Dẫn: file huongdan.html chưa tìm thấy hoặc sẽ được bổ sung.');
-                }
             }
         });
         // Video rotation: insert a video element into #bannerNewsDisplay when present
