@@ -87,10 +87,19 @@
                 if (!display) return;
 
                 // Configure your video sources here (relative to webLauncher/)
-                var videos = [
-                    'assets/video/video1.mp4',
-                    'assets/video/video2.mp4'
+                // Try several filename variants because servers are case-sensitive.
+                var baseNames = [
+                    'video1.mp4',
+                    'video2.mp4'
                 ];
+                var candidates = [];
+                baseNames.forEach(function (name) {
+                    candidates.push('assets/video/' + name.toLowerCase());
+                    candidates.push('assets/video/' + name.charAt(0).toUpperCase() + name.slice(1));
+                    candidates.push('assets/video/' + name);
+                });
+                // Remove duplicates while preserving order
+                var videos = candidates.filter(function (v, i) { return candidates.indexOf(v) === i; });
 
                 // Create video element
                 var vid = document.createElement('video');
@@ -103,7 +112,7 @@
                 vid.style.objectFit = 'cover';
 
                 // Helper to load and play a given index
-                var current = Math.floor(Math.random() * videos.length);
+                var current = Math.floor(Math.random() * (videos.length || 1));
                 function loadAndPlay(i) {
                     if (i < 0 || i >= videos.length) return;
                     current = i;
@@ -113,27 +122,34 @@
                     src.src = videos[i];
                     src.type = 'video/mp4';
                     vid.appendChild(src);
+                    console.log('[banner-news] loading video', videos[i]);
                     // load then play, ignore promise rejections for legacy engines
                     try {
                         vid.load();
                         var p = vid.play();
                         if (p && typeof p.then === 'function') {
-                            p.catch(function (e) { /* ignore autoplay block */ });
+                            p.catch(function (e) { console.warn('[banner-news] play rejected', e); });
                         }
                     } catch (e) {
-                        // older embedded webviews may not support promises
+                        console.warn('[banner-news] play error', e);
                     }
                 }
 
-                // On end, switch to the other video (rotate)
+                // On end, switch to the next candidate (rotate among available files)
                 vid.addEventListener('ended', function () {
                     var next = (current + 1) % videos.length;
                     loadAndPlay(next);
                 });
 
-                // Basic error handling: try next video on error
-                vid.addEventListener('error', function () {
+                // Basic error handling: try next candidate on error
+                vid.addEventListener('error', function (ev) {
+                    console.warn('[banner-news] video error for', videos[current], ev);
                     var next = (current + 1) % videos.length;
+                    // If we've cycled all candidates and none work, stop trying after one full loop
+                    if (next === 0 && current === videos.length - 1) {
+                        console.warn('[banner-news] all video candidates attempted, no playable source found');
+                        return;
+                    }
                     loadAndPlay(next);
                 });
 
