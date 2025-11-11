@@ -182,26 +182,41 @@
                     muteBtn.innerText = vid.muted ? '🔇' : '🔈';
                 });
 
-                var fsBtn = makeBtn('⤢', 'Fullscreen', function () {
+                // In-panel maximize: expand video display to fill the launcher's canvas area (not browser fullscreen)
+                var fsBtn = makeBtn('⤢', 'Maximize in launcher', function () {
                     try {
-                        // unified + vendor prefixed fallbacks
-                        var isFull = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
-                        if (isFull) {
-                            if (document.exitFullscreen) document.exitFullscreen();
-                            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-                            else if (document.msExitFullscreen) document.msExitFullscreen();
-                            else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+                        var canvas = document.querySelector('.canvas') || document.body;
+                        var isMax = display.classList.contains('banner-news--maximized');
+                        if (isMax) {
+                            // revert
+                            display.classList.remove('banner-news--maximized');
+                            display.style.position = '';
+                            display.style.left = '';
+                            display.style.top = '';
+                            display.style.width = '';
+                            display.style.height = '';
+                            display.style.zIndex = '';
+                            vid.style.objectFit = 'cover';
+                            fsBtn.innerText = '⤢';
                         } else {
-                            var target = display || vid;
-                            if (target.requestFullscreen) target.requestFullscreen();
-                            else if (target.webkitRequestFullscreen) target.webkitRequestFullscreen();
-                            else if (target.msRequestFullscreen) target.msRequestFullscreen();
-                            else if (target.mozRequestFullScreen) target.mozRequestFullScreen();
-                            else if (vid.requestFullscreen) vid.requestFullscreen();
-                            else console.warn('[banner-news] fullscreen API not available in this environment');
+                            // ensure canvas is positioned for absolute children
+                            if (canvas && getComputedStyle(canvas).position === 'static') {
+                                canvas.style.position = 'relative';
+                            }
+                            display.classList.add('banner-news--maximized');
+                            display.style.position = 'absolute';
+                            display.style.left = '0';
+                            display.style.top = '0';
+                            display.style.width = '100%';
+                            display.style.height = '100%';
+                            display.style.zIndex = '2147483640';
+                            vid.style.width = '100%';
+                            vid.style.height = '100%';
+                            vid.style.objectFit = 'cover';
+                            fsBtn.innerText = '❐';
                         }
                     } catch (e) {
-                        console.warn('[banner-news] fullscreen error', e);
+                        console.warn('[banner-news] in-panel maximize error', e);
                     }
                 });
 
