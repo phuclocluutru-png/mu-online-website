@@ -258,11 +258,45 @@
                 <span class="modal__acceptance-text">Chấp nhận Điều khoản, điều kiện và Chính sách</span>
             </label>
         </div>
+        <style>
+            .modal__options {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+                align-items: stretch;
+            }
+
+            .modal__options .button {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+                padding: 0.75rem 1rem;
+                white-space: normal;
+            }
+
+            .modal__options .button .line-top {
+                font-weight: 600;
+            }
+
+            .modal__options .button .line-bottom {
+                font-size: 0.9em;
+                color: inherit;
+                opacity: 0.9;
+            }
+        </style>
         <div class="modal__options">
-            <a href="/Download/SetupPkClear.exe" class="button button--gradient" id="download-direct">Tải trực
-                tiếp</a>
-            <a href="https://mega.nz/file/dEISDayD#vAHtZrHwK4MJ0KkTjoLRf019gTl0VtRlbA6WdIr8H6s" target="_blank"
-                class="button button--outline" id="download-mega">Tải bằng Mega.nz</a>
+            <a href="/Download/SetupPkClear.exe" class="button button--gradient" id="download-direct"><span
+                    class="line-top">Tải trực tiếp</span><span class="line-bottom">Phiên bản: Không âm thanh</span></a>
+            <a href="https://mega.nz/file/cNJFwbTQ#uoRfYeXfZfB4TFAtFOaGxUjtDdFGvcNFUzd6PE47OgE" target="_blank"
+                class="button button--outline" id="download-mega"><span class="line-top">Tải bằng Mega.nz</span><span
+                    class="line-bottom">Phiên bản: Không âm thanh</span></a>
+            <a href="/Download/SetupPkClear-Amthanh.exe" class="button button--gradient"
+                id="download-direct-sound"><span class="line-top">Tải trực tiếp</span><span class="line-bottom">Phiên
+                    bản: Có âm thanh</span></a>
+            <a href="https://mega.nz/file/EZZinTbB#aP7396lTwdEo5p709oP3Ng0fg-WgiaowdQ88JVTmCl8" target="_blank"
+                class="button button--outline" id="download-mega-sound"><span class="line-top">Tải bằng
+                    Mega.nz</span><span class="line-bottom">Phiên bản: Có âm thanh</span></a>
         </div>
         <div class="install-guide">
             <h3 class="section-title red text-center">CÁCH CÀI ĐẶT VÀ GỠ BỎ GAME</h3>

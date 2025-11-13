@@ -34,16 +34,20 @@ const initDownloadModal = () => {
     const acceptCheckbox = document.getElementById('accept-terms');
     const downloadDirect = document.getElementById('download-direct');
     const downloadMega = document.getElementById('download-mega');
+    const downloadDirectSound = document.getElementById('download-direct-sound');
+    const downloadMegaSound = document.getElementById('download-mega-sound');
 
     const updateDownloadButtons = () => {
         const isAccepted = acceptCheckbox.checked;
-        if (isAccepted) {
-            downloadDirect.classList.remove('disabled');
-            downloadMega.classList.remove('disabled');
-        } else {
-            downloadDirect.classList.add('disabled');
-            downloadMega.classList.add('disabled');
-        }
+        const allButtons = [downloadDirect, downloadMega, downloadDirectSound, downloadMegaSound];
+        allButtons.forEach(btn => {
+            if (!btn) return;
+            if (isAccepted) {
+                btn.classList.remove('disabled');
+            } else {
+                btn.classList.add('disabled');
+            }
+        });
     };
 
     const preventDownload = (e) => {
@@ -54,16 +58,18 @@ const initDownloadModal = () => {
         }
     };
 
-    if (acceptCheckbox && downloadDirect && downloadMega) {
+    if (acceptCheckbox) {
         // Initially disable buttons
         updateDownloadButtons();
 
         // Listen for checkbox changes
         acceptCheckbox.addEventListener('change', updateDownloadButtons);
 
-        // Prevent download when not accepted
-        downloadDirect.addEventListener('click', preventDownload);
-        downloadMega.addEventListener('click', preventDownload);
+        // Prevent download when not accepted for all buttons
+        [downloadDirect, downloadMega, downloadDirectSound, downloadMegaSound].forEach(btn => {
+            if (!btn) return;
+            btn.addEventListener('click', preventDownload);
+        });
     }
 
     // Close modal on Escape key
