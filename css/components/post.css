@@ -468,16 +468,16 @@
 }
 
 .postView__listItemImg {
-    width: 90px;
-    height: 90px;
+    width: 140px;
+    height: 88px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 10px;
     flex-shrink: 0;
 }
 
 .postView__listItemImgPlaceholder {
-    width: 90px;
-    height: 90px;
+    width: 140px;
+    height: 88px;
     background: linear-gradient(45deg, #2d1e4f, #1a1830);
     border-radius: 8px;
     flex-shrink: 0;
@@ -672,6 +672,19 @@
     font-weight: 700;
     letter-spacing: .03em;
     color: #d9d4e8;
+    line-height: 1.25;
+}
+
+.postView__content h2 {
+    font-size: 1.45rem;
+}
+
+.postView__content h3 {
+    font-size: 1.2rem;
+}
+
+.postView__content h4 {
+    font-size: 1rem;
 }
 
 .postView__content p {
@@ -699,6 +712,77 @@
     margin: 1rem auto;
     border-radius: 12px;
     box-shadow: 0 10px 26px -10px rgba(0, 0, 0, .55);
+}
+
+/* Gutenberg color + typography helpers so WP inline classes show correctly */
+.postView__content .has-vivid-red-color,
+.postView__content .has-vivid-red-color a { color: #e60023; }
+.postView__content .has-luminous-vivid-orange-color,
+.postView__content .has-luminous-vivid-orange-color a { color: #ff6900; }
+.postView__content .has-amber-color,
+.postView__content .has-amber-color a { color: #ffb300; }
+.postView__content .has-luminous-vivid-amber-color,
+.postView__content .has-luminous-vivid-amber-color a { color: #ffb900; }
+.postView__content .has-vivid-cyan-blue-color,
+.postView__content .has-vivid-cyan-blue-color a { color: #0693e3; }
+.postView__content .has-cyan-bluish-gray-color,
+.postView__content .has-cyan-bluish-gray-color a { color: #abb8c3; }
+.postView__content .has-vivid-purple-color,
+.postView__content .has-vivid-purple-color a { color: #9b51e0; }
+.postView__content .has-black-color,
+.postView__content .has-black-color a { color: #000; }
+.postView__content .has-white-color,
+.postView__content .has-white-color a { color: #fff; }
+
+.postView__content .has-large-font-size { font-size: 1.3rem; }
+.postView__content .has-larger-font-size,
+.postView__content .has-x-large-font-size { font-size: 1.6rem; }
+.postView__content .has-huge-font-size { font-size: 2rem; }
+.postView__content .has-medium-font-size { font-size: 1.1rem; }
+.postView__content .has-small-font-size { font-size: 0.9rem; }
+.postView__content .has-normal-font-size { font-size: 1rem; }
+
+.postView__content .has-text-align-center { text-align: center; }
+.postView__content .has-text-align-right { text-align: right; }
+
+/* Table styling for post content (e.g., WP block tables) */
+.postView__content figure.wp-block-table {
+    margin: 1.2rem 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow-x: auto;
+}
+
+.postView__content figure.wp-block-table table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    min-width: 360px;
+}
+
+.postView__content figure.wp-block-table th,
+.postView__content figure.wp-block-table td {
+    padding: 0.7rem 0.75rem;
+    border: 1px solid rgba(255, 255, 255, .12);
+    color: var(--color-silver);
+    text-align: left;
+}
+
+.postView__content figure.wp-block-table thead th {
+    background: linear-gradient(120deg, rgba(124, 58, 237, .45), rgba(255, 215, 0, .2));
+    color: #fff;
+    font-weight: 700;
+}
+
+.postView__content figure.wp-block-table tbody tr:nth-child(odd) {
+    background: rgba(255, 255, 255, .02);
+}
+
+.postView__content .has-text-align-center {
+    text-align: center;
 }
 
 .postView__featuredImg {

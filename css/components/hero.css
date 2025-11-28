@@ -8,7 +8,7 @@
         radial-gradient(circle at 82% 22%, rgba(54, 14, 199, 0.22), transparent 35%),
 
         url('../../images/top-bg.png') bottom center / cover no-repeat;
-    padding: 3.6rem 0 2.6rem;
+    padding: 0rem 0 2.6rem;
     /* compacted height */
 }
 
@@ -21,6 +21,11 @@
     overflow: hidden;
     background: #0f1324;
     box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+/* Chỉ hiển thị video hero ở trang chủ */
+body:not(.page-home) .hero__video {
+    display: none;
 }
 
 .hero__video video {
@@ -278,23 +283,17 @@
 .hero__logo-orb {
     position: absolute;
     width: 280px;
-    /* fixed */
     height: 280px;
-    /* fixed */
-    background: radial-gradient(circle at 45% 45%, rgba(103, 212, 255, 0.55), transparent 65%), radial-gradient(circle at 55% 60%, rgba(247, 167, 54, 0.45), transparent 70%);
-    filter: blur(12px);
-    opacity: 0.85;
+    background:
+        radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.35) 0%, rgba(34, 17, 58, 0.0) 70%),
+        radial-gradient(circle at 55% 60%, rgba(255, 215, 0, 0.14) 0%, rgba(34, 17, 58, 0) 70%);
+    filter: blur(10px);
+    opacity: 0.6;
     z-index: -2;
 }
 
 .hero__logo-rays {
-    position: absolute;
-    inset: -20%;
-    background: conic-gradient(from 0deg, rgba(255, 255, 255, 0.08), transparent 55%, rgba(247, 167, 54, 0.16), transparent 100%);
-    transform: rotate(12deg);
-    opacity: 0.55;
-    z-index: -1;
-    border-radius: 50%;
+    display: none;
 }
 
 /* standard actions inside copy */

@@ -2,16 +2,17 @@ import { WP_API_BASE, WP_TIMEOUT_MS, mapPost } from './news-config.js';
 
 // State
 const state = {
-    featuredPosts: [], // Bài viết nổi bật cho slider
+    featuredPosts: [], // bai viet noi bat cho slider
     currentSlide: 0,
-    activeTab: 'tin-tuc-cap-nhat', // tab mặc định
-    tabPosts: {}, // Cache posts cho mỗi tab
+    activeTab: 'latest', // tab mac dinh
+    tabPosts: {}, // Cache posts cho moi tab
     loading: false,
 };
 
-// Cấu hình tabs cố định
+// Cau hinh tabs co dinh
 const mainCategories = {
-    'tin-tuc-cap-nhat': { name: 'Tin tức và cập nhật', slug: 'tin-tuc-cap-nhat' },
+    'latest': { name: 'Mới nhất', slug: 'latest' },
+    'tin-tuc-cap-nhat': { name: 'Tin tức & cập nhật', slug: 'tin-tuc-cap-nhat' },
     'su-kien': { name: 'Sự kiện', slug: 'su-kien' },
     'huong-dan': { name: 'Hướng dẫn', slug: 'huong-dan' },
     'nhan-vat': { name: 'Nhân vật', slug: 'nhan-vat' }
@@ -74,26 +75,32 @@ async function fetchTabPosts(tabSlug) {
 
     try {
         console.log('Fetching posts for tab:', tabSlug);
-        // Tìm category ID từ slug
-        const categoriesRes = await timeoutFetch(`${WP_API_BASE}/categories?slug=${tabSlug}`);
-        console.log('Categories response for', tabSlug, ':', categoriesRes.status);
-
         let postsRes;
-        if (categoriesRes.ok) {
-            const categories = await categoriesRes.json();
-            console.log('Categories found for', tabSlug, ':', categories);
 
-            if (categories.length > 0) {
-                const categoryId = categories[0].id;
-                console.log('Using category ID:', categoryId, 'for tab:', tabSlug);
-                postsRes = await timeoutFetch(`${WP_API_BASE}/posts?per_page=6&categories=${categoryId}&_embed`);
-            } else {
-                console.log('No category found for', tabSlug, ', fetching all posts');
-                postsRes = await timeoutFetch(`${WP_API_BASE}/posts?per_page=6&_embed`);
-            }
+        if (tabSlug === 'latest') {
+            // Tab Mới nhất: lấy 6 bài viết mới nhất
+            postsRes = await timeoutFetch(`${WP_API_BASE}/posts?per_page=6&_embed&orderby=date&order=desc`);
         } else {
-            console.log('Category lookup failed for', tabSlug, ', fetching all posts');
-            postsRes = await timeoutFetch(`${WP_API_BASE}/posts?per_page=8&_embed`);
+            // Tìm category ID từ slug
+            const categoriesRes = await timeoutFetch(`${WP_API_BASE}/categories?slug=${tabSlug}`);
+            console.log('Categories response for', tabSlug, ':', categoriesRes.status);
+
+            if (categoriesRes.ok) {
+                const categories = await categoriesRes.json();
+                console.log('Categories found for', tabSlug, ':', categories);
+
+                if (categories.length > 0) {
+                    const categoryId = categories[0].id;
+                    console.log('Using category ID:', categoryId, 'for tab:', tabSlug);
+                    postsRes = await timeoutFetch(`${WP_API_BASE}/posts?per_page=6&categories=${categoryId}&_embed`);
+                } else {
+                    console.log('No category found for', tabSlug, ', fetching all posts');
+                    postsRes = await timeoutFetch(`${WP_API_BASE}/posts?per_page=6&_embed`);
+                }
+            } else {
+                console.log('Category lookup failed for', tabSlug, ', fetching all posts');
+                postsRes = await timeoutFetch(`${WP_API_BASE}/posts?per_page=8&_embed`);
+            }
         }
 
         if (!postsRes.ok) throw new Error('Bad posts response');

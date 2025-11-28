@@ -51,7 +51,7 @@ main {
 }
 
 .container {
-    width: min(1200px, 100%);
+    width: min(1300px, 100%);
     margin: 0 auto;
     padding: 0 1.5rem;
     /* restore side padding on larger screens */
