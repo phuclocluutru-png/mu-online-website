@@ -897,6 +897,45 @@
     margin-right: 0;
 }
 
+/* Custom wing table helper (for inline HTML tables in posts) */
+.postView__content table.wing-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.postView__content table.wing-table th,
+.postView__content table.wing-table td {
+    border: 1px solid rgba(255, 255, 255, .2);
+    padding: 16px;
+    vertical-align: top;
+}
+
+.postView__content table.wing-table th {
+    text-align: center;
+    font-weight: 700;
+    background: linear-gradient(120deg, rgba(124, 58, 237, .35), rgba(255, 215, 0, .15));
+    color: #fff;
+}
+
+.postView__content table.wing-table td:nth-child(2),
+.postView__content table.wing-table th:nth-child(2) {
+    text-align: center;
+    width: 120px;
+}
+
+.postView__content table.wing-table .item-cell {
+    text-align: center;
+}
+
+.postView__content table.wing-table .item-cell img {
+    display: block;
+    margin: 0 auto 8px;
+    max-width: 230px;
+    height: auto;
+    object-fit: contain;
+}
+
 .postView__content .has-text-align-center {
     text-align: center;
 }
