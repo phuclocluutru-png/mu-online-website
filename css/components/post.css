@@ -851,16 +851,6 @@
     flex: 0 0 auto;
 }
 
-.postView__content .is-layout-flex > figure img,
-.postView__content .is-layout-flex > .wp-block-image img {
-    max-width: 120px;
-    max-height: 120px;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    margin: 0;
-}
-
 /* Table styling for post content (e.g., WP block tables) */
 .postView__content figure.wp-block-table {
     margin: 1.2rem 0;
