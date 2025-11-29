@@ -598,6 +598,7 @@
     font-size: .83rem;
     line-height: 1.55;
     color: var(--color-silver);
+    display: flow-root;
 }
 
 /* Responsive embedded video wrapper (moved out of nested block) */
@@ -714,6 +715,66 @@
     box-shadow: 0 10px 26px -10px rgba(0, 0, 0, .55);
 }
 
+/* WordPress alignment helpers so inline images wrap text like in editor */
+.postView__content .alignleft,
+.postView__content img.alignleft,
+.postView__content figure.alignleft,
+.postView__content figure.wp-block-image.alignleft {
+    float: left;
+    display: inline-block;
+    margin: 0.25rem 1.1rem 1rem 0;
+}
+
+.postView__content .alignright,
+.postView__content img.alignright,
+.postView__content figure.alignright,
+.postView__content figure.wp-block-image.alignright {
+    float: right;
+    display: inline-block;
+    margin: 0.25rem 0 1rem 1.1rem;
+}
+
+.postView__content .aligncenter,
+.postView__content img.aligncenter,
+.postView__content figure.aligncenter,
+.postView__content figure.wp-block-image.aligncenter {
+    display: block;
+    margin: 1rem auto;
+    float: none;
+    text-align: center;
+}
+
+.postView__content figure.alignleft img,
+.postView__content figure.alignright img,
+.postView__content figure.wp-block-image.alignleft img,
+.postView__content figure.wp-block-image.alignright img {
+    display: block;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .postView__content .alignleft,
+    .postView__content img.alignleft,
+    .postView__content figure.alignleft,
+    .postView__content figure.wp-block-image.alignleft,
+    .postView__content .alignright,
+    .postView__content img.alignright,
+    .postView__content figure.alignright,
+    .postView__content figure.wp-block-image.alignright {
+        float: none;
+        display: block;
+        margin: 1rem auto;
+        text-align: center;
+    }
+
+    .postView__content figure.alignleft img,
+    .postView__content figure.alignright img,
+    .postView__content figure.wp-block-image.alignleft img,
+    .postView__content figure.wp-block-image.alignright img {
+        margin: 0 auto;
+    }
+}
+
 /* Gutenberg color + typography helpers so WP inline classes show correctly */
 .postView__content .has-vivid-red-color,
 .postView__content .has-vivid-red-color a { color: #e60023; }
@@ -744,6 +805,21 @@
 
 .postView__content .has-text-align-center { text-align: center; }
 .postView__content .has-text-align-right { text-align: right; }
+
+/* Basic Gutenberg layout helpers (wp-block-library substitutes) */
+.postView__content :where(.is-layout-flex) {
+    display: flex;
+    gap: var(--wp--style--block-gap, 1.1rem);
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.postView__content :where(.is-layout-grid) {
+    display: grid;
+    gap: var(--wp--style--block-gap, 1.1rem);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    align-items: flex-start;
+}
 
 /* Table styling for post content (e.g., WP block tables) */
 .postView__content figure.wp-block-table {
