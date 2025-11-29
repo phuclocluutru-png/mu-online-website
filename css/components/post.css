@@ -823,11 +823,28 @@
     align-items: flex-start;
 }
 
+.postView__content :where(.is-layout-flex).is-nowrap {
+    flex-wrap: nowrap;
+}
+
+.postView__content :where(.is-layout-flex).is-vertical {
+    flex-direction: column;
+}
+
 .postView__content :where(.is-layout-grid) {
     display: grid;
     gap: var(--wp--style--block-gap, 1.1rem);
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     align-items: flex-start;
+}
+
+.postView__content .is-layout-flex > * {
+    margin: 0;
+}
+
+.postView__content .is-layout-flex > figure,
+.postView__content .is-layout-flex > .wp-block-image {
+    flex: 0 0 auto;
 }
 
 /* Table styling for post content (e.g., WP block tables) */
