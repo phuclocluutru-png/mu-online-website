@@ -697,6 +697,15 @@
     margin: .75rem 0 .9rem 1.2rem;
 }
 
+.postView__content li {
+    margin-bottom: 0.35rem;
+    line-height: 1.65;
+}
+
+.postView__content li:last-child {
+    margin-bottom: 0;
+}
+
 .postView__content a {
     color: var(--color-gold-bright);
     text-decoration: none;
