@@ -831,6 +831,10 @@
     flex-direction: column;
 }
 
+.postView__content :where(.is-layout-flex):not(.is-vertical) {
+    align-items: center;
+}
+
 .postView__content :where(.is-layout-grid) {
     display: grid;
     gap: var(--wp--style--block-gap, 1.1rem);
