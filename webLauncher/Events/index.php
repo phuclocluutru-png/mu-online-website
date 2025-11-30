@@ -6,7 +6,7 @@ header('Pragma: no-cache');
 header('Expires: 0');
 header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
 
-$root = dirname(__DIR__);
+$root = __DIR__;
 function asset_version(string $relative) {
     global $GLOBAL_VERSION, $root;
     $path = $root . '/' . ltrim($relative, '/');
@@ -27,11 +27,11 @@ $bgVersion = asset_version('images/BG WEB.png');
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="stylesheet" href="../css/style.css?v=<?php echo asset_version('css/style.css'); ?>">
+  <link rel="stylesheet" href="css/style.css?v=<?php echo asset_version('css/style.css'); ?>">
 </head>
 <body>
   <div class="canvas">
-    <img class="canvas-bg" src="../images/BG WEB.png?v=<?php echo $bgVersion; ?>" alt="">
+    <img class="canvas-bg" src="images/BG WEB.png?v=<?php echo $bgVersion; ?>" alt="">
     <div class="layout layout--events-only">
       <section class="panel panel-events">
         <div class="events">
@@ -45,10 +45,10 @@ $bgVersion = asset_version('images/BG WEB.png');
 
   <div id="event-times-pop" class="event-times-pop"></div>
 
-  <script src="../js/event-drops.js?v=<?php echo asset_version('js/event-drops.js'); ?>"></script>
-  <script src="../js/events-data.js?v=<?php echo asset_version('js/events-data.js'); ?>"></script>
-  <script src="../js/time-utils.js?v=<?php echo asset_version('js/time-utils.js'); ?>"></script>
-  <script src="../js/events.js?v=<?php echo asset_version('js/events.js'); ?>"></script>
+  <script src="js/event-drops.js?v=<?php echo asset_version('js/event-drops.js'); ?>"></script>
+  <script src="js/events-data.js?v=<?php echo asset_version('js/events-data.js'); ?>"></script>
+  <script src="js/time-utils.js?v=<?php echo asset_version('js/time-utils.js'); ?>"></script>
+  <script src="js/events.js?v=<?php echo asset_version('js/events.js'); ?>"></script>
   <?php echo "<!-- INDEX_FILE=".__FILE__." VERSION=$GLOBAL_VERSION -->"; ?>
   <script>
     (function(){
