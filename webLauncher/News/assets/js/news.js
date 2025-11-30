@@ -54,6 +54,31 @@
       });
     };
   }
+  // Minimal fetch stub for legacy browsers (GET only, JSON helper)
+  if (typeof window.fetch !== 'function') {
+    window.fetch = function(url){
+      return new Promise(function(resolve, reject){
+        try{
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', url, true);
+          xhr.onreadystatechange = function(){
+            if (xhr.readyState === 4){
+              if (xhr.status >=200 && xhr.status <300){
+                resolve({
+                  ok: true,
+                  status: xhr.status,
+                  json: function(){ return Promise.resolve(JSON.parse(xhr.responseText)); }
+                });
+              } else {
+                reject(new Error('HTTP '+xhr.status));
+              }
+            }
+          };
+          xhr.send();
+        }catch(e){ reject(e); }
+      });
+    };
+  }
   var API_BASE = 'https://pkclear.com/wp-json/wp/v2';
   var tabs = [
     { key: 'latest', label: 'Mới nhất' },
