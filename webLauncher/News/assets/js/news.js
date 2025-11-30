@@ -68,8 +68,9 @@
 
   // Fetch JSON with XHR fallback for legacy WebBrowser (no fetch)
   function fetchJSON(url){
-    if (window.fetch) {
-      return fetch(url).then(function(r){ return r.json(); });
+    var fetchFn = (typeof window.fetch === 'function') ? window.fetch.bind(window) : null;
+    if (fetchFn) {
+      return fetchFn(url).then(function(r){ return r.json(); });
     }
     return new Promise(function(resolve, reject){
       try{
