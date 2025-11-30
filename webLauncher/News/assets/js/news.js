@@ -99,6 +99,15 @@
     }
     return new Promise(function(resolve, reject){
       try{
+        // IE9 WebBrowser control may support XDomainRequest
+        if (window.XDomainRequest) {
+          var xdr = new XDomainRequest();
+          xdr.onload = function(){ try{ resolve(JSON.parse(xdr.responseText)); } catch(e){ reject(e);} };
+          xdr.onerror = function(){ reject(new Error('XDR error')); };
+          xdr.open('GET', url);
+          xdr.send();
+          return;
+        }
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
         xhr.onreadystatechange = function(){
