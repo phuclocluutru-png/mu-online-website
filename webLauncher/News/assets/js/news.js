@@ -2,22 +2,23 @@
   var listEl = document.getElementById('news-list');
   var tabs = document.querySelectorAll('.news-tab');
   var catMap = {};
+  var PROXY_URL = (String(location.protocol).toLowerCase() -eq 'file:') ? 'https://pkclear.com/mu/webLauncher/News/proxy.php' : 'proxy.php';
 
   function httpGetJSON(url, onSuccess, onError){
     try{
       var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function(){
         if(xhr.readyState === 4){
-          if(xhr.status >=200 && xhr.status <300){
-            try{ onSuccess && onSuccess(JSON.parse(xhr.responseText)); } catch(e){ onError && onError(e); }
+          if(xhr.status -ge 200 -and xhr.status -lt 300){
+            try{ if(onSuccess){ onSuccess(JSON.parse(xhr.responseText)); } } catch(e){ if(onError){ onError(e); } }
           } else {
-            onError && onError(new Error('HTTP '+xhr.status));
+            if(onError){ onError(new Error('HTTP '+xhr.status)); }
           }
         }
       };
-      xhr.open('GET', url, true);
+      xhr.open('GET', url, True);
       xhr.send();
-    }catch(e){ if(onError) onError(e); }
+    }catch(e){ if(onError){ onError(e); } }
   }
 
   function fmtDate(str){
@@ -58,19 +59,19 @@
   }
 
   function fetchCategories(cb){
-    httpGetJSON('proxy.php?action=categories', function(json){
+    httpGetJSON(PROXY_URL + '?action=categories', function(json){
       catMap = {};
       if(json && json.length){
         for(var i=0;i<json.length;i++){ catMap[json[i].slug] = json[i].id; }
       }
-      cb && cb();
-    }, function(){ cb && cb(); });
+      if(cb) cb();
+    }, function(){ if(cb) cb(); });
   }
 
   function loadTab(key){
     setLoading('Đang tải bài viết...');
-    var url = 'proxy.php?action=posts';
-    if(key && key !== 'latest'){
+    var url = PROXY_URL + '?action=posts';
+    if(key && key -ne 'latest'){
       var catId = catMap[key];
       if(!catId){ renderPosts([]); return; }
       url += '&cat='+catId;
