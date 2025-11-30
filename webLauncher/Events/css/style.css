@@ -45,7 +45,7 @@ body {
 .layout--events-only {
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 0;
 }
 
 .panel {
@@ -315,9 +315,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     text-align: left;
-    gap: 6px;
+    gap: 8px;
+    width: 90%;
+    max-width: 780px;
+    height: 90%;
 }
 
 .panel-events h2 {
@@ -342,10 +345,10 @@ body {
     background: rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(2px);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 5px;
-    height: 407px;
-    width: 264px;
-    flex: none;
+    padding: 12px;
+    height: 100%;
+    width: 100%;
+    flex: 1;
     display: flex;
     flex-direction: column;
 }
