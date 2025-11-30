@@ -397,6 +397,7 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     font-size: 12px;
     min-width: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .event__name {
@@ -431,6 +432,21 @@ body {
 .event__status.is-active {
     background: linear-gradient(90deg, #7c3aed, #f59e0b);
     color: #fff;
+}
+
+.event--running .event__name {
+    font-weight: 800;
+    color: #ffd700 !important;
+}
+
+.event:hover {
+    background: rgba(62, 41, 93, 0.9);
+}
+
+.event:hover .event__name {
+    transform: scale(1.03);
+    font-weight: 700;
+    color: #ffe28a;
 }
 
 /* Tooltip */
