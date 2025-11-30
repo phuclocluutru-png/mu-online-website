@@ -1,40 +1,17 @@
 ﻿(function(){
-  // Đơn giản cho WebBrowser (không dùng fetch/Promise phức tạp)
-  var API_BASE = 'https://pkclear.com/wp-json/wp/v2';
   var listEl = document.getElementById('news-list');
   var tabs = document.querySelectorAll('.news-tab');
   var catMap = {};
 
-  function httpGetJSON(url, onSuccess, onError, triedFallback){
+  function httpGetJSON(url, onSuccess, onError){
     try{
-      var done = false;
-      function success(data){ if(done) return; done=true; if(onSuccess) onSuccess(data); }
-      function fail(err){ if(done) return; done=true; if(onError) onError(err); }
-      if(window.XDomainRequest){
-        var xdr = new XDomainRequest();
-        xdr.onload = function(){ try{ success(JSON.parse(xdr.responseText)); }catch(e){ fail(e); } };
-        xdr.onerror = function(){
-          if(!triedFallback && url.indexOf('https://') === 0){
-            httpGetJSON(url.replace('https://','http://'), onSuccess, onError, true);
-            return;
-          }
-          fail(new Error('XDR error'));
-        };
-        xdr.open('GET', url);
-        xdr.send();
-        return;
-      }
       var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function(){
         if(xhr.readyState === 4){
           if(xhr.status >=200 && xhr.status <300){
-            try{ success(JSON.parse(xhr.responseText)); } catch(e){ fail(e); }
+            try{ onSuccess && onSuccess(JSON.parse(xhr.responseText)); } catch(e){ onError && onError(e); }
           } else {
-            if(!triedFallback && url.indexOf('https://') === 0){
-              httpGetJSON(url.replace('https://','http://'), onSuccess, onError, true);
-              return;
-            }
-            fail(new Error('HTTP '+xhr.status));
+            onError && onError(new Error('HTTP '+xhr.status));
           }
         }
       };
@@ -81,28 +58,24 @@
   }
 
   function fetchCategories(cb){
-    httpGetJSON(API_BASE + '/categories?per_page=100', function(json){
+    httpGetJSON('proxy.php?action=categories', function(json){
       catMap = {};
       if(json && json.length){
         for(var i=0;i<json.length;i++){ catMap[json[i].slug] = json[i].id; }
       }
-      if(cb) cb();
-    }, function(){ if(cb) cb(); });
+      cb && cb();
+    }, function(){ cb && cb(); });
   }
 
   function loadTab(key){
     setLoading('Đang tải bài viết...');
-    var url;
-    if(key==='latest'){
-      url = API_BASE + '/posts?per_page=20&_embed';
-    } else {
+    var url = 'proxy.php?action=posts';
+    if(key && key !== 'latest'){
       var catId = catMap[key];
       if(!catId){ renderPosts([]); return; }
-      url = API_BASE + '/posts?per_page=20&categories='+catId+'&_embed';
+      url += '&cat='+catId;
     }
-    httpGetJSON(url, function(json){ renderPosts(json||[]); }, function(err){
-      if(listEl) listEl.innerHTML = '<div class="news-empty">Lỗi tải dữ liệu.</div>';
-    });
+    httpGetJSON(url, function(json){ renderPosts(json||[]); }, function(){ if(listEl) listEl.innerHTML = '<div class="news-empty">Lỗi tải dữ liệu.</div>'; });
   }
 
   function initTabs(){
