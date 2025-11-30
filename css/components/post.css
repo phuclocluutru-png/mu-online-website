@@ -899,6 +899,18 @@
     max-width: 100%;
 }
 
+.postView__content figure.wp-block-table td {
+    text-align: left;
+}
+
+.postView__content figure.wp-block-table td.has-text-align-center {
+    text-align: center;
+}
+
+.postView__content figure.wp-block-table td.has-text-align-right {
+    text-align: right;
+}
+
 .postView__content table img {
     display: inline-block;
     margin: 0 .6rem 0 0;
