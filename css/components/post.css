@@ -887,6 +887,18 @@
     background: rgba(255, 255, 255, .02);
 }
 
+.postView__content figure.wp-block-table.aligncenter,
+.postView__content table.aligncenter {
+    margin-left: auto;
+    margin-right: auto;
+    display: table;
+}
+
+.postView__content figure.wp-block-table.aligncenter table {
+    width: auto;
+    max-width: 100%;
+}
+
 .postView__content table img {
     display: inline-block;
     margin: 0 .6rem 0 0;
