@@ -84,8 +84,9 @@ function initEvents() {
         var html = '' +
             '<span class="event__name">' + name + '</span>' +
             '<span class="event__countdown" data-countdown="' + countdownValue + '">--:--:--</span>' +
-            '<span class="event__status">' + (activeWin ? 'Đang diễn ra' : 'Chờ đến giờ') + '</span>';
+            '<span class="event__status">' + (activeWin ? '?ang di?n ra' : 'Ch? ??n gi?') + '</span>';
         li.innerHTML = html;
+        if (activeWin) { li.className += ' event--running'; }
         if (frag) {
             frag.appendChild(li);
         } else {
@@ -239,16 +240,18 @@ function updateEventsLoop() {
                 if (info) {
                     var nextStartISO = computeNextStart(info.times, now);
                     countdownEl.setAttribute('data-countdown', String(nextStartISO));
-                    statusEl.innerHTML = 'Chuẩn bị';
-                    statusEl.className = statusEl.className.replace(' is-active', '');
+                    statusEl.innerHTML = 'Ch? ??n gi?';
+                    statusEl.className = statusEl.className.replace(' is-active', '').replace(' is-soon', '');
+                    li.className = li.className.replace(' event--running', '');
                 }
             } else {
                 var hours = Math.floor(remaining / 3600000);
                 var mins = Math.floor((remaining % 3600000) / 60000);
                 var secs = Math.floor((remaining % 60000) / 1000);
                 countdownEl.innerHTML = (hours < 10 ? '0' + hours : hours) + ':' + (mins < 10 ? '0' + mins : mins) + ':' + (secs < 10 ? '0' + secs : secs);
-                statusEl.innerHTML = 'Đang diễn ra';
+                statusEl.innerHTML = '?ang di?n ra';
                 if (statusEl.className.indexOf('is-active') === -1) statusEl.className += ' is-active';
+                if (li.className.indexOf('event--running') === -1) li.className += ' event--running';
                 active.push({ li: li, remaining: remaining });
             }
         } else {
@@ -258,8 +261,9 @@ function updateEventsLoop() {
                 var endTime2 = startTime + durationMin * 60000;
                 li.setAttribute('data-active-start', String(startTime));
                 countdownEl.setAttribute('data-countdown', String(endTime2));
-                statusEl.innerHTML = 'Đang diễn ra';
+                statusEl.innerHTML = '?ang di?n ra';
                 if (statusEl.className.indexOf('is-active') === -1) statusEl.className += ' is-active';
+                if (li.className.indexOf('event--running') === -1) li.className += ' event--running';
                 active.push({ li: li, remaining: endTime2 - now });
                 var hours2 = Math.floor((endTime2 - now) / 3600000);
                 var mins2 = Math.floor(((endTime2 - now) % 3600000) / 60000);
@@ -271,13 +275,14 @@ function updateEventsLoop() {
                 var secs3 = Math.floor((untilStart % 60000) / 1000);
                 countdownEl.innerHTML = (hours3 < 10 ? '0' + hours3 : hours3) + ':' + (mins3 < 10 ? '0' + mins3 : mins3) + ':' + (secs3 < 10 ? '0' + secs3 : secs3);
                 if (untilStart <= 10 * 60000) {
-                    statusEl.innerHTML = 'Sắp diễn ra';
+                    statusEl.innerHTML = 'S?p di?n ra';
                     if (statusEl.className.indexOf('is-soon') === -1) statusEl.className += ' is-soon';
                 } else {
-                    statusEl.innerHTML = 'Chờ đến giờ';
+                    statusEl.innerHTML = 'Ch? ??n gi?';
                     statusEl.className = statusEl.className.replace(' is-soon', '');
                 }
                 statusEl.className = statusEl.className.replace(' is-active', '');
+                li.className = li.className.replace(' event--running', '');
                 upcoming.push({ li: li, untilStart: untilStart });
             }
         }
@@ -290,7 +295,6 @@ function updateEventsLoop() {
         for (var j = 0; j < all.length; j++) list.appendChild(all[j].li);
     }
 }
-
 setInterval(updateEventsLoop, 1000);
 
 // expose global init for inline call
