@@ -1,4 +1,59 @@
 ﻿(function(){
+  // Minimal Promise polyfill for legacy WebBrowser (IE) so XHR fallback works
+  if (typeof Promise === 'undefined') {
+    window.Promise = function(executor){
+      var self = this;
+      self._state = 'pending';
+      self._value = undefined;
+      self._callbacks = [];
+      function resolve(val){
+        if (self._state !== 'pending') return;
+        self._state = 'fulfilled';
+        self._value = val;
+        self._callbacks.forEach(function(cb){ cb(); });
+      }
+      function reject(err){
+        if (self._state !== 'pending') return;
+        self._state = 'rejected';
+        self._value = err;
+        self._callbacks.forEach(function(cb){ cb(); });
+      }
+      try { executor(resolve, reject); } catch(e){ reject(e); }
+    };
+    Promise.prototype.then = function(onFulfilled){
+      var self = this;
+      return new Promise(function(resolve, reject){
+        function handler(){
+          try{
+            if (self._state === 'fulfilled'){
+              resolve(onFulfilled ? onFulfilled(self._value) : self._value);
+            } else if (self._state === 'rejected'){
+              reject(self._value);
+            }
+          }catch(e){ reject(e); }
+        }
+        if (self._state === 'pending') self._callbacks.push(handler);
+        else handler();
+      });
+    };
+    Promise.prototype.catch = function(onRejected){
+      var self = this;
+      return new Promise(function(resolve, reject){
+        function handler(){
+          try{
+            if (self._state === 'fulfilled'){
+              resolve(self._value);
+            } else if (self._state === 'rejected'){
+              if (onRejected) resolve(onRejected(self._value));
+              else reject(self._value);
+            }
+          }catch(e){ reject(e); }
+        }
+        if (self._state === 'pending') self._callbacks.push(handler);
+        else handler();
+      });
+    };
+  }
   var API_BASE = 'https://pkclear.com/wp-json/wp/v2';
   var tabs = [
     { key: 'latest', label: 'Mới nhất' },
