@@ -107,6 +107,19 @@ body::before {
     -ms-overflow-style: none;
 }
 
+.news-panel__list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.news-panel__list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.news-panel__list::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #7c3aed, #f6c744);
+    border-radius: 8px;
+}
+
 .news-item {
     display: flex;
     align-items: center;

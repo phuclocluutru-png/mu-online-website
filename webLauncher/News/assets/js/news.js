@@ -11,6 +11,30 @@
   var listEl = document.getElementById('news-list');
   var loadingClass = 'news-loading';
 
+  // Fetch JSON with XHR fallback for legacy WebBrowser (no fetch)
+  function fetchJSON(url){
+    if (window.fetch) {
+      return fetch(url).then(function(r){ return r.json(); });
+    }
+    return new Promise(function(resolve, reject){
+      try{
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = function(){
+          if (xhr.readyState === 4){
+            if (xhr.status >= 200 && xhr.status < 300){
+              try{ resolve(JSON.parse(xhr.responseText)); }
+              catch(e){ reject(e); }
+            } else {
+              reject(new Error('HTTP '+xhr.status));
+            }
+          }
+        };
+        xhr.send();
+      }catch(err){ reject(err); }
+    });
+  }
+
   function fmtDate(str){
     if(!str) return '';
     try{
@@ -47,7 +71,7 @@
   }
 
   function fetchCategories(){
-    return fetch(API_BASE + '/categories?per_page=100').then(function(r){return r.json();}).then(function(json){
+    return fetchJSON(API_BASE + '/categories?per_page=100').then(function(json){
       catMap = {};
       json.forEach(function(c){ catMap[c.slug]=c.id; });
       return catMap;
@@ -67,7 +91,7 @@
       }
       url = API_BASE + '/posts?per_page=20&categories='+catId+'&_embed';
     }
-    fetch(url).then(function(r){return r.json();}).then(function(json){
+    fetchJSON(url).then(function(json){
       renderPosts(json || []);
     }).catch(function(){
       if(listEl) listEl.innerHTML = '<div class="news-empty">Lỗi tải dữ liệu.</div>';
