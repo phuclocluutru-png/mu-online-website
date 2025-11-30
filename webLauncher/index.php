@@ -35,15 +35,8 @@ $bgVersion = asset_version('images/BG WEB.png');
 </head>
 <body>
   <div class="canvas">
-  <img class="canvas-bg" src="images/BG WEB.png?v=<?php echo $bgVersion; ?>" alt="">
-    <div class="layout">
-      <!-- panel-news: minimal video display inserted. Original full implementation is in backups/panel-news/ -->
-      <section class="panel panel-news--removed" aria-hidden="false">
-        <!-- Video display area: banner-news JS will populate a <video> element here. -->
-        <div id="bannerNewsDisplay" class="banner-news__display" style="background:#2e1f47;min-height:200px;">
-          <div class="banner-news__placeholder">Video loader placeholder</div>
-        </div>
-      </section>
+    <img class="canvas-bg" src="images/BG WEB.png?v=<?php echo $bgVersion; ?>" alt="">
+    <div class="layout layout--events-only">
       <section class="panel panel-events">
         <div class="events">
           <ul class="events__list">
@@ -61,7 +54,6 @@ $bgVersion = asset_version('images/BG WEB.png');
   <script src="js/events-data.js?v=<?php echo asset_version('js/events-data.js'); ?>"></script>
   <script src="js/time-utils.js?v=<?php echo asset_version('js/time-utils.js'); ?>"></script>
   <script src="js/events.js?v=<?php echo asset_version('js/events.js'); ?>"></script>
-  <script src="js/banner-news.js?v=<?php echo asset_version('js/banner-news.js'); ?>"></script>
   <!-- Debug: nguồn file index đang chạy: -->
   <?php echo "<!-- INDEX_FILE=".__FILE__." VERSION=$GLOBAL_VERSION -->"; ?>
   <script>

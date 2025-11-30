@@ -42,6 +42,12 @@ body {
     color: #ffffff;
 }
 
+.layout--events-only {
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
 .panel {
     background: rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(2px);
