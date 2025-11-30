@@ -5,7 +5,7 @@
   var tabs = document.querySelectorAll('.news-tab');
   var catMap = {};
 
-  function httpGetJSON(url, onSuccess, onError){
+  function httpGetJSON(url, onSuccess, onError, triedFallback){
     try{
       var done = false;
       function success(data){ if(done) return; done=true; if(onSuccess) onSuccess(data); }
@@ -13,7 +13,13 @@
       if(window.XDomainRequest){
         var xdr = new XDomainRequest();
         xdr.onload = function(){ try{ success(JSON.parse(xdr.responseText)); }catch(e){ fail(e); } };
-        xdr.onerror = function(){ fail(new Error('XDR error')); };
+        xdr.onerror = function(){
+          if(!triedFallback && url.indexOf('https://') === 0){
+            httpGetJSON(url.replace('https://','http://'), onSuccess, onError, true);
+            return;
+          }
+          fail(new Error('XDR error'));
+        };
         xdr.open('GET', url);
         xdr.send();
         return;
@@ -24,6 +30,10 @@
           if(xhr.status >=200 && xhr.status <300){
             try{ success(JSON.parse(xhr.responseText)); } catch(e){ fail(e); }
           } else {
+            if(!triedFallback && url.indexOf('https://') === 0){
+              httpGetJSON(url.replace('https://','http://'), onSuccess, onError, true);
+              return;
+            }
             fail(new Error('HTTP '+xhr.status));
           }
         }
@@ -90,7 +100,9 @@
       if(!catId){ renderPosts([]); return; }
       url = API_BASE + '/posts?per_page=20&categories='+catId+'&_embed';
     }
-    httpGetJSON(url, function(json){ renderPosts(json||[]); }, function(){ if(listEl) listEl.innerHTML = '<div class="news-empty">Lỗi tải dữ liệu.</div>'; });
+    httpGetJSON(url, function(json){ renderPosts(json||[]); }, function(err){
+      if(listEl) listEl.innerHTML = '<div class="news-empty">Lỗi tải dữ liệu.</div>';
+    });
   }
 
   function initTabs(){
