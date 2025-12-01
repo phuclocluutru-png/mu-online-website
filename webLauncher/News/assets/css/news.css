@@ -45,9 +45,9 @@ body::before {
 }
 
 .news-panel__header {
-    max-width: 620px;
+    max-width: none;
     z-index: 1;
-    padding: 10px 12px 0;
+    padding: 6px 6px 4px;
 }
 
 .news-panel__tag {
@@ -79,7 +79,7 @@ body::before {
     justify-content: flex-start;
     overflow: hidden;
     flex: 0 0 auto;
-    padding: 0 12px;
+    padding: 0 6px;
 }
 
 .news-tab {
@@ -109,8 +109,7 @@ body::before {
     margin: 0;
     flex: 1 1 auto;
     overflow-y: auto;
-    padding-right: 6px;
-    padding-left: 12px;
+    padding: 0 6px 6px;
     scroll-behavior: smooth;
     z-index: 1;
     scrollbar-width: none;
