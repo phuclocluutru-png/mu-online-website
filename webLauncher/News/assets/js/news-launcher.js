@@ -2,10 +2,11 @@
   var listEl = document.getElementById('news-list');
   var tabs = document.querySelectorAll('.news-tab');
   var catMap = {};
-  // Absolute proxy path to avoid relative issues in launcher (prefer http for old WebBrowser TLS)
-  var PROXY_URL = 'http://pkclear.com/mu/webLauncher/News/proxy.php';
+  // Build proxy URL cùng host để tránh mixed-content; fallback đổi https <-> http khi lỗi
+  var baseHost = (location && location.host) ? (location.protocol + '//' + location.host) : 'https://pkclear.com';
+  var PROXY_URL = baseHost + '/mu/webLauncher/News/proxy.php';
 
-  function httpGetJSON(url, onSuccess, onError){
+  function httpGetJSON(url, onSuccess, onError, triedSwitch){
     try{
       var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function(){
@@ -13,9 +14,12 @@
           if(xhr.status >=200 && xhr.status <300){
             try{ onSuccess && onSuccess(JSON.parse(xhr.responseText)); } catch(e){ onError && onError(e); }
           } else {
-            // retry with https if http fails
-            if(url.indexOf('http://') === 0){
-              httpGetJSON(url.replace('http://','https://'), onSuccess, onError);
+            if(!triedSwitch && url.indexOf('https://') === 0){
+              httpGetJSON(url.replace('https://','http://'), onSuccess, onError, true);
+              return;
+            }
+            if(!triedSwitch && url.indexOf('http://') === 0){
+              httpGetJSON(url.replace('http://','https://'), onSuccess, onError, true);
               return;
             }
             onError && onError(new Error('HTTP '+xhr.status));
