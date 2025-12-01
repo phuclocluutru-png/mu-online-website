@@ -20,7 +20,7 @@ body {
 
 body::before {
     content: '';
-    position: fixed;
+    position: absolute;
     inset: 0;
     background: rgba(5, 8, 15, 0.65);
     pointer-events: none;
@@ -30,12 +30,12 @@ body::before {
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 420px;
-    padding: 12px 14px;
+    min-height: 100%;
+    padding: 10px 10px 12px;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     box-sizing: border-box;
     background: linear-gradient(180deg, rgba(15, 10, 34, 0.85), rgba(18, 12, 38, 0.82));
     border-radius: 16px;
