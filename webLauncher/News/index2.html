@@ -9,7 +9,26 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <link rel="stylesheet" href="assets/css/news.css?v=20251216">
+    <link rel="stylesheet" href="assets/css/news.css" data-bust="1">
+    <script>
+        (function () {
+            var bust = new Date().getTime();
+            var links = document.getElementsByTagName('link');
+            for (var i = 0; i < links.length; i++) {
+                if (links[i].getAttribute('data-bust') === '1') {
+                    var href = links[i].getAttribute('href') || '';
+                    links[i].setAttribute('href', href.split('?')[0] + '?v=' + bust);
+                }
+            }
+            var scripts = document.getElementsByTagName('script');
+            for (var j = 0; j < scripts.length; j++) {
+                if (scripts[j].getAttribute && scripts[j].getAttribute('data-bust') === '1') {
+                    var src = scripts[j].getAttribute('src') || '';
+                    scripts[j].setAttribute('src', src.split('?')[0] + '?v=' + bust);
+                }
+            }
+        })();
+    </script>
 </head>
 
 <body>
@@ -31,7 +50,7 @@
         </section>
     </main>
 
-    <script src="assets/js/news-launcher.js?v=20251217"></script>
+    <script src="assets/js/news-launcher.js" data-bust="1"></script>
 </body>
 
 </html>
