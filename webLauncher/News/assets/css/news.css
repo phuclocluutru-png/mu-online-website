@@ -8,46 +8,42 @@ body {
     padding: 0;
     width: 100%;
     height: 100%;
+    min-height: 100vh;
 }
 
 body {
+    position: relative;
     font-family: 'Segoe UI', Arial, sans-serif;
     color: #f1f4fb;
     background: url('../image/Bg.png') center/cover no-repeat;
     font-size: 14px;
-    height: 100%;
 }
 
 body::before {
     content: '';
-    position: absolute;
+    position: fixed;
     inset: 0;
     background: rgba(5, 8, 15, 0.65);
     pointer-events: none;
 }
 
 .news-panel {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    min-height: 100vh;
-    padding: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 4px 6px;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     box-sizing: border-box;
     background: linear-gradient(180deg, rgba(15, 10, 34, 0.85), rgba(18, 12, 38, 0.82));
-    border-radius: 0;
-    border: 0;
-    box-shadow: none;
+    border-radius: 6px;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     overflow: hidden;
-}
-
-.news-panel__header {
-    max-width: none;
-    z-index: 1;
-    padding: 6px 6px 4px;
 }
 
 .news-panel__tag {
@@ -75,7 +71,7 @@ body::before {
 .news-tabs {
     display: flex;
     flex-wrap: nowrap;
-    gap: 10px;
+    gap: 6px;
     justify-content: flex-start;
     overflow: hidden;
     flex: 0 0 auto;
@@ -108,6 +104,7 @@ body::before {
     width: 100%;
     margin: 0;
     flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
     padding: 0 6px 6px;
     scroll-behavior: smooth;
@@ -133,7 +130,7 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
+    padding: 6px 8px;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     background: rgba(27, 18, 48, 0.65);
