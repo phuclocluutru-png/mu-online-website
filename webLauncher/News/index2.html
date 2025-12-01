@@ -9,22 +9,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <link rel="stylesheet" href="assets/css/news.css" data-bust="1">
-    <script>
-        (function () {
-            var bust = (new Date()).getTime();
-            var links = document.querySelectorAll ? document.querySelectorAll('link[data-bust="1"]') : [];
-            for (var i = 0; i < links.length; i++) {
-                var href = links[i].getAttribute('href') || '';
-                links[i].setAttribute('href', href.split('?')[0] + '?v=' + bust);
-            }
-            var scripts = document.querySelectorAll ? document.querySelectorAll('script[data-bust="1"]') : [];
-            for (var j = 0; j < scripts.length; j++) {
-                var src = scripts[j].getAttribute('src') || '';
-                scripts[j].setAttribute('src', src.split('?')[0] + '?v=' + bust);
-            }
-        })();
-    </script>
+    <link rel="stylesheet" href="assets/css/news.css?v=20251216">
 </head>
 
 <body>
@@ -46,7 +31,7 @@
         </section>
     </main>
 
-    <script src="assets/js/news.js" data-bust="1"></script>
+    <script src="assets/js/news.js?v=20251216"></script>
 </body>
 
 </html>

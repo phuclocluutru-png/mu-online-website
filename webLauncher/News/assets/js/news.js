@@ -2,35 +2,37 @@
   var listEl = document.getElementById('news-list');
   var tabs = document.querySelectorAll('.news-tab');
   var catMap = {};
-  var PROXY_URL = (String(location.protocol).toLowerCase() -eq 'file:') ? 'https://pkclear.com/mu/webLauncher/News/proxy.php' : 'proxy.php';
+  // Dùng proxy cùng domain để tránh CORS/TLS trên WebBrowser của launcher
+  var PROXY_URL = '/mu/webLauncher/News/proxy.php';
 
   function httpGetJSON(url, onSuccess, onError){
     try{
       var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function(){
-        if(xhr.readyState === 4){
-          if(xhr.status -ge 200 -and xhr.status -lt 300){
-            try{ if(onSuccess){ onSuccess(JSON.parse(xhr.responseText)); } } catch(e){ if(onError){ onError(e); } }
+        if (xhr.readyState === 4){
+          if (xhr.status >= 200 && xhr.status < 300){
+            try { onSuccess && onSuccess(JSON.parse(xhr.responseText)); }
+            catch(e){ onError && onError(e); }
           } else {
-            if(onError){ onError(new Error('HTTP '+xhr.status)); }
+            onError && onError(new Error('HTTP '+xhr.status));
           }
         }
       };
-      xhr.open('GET', url, True);
+      xhr.open('GET', url, true);
       xhr.send();
-    }catch(e){ if(onError){ onError(e); } }
+    }catch(e){ if(onError) onError(e); }
   }
 
   function fmtDate(str){
     if(!str) return '';
-    try{
+    try {
       var d = new Date(str);
-      if(isNaN(d.getTime())) return '';
-      var dd=('0'+d.getDate()).slice(-2);
-      var mm=('0'+(d.getMonth()+1)).slice(-2);
-      var yy=d.getFullYear();
+      if (isNaN(d.getTime())) return '';
+      var dd = ('0'+d.getDate()).slice(-2);
+      var mm = ('0'+(d.getMonth()+1)).slice(-2);
+      var yy = d.getFullYear();
       return dd+'/'+mm+'/'+yy;
-    }catch(e){ return ''; }
+    } catch(e){ return ''; }
   }
 
   function setLoading(msg){
@@ -44,8 +46,8 @@
       listEl.innerHTML = '<div class="news-empty">Chưa có bài viết.</div>';
       return;
     }
-    var html='';
-    for(var i=0;i<posts.length;i++){
+    var html = '';
+    for (var i=0;i<posts.length;i++){
       var p = posts[i];
       var title = (p.title && p.title.rendered) ? p.title.rendered : 'Bài viết';
       var link = '/pages/post.html?id='+p.id;
@@ -64,14 +66,14 @@
       if(json && json.length){
         for(var i=0;i<json.length;i++){ catMap[json[i].slug] = json[i].id; }
       }
-      if(cb) cb();
-    }, function(){ if(cb) cb(); });
+      cb && cb();
+    }, function(){ cb && cb(); });
   }
 
   function loadTab(key){
     setLoading('Đang tải bài viết...');
     var url = PROXY_URL + '?action=posts';
-    if(key && key -ne 'latest'){
+    if(key && key !== 'latest'){
       var catId = catMap[key];
       if(!catId){ renderPosts([]); return; }
       url += '&cat='+catId;
@@ -83,7 +85,10 @@
     for(var i=0;i<tabs.length;i++){
       (function(btn){
         btn.onclick = function(){
-          for(var j=0;j<tabs.length;j++){ tabs[j].classList.remove('is-active'); tabs[j].setAttribute('aria-selected','false'); }
+          for(var j=0;j<tabs.length;j++){
+            tabs[j].classList.remove('is-active');
+            tabs[j].setAttribute('aria-selected','false');
+          }
           btn.classList.add('is-active');
           btn.setAttribute('aria-selected','true');
           loadTab(btn.getAttribute('data-key'));
@@ -98,7 +103,7 @@
     fetchCategories(function(){ loadTab('latest'); });
   }
 
-  if(document.readyState==='complete' || document.readyState==='interactive') init();
+  if(document.readyState === 'complete' || document.readyState === 'interactive') init();
   else if(document.addEventListener) document.addEventListener('DOMContentLoaded', init);
-  else document.attachEvent('onreadystatechange', function(){ if(document.readyState==='complete') init(); });
+  else if(document.attachEvent) document.attachEvent('onreadystatechange', function(){ if(document.readyState === 'complete') init(); });
 })();
