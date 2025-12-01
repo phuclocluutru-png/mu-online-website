@@ -2,8 +2,8 @@
   var listEl = document.getElementById('news-list');
   var tabs = document.querySelectorAll('.news-tab');
   var catMap = {};
-  // Absolute proxy path to avoid relative issues in launcher
-  var PROXY_URL = 'https://pkclear.com/mu/webLauncher/News/proxy.php';
+  // Absolute proxy path to avoid relative issues in launcher (prefer http for old WebBrowser TLS)
+  var PROXY_URL = 'http://pkclear.com/mu/webLauncher/News/proxy.php';
 
   function httpGetJSON(url, onSuccess, onError){
     try{
@@ -13,6 +13,11 @@
           if(xhr.status >=200 && xhr.status <300){
             try{ onSuccess && onSuccess(JSON.parse(xhr.responseText)); } catch(e){ onError && onError(e); }
           } else {
+            // retry with https if http fails
+            if(url.indexOf('http://') === 0){
+              httpGetJSON(url.replace('http://','https://'), onSuccess, onError);
+              return;
+            }
             onError && onError(new Error('HTTP '+xhr.status));
           }
         }
