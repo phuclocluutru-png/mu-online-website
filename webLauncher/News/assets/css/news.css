@@ -32,7 +32,7 @@ body::before {
     position: fixed;
     inset: 0;
     width: 100vw;
-    padding: 0;
+    padding: 2px;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -81,6 +81,7 @@ body::before {
 
 .news-tab {
     flex: 1 1 0;
+    min-width: 0;
     padding: 10px 12px;
     border-radius: 0;
     border: 1px solid rgba(180, 150, 255, 0.5);
@@ -95,6 +96,8 @@ body::before {
     cursor: pointer;
     transition: all .2s ease;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     text-align: center;
 }
 
@@ -161,6 +164,9 @@ body::before {
 .news-item__text {
     flex: 1;
     margin-right: 10px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .news-item__badge {
@@ -227,6 +233,31 @@ body::before {
 
     50% {
         transform: scale(1.05);
+    }
+}
+
+/* Responsive scaling for very narrow launcher widths */
+@media (max-width: 520px) {
+    body {
+        font-size: 12px;
+    }
+
+    .news-tab {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .news-item {
+        padding: 3px 5px;
+    }
+
+    .news-item__text {
+        font-size: 12px;
+    }
+
+    .news-item__date {
+        font-size: 11px;
+        min-width: 64px;
     }
 }
 
