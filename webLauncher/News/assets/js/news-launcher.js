@@ -66,6 +66,30 @@
            + '</a>';
     }
     listEl.innerHTML = html;
+    attachLinkHandler();
+  }
+
+  function attachLinkHandler(){
+    if(!listEl) return;
+    listEl.onclick = function(e){
+      e = e || window.event;
+      var target = e.target || e.srcElement;
+      while (target && target !== listEl && target.tagName && target.tagName.toLowerCase() !== 'a') {
+        target = target.parentNode;
+      }
+      if (target && target.tagName && target.tagName.toLowerCase() === 'a') {
+        if (e.preventDefault) e.preventDefault(); else e.returnValue = false;
+        var url = target.getAttribute('href');
+        try {
+          if (window.external && typeof window.external.Navigate === 'function') {
+            window.external.Navigate(url);
+            return false;
+          }
+        } catch(err){}
+        try { window.open(url, '_blank'); } catch(err2) { window.location.href = url; }
+        return false;
+      }
+    };
   }
 
   function fetchCategories(cb){
