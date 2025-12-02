@@ -144,7 +144,7 @@ body::before {
 .news-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 4px 6px;
     border-radius: 0;
     border: 0;
@@ -163,7 +163,7 @@ body::before {
 
 .news-item__text {
     flex: 1;
-    margin-right: 10px;
+    margin-right: 0;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -194,6 +194,7 @@ body::before {
     font-size: 12px;
     min-width: 72px;
     text-align: right;
+    display: none;
 }
 
 .news-loading,

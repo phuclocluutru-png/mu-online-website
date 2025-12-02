@@ -1,8 +1,8 @@
-﻿(function(){
+(function(){
   var listEl = document.getElementById('news-list');
   var tabs = document.querySelectorAll('.news-tab');
   var catMap = {};
-  // Dùng proxy cùng domain để tránh CORS/TLS trên WebBrowser của launcher
+  // Dùng proxy cùng domain để tránh CORS/TLS trên WebBrowser của launcher.
   var PROXY_URL = '/mu/webLauncher/News/proxy.php';
 
   function httpGetJSON(url, onSuccess, onError){
@@ -23,18 +23,6 @@
     }catch(e){ if(onError) onError(e); }
   }
 
-  function fmtDate(str){
-    if(!str) return '';
-    try {
-      var d = new Date(str);
-      if (isNaN(d.getTime())) return '';
-      var dd = ('0'+d.getDate()).slice(-2);
-      var mm = ('0'+(d.getMonth()+1)).slice(-2);
-      var yy = d.getFullYear();
-      return dd+'/'+mm+'/'+yy;
-    } catch(e){ return ''; }
-  }
-
   function setLoading(msg){
     if(!listEl) return;
     listEl.innerHTML = '<div class="news-loading">'+(msg||'Đang tải...')+'</div>';
@@ -51,10 +39,8 @@
       var p = posts[i];
       var title = (p.title && p.title.rendered) ? p.title.rendered : 'Bài viết';
       var link = '/pages/post.html?id='+p.id;
-      var date = fmtDate(p.date);
       html += '<a class="news-item" href="'+link+'" target="_blank" rel="noopener">'
            +   '<span class="news-item__text">'+title+'</span>'
-           +   '<span class="news-item__date">'+date+'</span>'
            + '</a>';
     }
     listEl.innerHTML = html;
