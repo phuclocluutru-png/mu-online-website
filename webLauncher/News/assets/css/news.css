@@ -74,18 +74,20 @@ body::before {
     justify-content: flex-start;
     overflow: hidden;
     flex: 0 0 auto;
-    padding: 0;
+    padding: 6px 6px 4px;
     margin: 0;
+    background: rgba(0, 0, 0, 0.18);
 }
 
 .news-tab {
-    padding: 0;
+    padding: 10px 16px;
     border-radius: 0;
     border: 1px solid rgba(180, 150, 255, 0.5);
     border-right: 0;
     background: rgba(22, 15, 42, 0.65);
     color: #dcd9f9;
     font-weight: 600;
+    line-height: 1.2;
     cursor: pointer;
     transition: all .2s ease;
     white-space: nowrap;
