@@ -38,7 +38,7 @@ body::before {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 0;
     box-sizing: border-box;
     background: linear-gradient(180deg, rgba(15, 10, 34, 0.85), rgba(18, 12, 38, 0.82));
     border-radius: 6px;
@@ -76,7 +76,8 @@ body::before {
     justify-content: flex-start;
     overflow: hidden;
     flex: 0 0 auto;
-    padding: 0 6px;
+    padding: 0;
+    margin: 0;
 }
 
 .news-tab {
@@ -112,7 +113,7 @@ body::before {
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
-    padding: 0 6px 6px;
+    padding: 0 4px 4px;
     scroll-behavior: smooth;
     z-index: 1;
     scrollbar-width: none;
