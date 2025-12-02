@@ -41,9 +41,9 @@ body::before {
     gap: 0;
     box-sizing: border-box;
     background: linear-gradient(180deg, rgba(15, 10, 34, 0.85), rgba(18, 12, 38, 0.82));
-    border-radius: 6px;
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
     overflow: hidden;
 }
 
