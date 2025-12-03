@@ -81,6 +81,7 @@ function renderPost(raw) {
         `;
 
     enhanceEmbeds(article);
+    normalizeGrids(article);
 }
 
 async function loadPost() {
@@ -517,6 +518,7 @@ async function loadSinglePost(postId) {
         `;
 
         enhanceEmbeds(article);
+        normalizeGrids(article);
 
         // Add breadcrumb click handlers
         article.querySelectorAll('.breadcrumb-link').forEach(link => {
@@ -624,5 +626,29 @@ function enhanceEmbeds(root) {
         });
     } catch (e) {
         console.warn('enhanceEmbeds failed', e);
+    }
+}
+
+// Normalize Gutenberg grid wrappers so only 2-child grids auto-create columns
+// and larger wrappers stay single-column (prevents tables shifting layout).
+function normalizeGrids(root) {
+    try {
+        const grids = root.querySelectorAll('.postView__content .is-layout-grid');
+        grids.forEach(grid => {
+            const hasExplicitTemplate =
+                grid.style.gridTemplateColumns ||
+                grid.style.getPropertyValue('--wp--style--grid-template-columns');
+            if (hasExplicitTemplate) return;
+
+            const elements = Array.from(grid.children).filter(el => el.nodeType === 1);
+            if (elements.length === 2) {
+                grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(260px, 1fr))';
+                grid.style.alignItems = 'start';
+            } else {
+                grid.style.gridTemplateColumns = '1fr';
+            }
+        });
+    } catch (e) {
+        console.warn('normalizeGrids failed', e);
     }
 }
