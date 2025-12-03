@@ -838,8 +838,15 @@
 .postView__content :where(.is-layout-grid) {
     display: grid;
     gap: var(--wp--style--block-gap, 1.1rem);
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    /* Respect Gutenberg grid settings; fallback still makes multiple columns when defined */
+    grid-template-columns: var(--wp--style--grid-template-columns, repeat(auto-fit, minmax(260px, 1fr)));
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: row;
     align-items: flex-start;
+}
+
+.postView__content :where(.is-layout-grid) > * {
+    margin: 0;
 }
 
 .postView__content .is-layout-flex > * {
