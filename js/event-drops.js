@@ -48,7 +48,7 @@ export const eventDrops = {
         { name: 'Bless', img: 'bless.jpg' },
         { name: 'Soul', img: 'soul.jpg' }
     ],
-    'Nhện': [
+    'Rương Báu': [
         { name: 'Chaos', img: 'chaos.jpg' },
         { name: 'Creation', img: 'creation.jpg' }
     ],
@@ -84,7 +84,8 @@ export const eventWcoinReward = {
     'Siêu Boss': 5000,
     'Wukong': 5000,
     'Medusa': 5000,
-    'Kundun': 5000
+    'Kundun': 5000,
+    'Rương Báu': 5000
 };
 
 // Format number with dot thousands (e.g., 30000 -> 30.000)

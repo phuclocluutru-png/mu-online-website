@@ -11,7 +11,7 @@ var eventSchedule = {
     'Thỏ Ngọc': { duration: 10, times: ['11:30', '19:00'], map: 'Lorencia', note: 'Rơi nhiều Gemstone.' },
     'Ngưu Ma Vương': { duration: 50, times: ['12:15'], map: 'Nars', note: 'Boss trâu, tổ đội khuyến nghị.' },
     'Loạn Chiến': { duration: 10, times: ['19:20'], map: 'Arena', note: 'PvP tự do, cẩn thận PK.' },
-    'Nhện': { duration: 30, times: ['21:30'], map: 'Atlans', note: 'Nhiều Creation.' },
+    'Rương Báu': { duration: 30, times: ['21:30'], map: 'Atlans', note: 'Nhiều Creation.' },
     'Siêu Boss': { duration: 40, times: ['22:20'], map: 'Ferea', note: 'Drop refining stone hiếm.' },
     'Wukong': { duration: 30, times: ['20:00'], map: 'Elbeland', note: 'Có thể stun, mang chống choáng.' },
     'Medusa': { duration: 40, times: ['08:20'], map: 'Swamp of Calmness', note: 'Độc mạnh, mang kháng poison.' },

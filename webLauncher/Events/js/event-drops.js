@@ -48,7 +48,7 @@ var eventDrops = {
         { name: 'Bless', img: 'bless.jpg' },
         { name: 'Soul', img: 'soul.jpg' }
     ],
-    'Nhện': [
+    'Rương Báu': [
         { name: 'Chaos', img: 'chaos.jpg' },
         { name: 'Creation', img: 'creation.jpg' }
     ],
@@ -76,20 +76,16 @@ var eventDrops = {
 
 // Optional Wcoin rewards per event (amount player can earn)
 var eventWcoinReward = {
-    'Boss Vàng': 30000,
-    'Blood Castle': 1500,
-    'Devil Square': 1200,
-    'Chaos Castle': 1400,
-    'Rồng Đỏ': 2500,
-    'Vua Quỷ Xương': 2000,
-    'Thỏ Ngọc': 1000,
-    'Ngưu Ma Vương': 4000,
-    'Loạn Chiến': 1800,
-    'Nhện': 1600,
-    'Siêu Boss': 6000,
-    'Wukong': 2200,
-    'Medusa': 3500,
-    'Kundun': 3000
+    'Boss Vàng': 5000,
+    'Rồng Đỏ': 300,
+    'Vua Quỷ Xương': 300,
+    'Thỏ Ngọc': 0,
+    'Ngưu Ma Vương': 5000,
+    'Siêu Boss': 5000,
+    'Wukong': 5000,
+    'Medusa': 5000,
+    'Kundun': 5000,
+    'Rương Báu': 5000
 };
 
 // Format number with dot thousands (e.g., 30000 -> 30.000)
